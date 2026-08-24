@@ -6,7 +6,7 @@ function App() {
   return (
     <main className="site-shell">
       <nav className="topbar" aria-label="Primary navigation">
-        <a className="brand" href="/" aria-label="Great House home"><span className="brand-mark" aria-hidden="true">▰</span><span><strong>HP VENTURES</strong><small>HOLDING COMPANY</small></span></a>
+        <a className="brand" href="/" aria-label="Great House home"><span className="brand-mark" aria-hidden="true">▰</span><span><strong><big>HP VENTURES</big></strong><medium>HOLDING COMPANY</medium></span></a>
         <button className="menu-toggle" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /> <span /> <span /></button>
         <div className={menuOpen ? 'nav-links open' : 'nav-links'}>
           {['About us', 'Sectors', 'Services', 'Projects', 'Contacts'].map((item) => <a href={`#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>)}
@@ -26,7 +26,7 @@ function App() {
       <section className="workspace-section" id="services">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">What we do</p><h2>Built for what comes next.</h2>
+            <p className="eyebrow"><big>What we do</big></p><h2>Built for what comes next.</h2>
           </div>
           <a className="add-button" href="#projects">View our work <span>→</span></a>
         </div>
