@@ -1,8 +1,49 @@
 import { useState } from 'react'
 import logo from './images/logo.png'
 
+const categories = {
+  'Investors Relations': [
+    { title: 'Financial Study', text: 'HP Ventures, Inc. is a growing investment holding company focused on building a diverse and profitable portfolio through strategic investments, prudent risk management, and sustainable growth.' },
+    { title: 'Corporate Trends', text: 'HP Ventures, Inc. has various exposures in the local outsourcing services industry, while expanding into trading, manufacturing, IT, and real estate through its growing portfolio.' },
+    { title: 'Banks', text: 'HP Ventures, Inc. has investments across outsourcing, IT, trading and manufacturing, and real estate, with affiliates managed for aligned and profitable operations.' },
+    { title: 'Portfolio Growth', text: 'A measured approach to expanding our portfolio, creating long-term value through thoughtful investment and responsible management.' },
+    { title: 'Risk Management', text: 'We balance opportunity with discipline, using clear analysis and prudent decision-making to protect the future of every investment.' },
+  ],
+  'Business Interest': [
+    { title: 'Outsourcing', text: 'Building dependable service businesses that help organizations operate with greater focus, speed, and confidence.' },
+    { title: 'Information Technology', text: 'Supporting practical technology solutions that make businesses more connected, capable, and ready for change.' },
+    { title: 'Trading & Manufacturing', text: 'Growing our presence in the trading and manufacturing space through reliable products and local market knowledge.' },
+    { title: 'Real Estate', text: 'Investing in places and properties that serve people well and create durable value over time.' },
+    { title: 'New Opportunities', text: 'We stay curious about new markets, partners, and ideas that fit our values and strengthen our portfolio.' },
+  ],
+  'Social Responsibility': [
+    { title: 'Community', text: 'We participate in initiatives that nurture people, strengthen communities, and support a more inclusive future.' },
+    { title: 'Nation Building', text: 'Our work contributes to the growth of the communities and local economies where our businesses operate.' },
+    { title: 'Environment', text: 'We believe responsible growth includes caring for the environment and making thoughtful choices today.' },
+    { title: 'Collective Action', text: 'Partnership and shared effort help turn good intentions into meaningful, lasting outcomes.' },
+    { title: 'People First', text: 'We value the people behind every business and seek to create opportunities for them to thrive.' },
+  ],
+  Careers: [
+    { title: 'Join Our Team', text: 'Bring your perspective, expertise, and ambition to a growing group of businesses with room to make an impact.' },
+    { title: 'Growth Mindset', text: 'We support people who stay curious, take ownership, and keep looking for better ways forward.' },
+    { title: 'Shared Values', text: 'Integrity, accountability, and respect shape how we work with our colleagues, partners, and communities.' },
+    { title: 'Make An Impact', text: 'Your work can reach beyond a single role, contributing to businesses and initiatives that matter.' },
+    { title: 'Our Culture', text: 'We are building a culture that is collaborative, practical, and open to new ideas.' },
+  ],
+}
+
+const categoryNames = Object.keys(categories)
+
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [categoryIndex, setCategoryIndex] = useState(0)
+
+  const activeCategory = categoryNames[categoryIndex]
+  const visibleCards = categories[activeCategory]
+
+  const moveCategory = (direction) => {
+    setCategoryIndex((currentIndex) => (currentIndex + direction + categoryNames.length) % categoryNames.length)
+  }
 
   return (
     <main className="site-shell">
@@ -27,14 +68,16 @@ function App() {
       <section className="workspace-section" id="services">
         <div className="section-heading">
           <div>
-            <p className="eyebrow"><big>What we do</big></p><h2>Investors Relations</h2>
+            <p className="eyebrow"><big>What we do</big></p><h2>{activeCategory}</h2>
           </div>
-          {/* <a className="add-button" href="#projects">View our work <span>→</span></a> */}
+          <div className="carousel-controls">
+            <button className="carousel-arrow" aria-label="Previous category" onClick={() => moveCategory(-1)}>←</button>
+            <span>{String(categoryIndex + 1).padStart(2, '0')} / {String(categoryNames.length).padStart(2, '0')}</span>
+            <button className="carousel-arrow" aria-label="Next category" onClick={() => moveCategory(1)}>→</button>
+          </div>
         </div>
         <div className="project-grid" id="projects">
-          <article className="project-card"><span>01</span><h3>Financial Study</h3><p>HP Ventures, Inc. is a growing investment holding company focused on building a diverse and profitable portfolio through strategic investments, prudent risk management, and sustainable growth. Its businesses span outsourcing, IT, trading and manufacturing, and real estate, with its affiliates managed by Globalus Management Services. The company aims to become a leading and respected investment entity while contributing to society, nation-building, and environmental initiatives.</p></article>
-          <article className="project-card"><span>02</span><h3>Corporate Trends</h3><p>HP Ventures, Inc. has various exposures in the local outsourcing services industry, with its 95% stake in an industry leading company, Infovision Research Systems, Inc. other investments in this field includes, Jobsvision Human Capital Resources Services, Link2Info Outsourcing Services and a growing IT firm, the InfoZ IT Works. It is now expanding its base to Trading & Manufacturing of key products initially within Cebu market through Infotrade Resources and High Power Traders. HP Ventures, Inc. also owned the Henzplace@Sea Residences- a condo leasing entity in Manila. All of the companies under the HP Ventures, Inc. is being managed by Globalus Management Services, a management firm tasked to oversee and ensure affiliates are aligned within the goals towards achieving a profitable operations. It also understands that as a growing investment company comes with its social responsibility, to nurture society and its people, participate in nation building activities and caring for the environment. HP Ventures, Inc. commits to actively participate in collective activities aligned on these endeavors.</p></article>
-          <article className="project-card"><span>03</span><h3>Banks</h3><p>HP Ventures, Inc. has investments across outsourcing, IT, trading and manufacturing, and real estate. Its portfolio includes a 95% stake in Infovision Research Systems, Inc., as well as Jobsvision, Link2Info, InfoZ IT Works, Infotrade Resources, High Power Traders, and Henzplace@Sea Residences. Its affiliated companies are managed by Globalus Management Services to ensure profitable and aligned operations. Beyond business growth, HP Ventures is also committed to social responsibility, nation-building, and environmental initiatives.</p></article>
+          {visibleCards.map((card, index) => <article className="project-card" key={card.title}><span>{String(index + 1).padStart(2, '0')}</span><h3>{card.title}</h3><p>{card.text}</p></article>)}
         </div>
         
       </section>
