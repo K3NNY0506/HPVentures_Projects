@@ -83,7 +83,7 @@ function App() {
       </section>
 
 
-      <footer className="footer" id="contacts"><span>HP Ventures Holding Company</span><a href="mailto:hcp@hpobladorventures.com">hcp@hpobladorventures.com</a></footer>
+      <footer className="footer" id="contacts"><span>HP Ventures Holding Company</span><a href="mailto:hcp@hpobladorventures.com">info@hpobladorventures.com</a></footer>
     </main>
   )
 }
