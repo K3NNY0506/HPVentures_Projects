@@ -240,12 +240,12 @@ h1 span {
 }
 
 .primary-action {
-  background: #ffb70e;
+  background: #1b74da;
   color: #fff;
 }
 
 .primary-action:hover {
-  background: #ffc53b;
+  background: #c52828;
 }
 
 .secondary-action {
@@ -331,7 +331,7 @@ h1 span {
 }
 
 .eyebrow {
-  color: #f5ae13;
+  color: #a12828;
 
   font:
     600 11px
@@ -454,7 +454,7 @@ h2 {
   min-height: 185px;
   padding: 20px 22px;
 
-  border-top: 3px solid #f5ae13;
+  border-top: 3px solid #cf3d43;
 
   background: #fff;
 }
@@ -548,7 +548,7 @@ h3 {
 
 .feature-panel .eyebrow {
   margin: 0 0 12px;
-  color: #f6c03c;
+  color: lch(76.86% 77.84 89.58);
 }
 
 .feature-panel h2 {
