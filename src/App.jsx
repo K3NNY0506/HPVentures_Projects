@@ -1,5 +1,21 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import logo from './images/logo.png'
+import heroImageOne from './images/171-Enhanced-NR.jpg'
+import heroImageTwo from './images/187-Enhanced-NR.jpg'
+import heroImageThree from './images/268-Enhanced-NR.jpg'
+import heroImageFour from './images/280-Enhanced-NR.jpg'
+import heroImageFive from './images/491222308_1139710681502200_736987314008467945_n.jpg'
+import heroImageSix from './images/491339986_1139565998183335_2328618360663044858_n.jpg'
+import heroImageSeven from './images/492124794_1140941494712452_1302670891728671341_n.jpg'
+import heroImageEight from './images/8006541_DSC_0043.JPG'
+import heroImageNine from './images/8006541_DSC_0049_high.JPG'
+import heroImageTen from './images/dji_fly_20250901_114622_0014_1756701711042_photo.jpg'
+import heroImageEleven from './images/dji_fly_20250901_114758_0019_1756701704954_photo.jpg'
+
+const heroImages = [
+  heroImageOne, heroImageTwo, heroImageThree, heroImageFour, heroImageFive,
+  heroImageSix, heroImageSeven, heroImageEight, heroImageNine, heroImageTen, heroImageEleven,
+]
 
 const categories = {
   'Investors Relations': [
@@ -36,8 +52,17 @@ const categoryNames = Object.keys(categories)
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [heroIndex, setHeroIndex] = useState(0)
   const [categoryIndex, setCategoryIndex] = useState(0)
   const [categoryDirection, setCategoryDirection] = useState('next')
+
+  useEffect(() => {
+    const heroTimer = setInterval(() => {
+      setHeroIndex((currentIndex) => (currentIndex + 1) % heroImages.length)
+    }, 5000)
+
+    return () => clearInterval(heroTimer)
+  }, [])
 
   const activeCategory = categoryNames[categoryIndex]
   const visibleCards = categories[activeCategory]
@@ -60,6 +85,7 @@ function App() {
       </nav>
 
       <section className="hero-section" id="about-us">
+        <div className="hero-background" key={heroIndex} style={{ backgroundImage: `url("${heroImages[heroIndex]}")` }} aria-hidden="true" />
         <div className="hero-copy">
           <h1>Emancipating of<br />Quality and Quantifiable Investments<span>.</span></h1>
           <div className="hero-actions">
