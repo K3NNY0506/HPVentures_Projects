@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import logo from './images/logo.png'
 import Groups from './groups.jsx'
+import Staff from './staff.jsx'
 import heroImageOne from './images/171-Enhanced-NR.jpg'
 import heroImageTwo from './images/187-Enhanced-NR.jpg'
 import heroImageThree from './images/268-Enhanced-NR.jpg'
@@ -59,7 +60,7 @@ function FeatureBanner({ image, title, text, reverse = false }) {
         <p className="eyebrow">Featured</p>
         <h2>{title}</h2>
         <p>{text}</p>
-        <a className="feature-link" href="#services">Discover more <span>→</span></a>
+        <a className="feature-link" href="/staff">Discover more <span>→</span></a>
       </div>
     </section>
   )
@@ -73,6 +74,10 @@ function App() {
 
   if (window.location.pathname === '/groups' || window.location.pathname === '/groups/') {
     return <Groups />
+  }
+
+  if (window.location.pathname === '/staff' || window.location.pathname === '/staff/') {
+    return <Staff />
   }
 
   useEffect(() => {
@@ -98,7 +103,7 @@ function App() {
         <a className="brand" href="/" aria-label="HP Ventures home"><img className="brand-logo" src={logo} alt="HP Ventures" /></a>
         <button className="menu-toggle" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /> <span /> <span /></button>
         <div className={menuOpen ? 'nav-links open' : 'nav-links'}>
-          {['About us', 'Groups', 'Services', 'Projects', 'Contacts'].map((item) => <a href={item === 'Groups' ? '/groups' : `#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>)}
+          {['About us', 'Groups', 'Services', 'Projects', 'Contacts'].map((item) => <a href={item === 'Groups' ? '/groups' : `#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>) }
         </div>
         <a className="phone-link" href="tel:(032) 343-9651 "><span aria-hidden="true">☎</span> (032) 343-9651 </a>
       </nav>

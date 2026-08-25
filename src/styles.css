@@ -608,6 +608,54 @@ h3 {
   color: #f5ae13;
 }
 
+.staff-page {
+  background: #f4f6f5;
+  color: #062337;
+}
+
+.staff-hero {
+  min-height: 480px;
+  padding: 110px 13.7%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(90deg, #062337f2, #06233799), url('./images/Image_20260825_140643_663.jpeg') center / cover;
+  color: #fff;
+}
+
+.staff-hero .eyebrow {
+  margin: 0 0 20px;
+}
+
+.staff-hero h1 {
+  margin: 0 0 20px;
+  font-size: clamp(58px, 8vw, 110px);
+}
+
+.staff-hero h1 span {
+  color: #f5ae13;
+}
+
+.staff-hero > p:last-child {
+  max-width: 440px;
+  margin: 0;
+  color: #e0e8ea;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.staff-content {
+  padding: 80px 13.7% 180px;
+}
+
+.staff-content .eyebrow {
+  margin: 0 0 12px;
+}
+
+.staff-content h2 {
+  margin: 0;
+}
+
 .groups-hero {
   min-height: 430px;
 
