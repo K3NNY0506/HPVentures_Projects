@@ -50,6 +50,20 @@ const categories = {
 
 const categoryNames = Object.keys(categories)
 
+function FeatureBanner({ image, title, text, reverse = false }) {
+  return (
+    <section className={`feature-banner ${reverse ? 'reverse' : ''}`}>
+      <div className="feature-image" style={{ backgroundImage: `url("${image}")` }} role="img" aria-label={title} />
+      <div className="feature-panel">
+        <p className="eyebrow">Featured</p>
+        <h2>{title}</h2>
+        <p>{text}</p>
+        <a className="feature-link" href="#services">Discover more <span>→</span></a>
+      </div>
+    </section>
+  )
+}
+
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [heroIndex, setHeroIndex] = useState(0)
@@ -84,7 +98,7 @@ function App() {
         <a className="phone-link" href="tel:(032) 343-9651 "><span aria-hidden="true">☎</span> (032) 343-9651 </a>
       </nav>
 
-      <section className="hero-section" id="about-us">
+      <section className="hero-section" id="#about-us">
         <div className="hero-background" key={heroIndex} style={{ backgroundImage: `url("${heroImages[heroIndex]}")` }} aria-hidden="true" />
         <div className="hero-copy">
           <h1>Emancipating of<br />Quality and Quantifiable Investments<span>.</span></h1>
@@ -93,6 +107,32 @@ function App() {
           </div>
         </div>
       </section>
+
+      <section className="workspace-section" id="about-us">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow"><big>About Us</big></p><h2>The HP Group</h2>
+          </div>
+            <div>
+            <p>A Commitment to Value and Excellence</p>
+          </div>
+        </div>
+        <div>
+          <p> The Group aims to nurture the key strengths of each individual under the umbrella with the aim to the enhancement and development of each person's skills and capabilities, exudes enough confidence, highlighting each and everyone's worh while valuing the synergy and interoperatability within our key business points.</p>
+          
+          <p>Our strategy is underlined in our determination to pursue growth from within while exploring the business opportunities under the framework of justice and equity.</p>
+          
+          <p>We put emphasis in the Value of our people whom we considered our key assets. We invest accordingly with our stakeholders best interest in mind. We put Value in every trust and confidence our stakeholders gave us.</p>
+          
+          <p>We move towards Excellence in everything we do in a timely and orderly fashion.</p>
+        </div>
+      </section>
+
+      <FeatureBanner
+        image={heroImageFour}
+        title="People who build progress."
+        text="Our work is made possible by the people, partnerships, and communities that move every idea forward."
+      />
 
       <section className="workspace-section" id="services">
         <div className="section-heading">
