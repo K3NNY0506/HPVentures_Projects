@@ -1,4 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap');
+ .category-slide { animation: slide-from-right .45s cubic-bezier(.22, .61, .36, 1) both; }
+ .category-slide.previous { animation-name: slide-from-left; }
+ @keyframes slide-from-right { from { opacity: 0; transform: translateX(48px); } to { opacity: 1; transform: translateX(0); } }
+ @keyframes slide-from-left { from { opacity: 0; transform: translateX(-48px); } to { opacity: 1; transform: translateX(0); } }
+ @media (prefers-reduced-motion: reduce) { .category-slide { animation: none; } }
 :root { font-family: 'Barlow', sans-serif; color: #fff; background: #062337; font-synthesis: none; }
 * { box-sizing: border-box; } html { scroll-behavior: smooth; } body { margin: 0; min-width: 320px; }
 button, a { color: inherit; font: inherit; } button { border: 0; cursor: pointer; }

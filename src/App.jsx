@@ -37,11 +37,14 @@ const categoryNames = Object.keys(categories)
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [categoryIndex, setCategoryIndex] = useState(0)
+  const [categoryDirection, setCategoryDirection] = useState('next')
 
   const activeCategory = categoryNames[categoryIndex]
   const visibleCards = categories[activeCategory]
 
   const moveCategory = (direction) => {
+    document.getElementById('services')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    setCategoryDirection(direction > 0 ? 'next' : 'previous')
     setCategoryIndex((currentIndex) => (currentIndex + direction + categoryNames.length) % categoryNames.length)
   }
 
@@ -76,7 +79,7 @@ function App() {
             <button className="carousel-arrow" aria-label="Next category" onClick={() => moveCategory(1)}>→</button>
           </div>
         </div>
-        <div className="project-grid" id="projects">
+        <div className={`project-grid category-slide ${categoryDirection}`} id="projects" key={categoryIndex}>
           {visibleCards.map((card, index) => <article className="project-card" key={card.title}><span>{String(index + 1).padStart(2, '0')}</span><h3>{card.title}</h3><p>{card.text}</p></article>)}
         </div>
         
