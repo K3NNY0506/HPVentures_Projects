@@ -1,0 +1,50 @@
+import { useEffect, useState } from 'react'
+import logo from './images/logo.png'
+import groupsHeroImage from './images/Image_20260825_140643_663.jpeg'
+
+const groupItems = [
+	{ number: '01', name: 'Infovision Research Systems', type: 'Outsourcing Services', description: 'A leading provider of research and business process solutions built around dependable service.' },
+	{ number: '02', name: 'Jobsvision Human Capital', type: 'Human Resources', description: 'Connecting organizations with the people and capabilities they need to grow.' },
+	{ number: '03', name: 'Link2Info Outsourcing', type: 'Outsourcing Services', description: 'Practical outsourcing support that helps businesses work smarter and serve better.' },
+	{ number: '04', name: 'InfoZ IT Works', type: 'Information Technology', description: 'Technology solutions that help modern businesses become more connected and capable.' },
+	{ number: '05', name: 'Infotrade Resources', type: 'Trading & Manufacturing', description: 'Building a growing presence in trade through products, partnerships, and local insight.' },
+	{ number: '06', name: 'Henzplace@Sea Residences', type: 'Real Estate', description: 'A property and leasing business focused on useful, well-managed spaces.' },
+]
+
+function Groups() {
+	const [menuOpen, setMenuOpen] = useState(false)
+
+	useEffect(() => {
+		window.scrollTo(0, 0)
+	}, [])
+
+	return (
+		<main className="site-shell groups-page">
+			<nav className="topbar" aria-label="Primary navigation">
+				<a className="brand" href="/" aria-label="HP Ventures home"><img className="brand-logo" src={logo} alt="HP Ventures" /></a>
+				<button className="menu-toggle" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /> <span /> <span /></button>
+				<div className={menuOpen ? 'nav-links open' : 'nav-links'}>
+					{['About us', 'Groups', 'Services', 'Projects', 'Contacts'].map((item) => <a className={item === 'Groups' ? 'active' : ''} href={item === 'Groups' ? '/groups' : `/#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>)}
+				</div>
+				<a className="phone-link" href="tel:(032) 343-9651"><span aria-hidden="true">☎</span> (032) 343-9651</a>
+			</nav>
+
+			<header className="groups-hero" style={{ backgroundImage: `linear-gradient(90deg, #062337dd 0%, #06233799 52%, #06233744), url("${groupsHeroImage}")` }}>
+				<p className="eyebrow">Our portfolio</p>
+				<h1>The HP <span>Groups.</span></h1>
+				<p>Businesses working together with a shared commitment to value, excellence, and sustainable growth.</p>
+			</header>
+
+			<section className="groups-list" aria-labelledby="groups-heading">
+				<div className="groups-heading"><p className="eyebrow">Our affiliates</p><h2 id="groups-heading">Built around possibility.</h2></div>
+				<div className="groups-grid">
+					{groupItems.map((group) => <article className="group-item" key={group.number}><span className="group-number">{group.number}</span><div><p className="group-type">{group.type}</p><h3>{group.name}</h3><p className="group-description">{group.description}</p></div><span className="group-arrow" aria-hidden="true">↗</span></article>)}
+				</div>
+			</section>
+
+			<footer className="footer"><span>HP Ventures Holding Company</span><a href="mailto:info@hpobladorventures.com">info@hpobladorventures.com</a></footer>
+		</main>
+	)
+}
+
+export default Groups

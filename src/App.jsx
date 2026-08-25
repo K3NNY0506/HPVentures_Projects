@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import logo from './images/logo.png'
+import Groups from './groups.jsx'
 import heroImageOne from './images/171-Enhanced-NR.jpg'
 import heroImageTwo from './images/187-Enhanced-NR.jpg'
 import heroImageThree from './images/268-Enhanced-NR.jpg'
@@ -70,6 +71,10 @@ function App() {
   const [categoryIndex, setCategoryIndex] = useState(0)
   const [categoryDirection, setCategoryDirection] = useState('next')
 
+  if (window.location.pathname === '/groups' || window.location.pathname === '/groups/') {
+    return <Groups />
+  }
+
   useEffect(() => {
     const heroTimer = setInterval(() => {
       setHeroIndex((currentIndex) => (currentIndex + 1) % heroImages.length)
@@ -93,7 +98,7 @@ function App() {
         <a className="brand" href="/" aria-label="HP Ventures home"><img className="brand-logo" src={logo} alt="HP Ventures" /></a>
         <button className="menu-toggle" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /> <span /> <span /></button>
         <div className={menuOpen ? 'nav-links open' : 'nav-links'}>
-          {['About us', 'Sectors', 'Services', 'Projects', 'Contacts'].map((item) => <a href={`#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>)}
+          {['About us', 'Groups', 'Services', 'Projects', 'Contacts'].map((item) => <a href={item === 'Groups' ? '/groups' : `#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>)}
         </div>
         <a className="phone-link" href="tel:(032) 343-9651 "><span aria-hidden="true">☎</span> (032) 343-9651 </a>
       </nav>
