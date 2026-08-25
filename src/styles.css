@@ -76,6 +76,16 @@ button {
   object-position: left center;
 }
 
+.brand-logo-footer {
+  display: block;
+  width: 100px;
+  height: 100px;
+  max-height: 60px;
+
+  object-fit: contain;
+  object-position: left center;
+}
+
 .nav-links {
   display: flex;
   gap: 29px;
@@ -790,22 +800,18 @@ h3 {
    FOOTER
    ========================================================= */
 
-.footer {
-  display: flex;
-  justify-content: space-between;
-
-  padding: 24px 13.7%;
-
-  color: #b5c4ca;
-  background: #052033;
-
-  font-size: 11px;
-}
-
-.footer a {
-  color: #f5ae13;
-  text-decoration: none;
-}
+.site-footer { color: #fff; background: #285da3; }
+.footer-content { display: grid; grid-template-columns: 1.3fr repeat(4, 1fr); gap: 38px; padding: 42px 13.7% 48px; background: #244f88; }
+.footer-brand-column { display: flex; flex-direction: column; align-items: flex-start; min-width: 150px; }
+.brand-logo-footer { display: block; width: 200px; height: auto; max-height: 52px; margin-bottom: 16px; object-fit: contain; object-position: left center; }
+.footer-brand-column p { margin: 0 0 6px; font-size: 11px; }
+.footer-brand-column > a { color: #fff; font-size: 11px; text-decoration: none; }
+.footer-brand-column small { margin-top: auto; padding-top: 28px; font-size: 9px; }
+.footer-socials { display: flex; gap: 13px; margin-top: 17px; }.footer-socials a { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; color: #f52d24; background: #fff; border-radius: 2px; font: 600 11px Arial; text-decoration: none; }
+.footer-column { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.footer-column h3 { margin: 0 0 3px; color: #fff; font: 700 15px 'Barlow', sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.footer-column a { color: #fff; font-size: 12px; line-height: 1.25; text-decoration: none; }
+.footer-column a:hover, .footer-brand-column > a:hover { text-decoration: underline; }
 
 
 /* =========================================================
@@ -1014,6 +1020,11 @@ h3 {
     flex-direction: column;
     gap: 8px;
   }
+
+  .footer-sky { height: 90px; }
+  .footer-content { grid-template-columns: repeat(2, 1fr); gap: 34px 24px; padding: 36px 24px 40px; }
+  .footer-brand-column { grid-column: 1 / -1; }
+  .footer-brand-column small { margin-top: 0; }
 }
 
 

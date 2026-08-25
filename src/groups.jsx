@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import logo from './images/logo.png'
+import Footer from './Footer.jsx'
 import groupsHeroImage from './images/Image_20260825_140643_663.jpeg'
 
 const groupItems = [
@@ -42,7 +43,7 @@ function Groups() {
 				</div>
 			</section>
 
-			<footer className="footer"><span>HP Ventures Holding Company</span><a href="mailto:info@hpobladorventures.com">info@hpobladorventures.com</a></footer>
+			<Footer />
 		</main>
 	)
 }

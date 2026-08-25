@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import logo from './images/logo.png'
+import Footer from './Footer.jsx'
 
 function Staff() {
 
@@ -25,7 +26,7 @@ function Staff() {
 				<p>Meet the people whose experience, care, and commitment move HP Ventures forward.</p>
 			</header>
 			<section className="staff-content"><p className="eyebrow">Staff</p><h2>A team with purpose.</h2></section>
-			<footer className="footer"><span>HP Ventures Holding Company</span><a href="mailto:info@hpobladorventures.com">info@hpobladorventures.com</a></footer>
+			<Footer />
 		</main>
 	)
 }

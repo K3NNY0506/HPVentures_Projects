@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import logo from './images/logo.png'
 import Groups from './groups.jsx'
 import Staff from './staff.jsx'
+import Footer from './Footer.jsx'
 import heroImageOne from './images/171-Enhanced-NR.jpg'
 import heroImageTwo from './images/187-Enhanced-NR.jpg'
 import heroImageThree from './images/268-Enhanced-NR.jpg'
@@ -162,7 +163,7 @@ function App() {
       </section>
 
 
-      <footer className="footer" id="contacts"><span>HP Ventures Holding Company</span><a href="mailto:hcp@hpobladorventures.com">info@hpobladorventures.com</a></footer>
+      <Footer />
     </main>
   )
 }
