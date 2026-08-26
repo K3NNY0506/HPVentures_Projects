@@ -1155,6 +1155,7 @@ h3 {
 }
 
 .group-category-selector button {
+  position: relative;
   flex: 1 0 auto;
   min-height: 42px;
   padding: 0 18px;
@@ -1166,19 +1167,38 @@ h3 {
   font-weight: 600;
   letter-spacing: .08em;
   white-space: nowrap;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color .3s ease, border-color .3s ease;
+}
+
+.group-category-selector button::before,
+.category-selector button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #1b74da;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 1s cubic-bezier(.22, .61, .36, 1);
 }
 
 .group-category-selector button:hover,
 .group-category-selector button.active {
-  border-color: #cf3d43;
-  background: #fff;
+  border-color: #e9eeee;
+  background: #e9eeee;
   color: #a12828;
 }
 
 .group-category-selector button.active {
-  border-color: #1b74da;
-  background: #1b74da;
+ 
   color: #fff;
+}
+
+.group-category-selector button.active::before,
+.category-selector button.active::before {
+  transform: scaleX(1);
 }
 
 .groups-grid {
@@ -2169,6 +2189,7 @@ h3 {
 }
 
 .category-selector button {
+  position: relative;
   flex: 1 0 auto;
   min-height: 42px;
   padding: 0 18px;
@@ -2180,16 +2201,17 @@ h3 {
   font-weight: 600;
   letter-spacing: .08em;
   white-space: nowrap;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color 0.1s ease, border-color 0.1s ease;
 }
 
 .category-selector button:hover {
-  border-color: #cf3d43;
-  background: #fff;
+  border-color: #e9eeee;
+  background: #e9eeee;
   color: #a12828;
 }
 .category-selector button.active {
-  border-color: #1b74da;
-  background: #1b74da;
   color: #ffffff;
 }
 
