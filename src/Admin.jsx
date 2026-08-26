@@ -130,7 +130,7 @@ function Admin() {
           <img className="admin-login-logo" src={logo} alt="HP Ventures" />
           <p className="eyebrow">Restricted area</p>
           <h1>Admin sign in.</h1>
-          <p>Sign in with your Supabase account to manage staff and company event content.</p>
+          <p>Sign in with your admin account to manage staff and company event content.</p>
           <form className="admin-form" onSubmit={submitLogin}>
             <label>Email<input type="email" value={login.username} onChange={(event) => setLogin({ ...login, username: event.target.value })} autoComplete="username" required /></label>
             <label>Password<input type="password" value={login.password} onChange={(event) => setLogin({ ...login, password: event.target.value })} autoComplete="current-password" required /></label>
