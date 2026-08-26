@@ -1,19 +1,27 @@
 import { useEffect, useState } from 'react'
 import logo from './images/logo.png'
 import Footer from './Footer.jsx'
-import groupsHeroImage from './images/company_events/Image_20260825_140643_663.jpeg'
+import groupsHeroImage from './images/company_events/dji_fly_20250901_114758_0019_1756701704954_photo.jpg'
+import infovisionLogo from './images/logos/infovision.png'
+import Link2InfoLogo from './images/logos/link2info.png'
+import InfozLogo from './images/logos/infoz.png'
+import infotrade from './images/logos/infotrade.png'	
+import henzplace from './images/logos/henzplace.png'
 
 const groupItems = [
-	{ number: '01', name: 'Infovision Research Systems', type: 'Outsourcing Services', description: 'A leading provider of research and business process solutions built around dependable service.' },
-	{ number: '02', name: 'Jobsvision Human Capital', type: 'Human Resources', description: 'Connecting organizations with the people and capabilities they need to grow.' },
-	{ number: '03', name: 'Link2Info Outsourcing', type: 'Outsourcing Services', description: 'Practical outsourcing support that helps businesses work smarter and serve better.' },
-	{ number: '04', name: 'InfoZ IT Works', type: 'Information Technology', description: 'Technology solutions that help modern businesses become more connected and capable.' },
-	{ number: '05', name: 'Infotrade Resources', type: 'Trading & Manufacturing', description: 'Building a growing presence in trade through products, partnerships, and local insight.' },
-	{ number: '06', name: 'Henzplace@Sea Residences', type: 'Real Estate', description: 'A property and leasing business focused on useful, well-managed spaces.' },
+	{ number: '01', name: 'Infovision Research Systems', logo: infovisionLogo, url: 'https://www.infovisionresearch.com/home/', category: 'OUTSOURCING SERVICES', description: 'A leading provider of research and business process solutions built around dependable service.' },
+	{ number: '02', name: 'Jobsvision Human Capital', category: 'HR', description: 'Connecting organizations with the people and capabilities they need to grow.' },
+	{ number: '03', name: 'Link2Info Outsourcing', logo: Link2InfoLogo, url: 'https://link2info-outsourcing.com/', category: 'OUTSOURCING SERVICES', description: 'Practical outsourcing support that helps businesses work smarter and serve better.' },
+	{ number: '04', name: 'InfoZ IT Works', logo: InfozLogo, url: 'https://www.infozitworks.com/', category: 'IT', description: 'Technology solutions that help modern businesses become more connected and capable.' },
+	{ number: '05', name: 'Infotrade Resources', logo: infotrade, url: 'https://www.facebook.com/infotraderesources/', category: 'TRADING & MANUFACTURING', description: 'Building a growing presence in trade through products, partnerships, and local insight.' },
+	{ number: '06', name: 'Henzplace@Sea Residences', logo: henzplace, url: 'https://www.facebook.com/HenzplaceSeaResidences/', category: 'REAL ESTATE', description: 'A property and leasing business focused on useful, well-managed spaces.' },
 ]
 
 function Groups() {
 	const [menuOpen, setMenuOpen] = useState(false)
+	const [selectedCategory, setSelectedCategory] = useState('ALL GROUPS')
+	const categories = ['ALL GROUPS', ...new Set(groupItems.map((group) => group.category))]
+	const visibleGroups = selectedCategory === 'ALL GROUPS' ? groupItems : groupItems.filter((group) => group.category === selectedCategory)
 
 	useEffect(() => {
 		window.scrollTo(0, 0)
@@ -38,8 +46,11 @@ function Groups() {
 
 			<section className="groups-list" aria-labelledby="groups-heading">
 				<div className="groups-heading"><p className="eyebrow">Our affiliates</p><h2 id="groups-heading">Built around possibility.</h2></div>
+				<div className="group-category-selector" role="tablist" aria-label="Group categories">
+					{categories.map((category) => <button className={selectedCategory === category ? 'active' : ''} role="tab" aria-selected={selectedCategory === category} key={category} onClick={() => setSelectedCategory(category)}>{category}</button>)}
+				</div>
 				<div className="groups-grid">
-					{groupItems.map((group) => <article className="group-item" key={group.number}><span className="group-number">{group.number}</span><div><p className="group-type">{group.type}</p><h3>{group.name}</h3><p className="group-description">{group.description}</p></div><span className="group-arrow" aria-hidden="true">↗</span></article>)}
+					{visibleGroups.map((group) => <article className="group-item" key={group.number}><span className="group-number">{group.number}</span><div><p className="group-type">{group.category}</p><h3 className="group-name"><a className="group-link" href={group.url} target="_blank" rel="noreferrer">{group.name}</a></h3><p className="group-description">{group.description}</p></div>{group.logo && <img className="group-logo" src={group.logo} alt={`${group.name} logo`} />}<a className="group-arrow" href={group.url} target="_blank" rel="noreferrer" aria-label={`Visit ${group.name}`}>↗</a></article>)}
 				</div>
 			</section>
 

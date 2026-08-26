@@ -3,6 +3,7 @@ import logo from './images/logo.png'
 import Footer from './Footer.jsx'
 import itDepartmentImage from './images/it_department/mr. dpo.jpg'
 import rodImage from './images/it_department/rod.jpg'
+import roxanImage from './images/accounting_department/roxan.jpg'
 const departments = ['ALL DEPARTMENTS', 'LEADERSHIP', 'IT DEPARTMENT', 'FINANCE AND ACCOUNTING', 'HR DEPARTMENT', 'TAURUS CAFE']
 
 const employees = [
@@ -14,7 +15,7 @@ const employees = [
 	{ name: 'Name Test', role: 'People & Culture', department: 'HR DEPARTMENT', description: 'Creates an environment where people can do thoughtful work, grow their skills, and feel part of the mission.' },
 	{ name: 'Rod Christian Camangyan', role: 'Web Developer', department: 'IT DEPARTMENT', image: rodImage, description: 'Helps the group use practical technology to work smarter, stay connected, and prepare for what is next.' },
 	{ name: 'Name Test', role: 'Corporate Affairs', department: 'HR DEPARTMENT', description: 'Supports trusted relationships with stakeholders and helps the group show up with integrity.' },
-	{ name: 'Name Test', role: 'Investments', department: 'FINANCE AND ACCOUNTING', description: 'Studies markets and opportunities with patience, care, and a clear eye for long-term potential.' },
+	{ name: 'Roxan Beldesola', role: 'Investments', department: 'FINANCE AND ACCOUNTING', image: roxanImage, description: 'Studies markets and opportunities with patience, care, and a clear eye for long-term potential.' },
 	{ name: 'Name Test', role: 'Administration', department: 'TAURUS CAFE', description: 'Keeps the details moving smoothly and makes space for every team to do its best work.' },
 	{ name: 'Name Test', role: 'Web Developer', department: 'IT DEPARTMENT', description: 'Helps the group use practical technology to work smarter, stay connected, and prepare for what is next.' },
 	{ name: 'Name Test', role: 'Web Developer', department: 'IT DEPARTMENT', description: 'Helps the group use practical technology to work smarter, stay connected, and prepare for what is next.' },
