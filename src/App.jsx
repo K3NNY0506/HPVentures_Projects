@@ -90,7 +90,7 @@ function App() {
     return <Staff />
   }
 
-  if (window.location.pathname === '/admin' || window.location.pathname === '/admin/') {
+  if (window.location.pathname === '/infozadminz' || window.location.pathname === '/infozadminz/') {
     return <Admin />
   }
 
