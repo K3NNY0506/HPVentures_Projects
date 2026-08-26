@@ -1938,6 +1938,97 @@ h3 {
   color: #667178;
 }
 
+.admin-content-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.admin-content-form input,
+.admin-content-form select,
+.admin-content-form textarea,
+.admin-archive-editor input,
+.admin-archive-editor textarea {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #c7d2d2;
+  border-radius: 2px;
+  background: #f8faf9;
+  color: #062337;
+  font-size: 13px;
+}
+
+.admin-content-form textarea,
+.admin-content-form button,
+.admin-content-form label {
+  grid-column: 1 / -1;
+}
+
+.admin-content-form .admin-upload-button {
+  width: max-content;
+}
+
+.admin-content-group {
+  margin-top: 22px;
+}
+
+.admin-content-group h3,
+.admin-archive-editor h3 {
+  margin: 0 0 10px;
+  color: #062337;
+  font-size: 22px;
+}
+
+.admin-content-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  border-top: 1px solid #d2dcdb;
+}
+
+.admin-content-row > span {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.admin-content-row small {
+  overflow: hidden;
+  color: #667178;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-content-row button {
+  padding: 7px 10px;
+  background: #e8f1fb;
+  color: #1b74da;
+  font-size: 11px;
+}
+
+.admin-content-row button:last-child {
+  background: #fbe8e8;
+  color: #a12828;
+}
+
+.admin-archive-editor {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #d2dcdb;
+}
+
+.admin-archive-editor h3 {
+  grid-row: span 3;
+}
+
 .admin-events-section {
   margin-top: 28px;
   padding: 30px;
@@ -2047,6 +2138,20 @@ h3 {
 
   .admin-events-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-content-form,
+  .admin-archive-editor {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-archive-editor h3 {
+    grid-row: auto;
+  }
+
+  .admin-content-row {
+    align-items: flex-start;
+    flex-wrap: wrap;
   }
 }
 

@@ -1,6 +1,7 @@
 import itDepartmentImage from './images/it_department/mr. dpo.jpg'
 import rodImage from './images/it_department/rod.jpg'
 import roxanImage from './images/accounting_department/roxan.jpg'
+import { supabase, supabaseConfigured } from './supabaseClient.js'
 
 export const departments = ['LEADERSHIP', 'IT DEPARTMENT', 'FINANCE AND ACCOUNTING', 'HR DEPARTMENT', 'TAURUS CAFE']
 
@@ -21,7 +22,11 @@ export const defaultEmployees = [
 
 const storageKey = 'hp-ventures-employees'
 
-export function loadEmployees() {
+export async function loadEmployees() {
+  if (supabaseConfigured) {
+    const { data, error } = await supabase.from('employees').select('*').order('created_at', { ascending: true })
+    if (!error && data?.length) return data.map(({ image_url, ...employee }) => ({ ...employee, image: image_url || '' }))
+  }
   try {
     const savedEmployees = window.localStorage.getItem(storageKey)
     const employees = savedEmployees ? JSON.parse(savedEmployees) : defaultEmployees
@@ -31,12 +36,18 @@ export function loadEmployees() {
   }
 }
 
-export function saveEmployees(employees) {
+export async function saveEmployees(employees) {
+  if (supabaseConfigured) {
+    await supabase.from('employees').delete().not('id', 'is', null)
+    const { error } = await supabase.from('employees').insert(employees.map(({ image, ...employee }) => ({ ...employee, image_url: image || null })))
+    if (error) throw error
+  }
   window.localStorage.setItem(storageKey, JSON.stringify(employees))
   window.dispatchEvent(new Event('employees-updated'))
 }
 
-export function resetEmployees() {
+export async function resetEmployees() {
+  if (supabaseConfigured) await supabase.from('employees').delete().not('id', 'is', null)
   window.localStorage.removeItem(storageKey)
   window.dispatchEvent(new Event('employees-updated'))
 }

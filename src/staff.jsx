@@ -11,11 +11,12 @@ function Staff() {
 	const [menuOpen, setMenuOpen] = useState(false)
 	const [selectedEmployee, setSelectedEmployee] = useState(null)
 	const [selectedDepartment, setSelectedDepartment] = useState('ALL DEPARTMENTS')
-	const [employees, setEmployees] = useState(loadEmployees)
+	const [employees, setEmployees] = useState([])
 
 	useEffect(() => {
 		window.scrollTo(0, 0)
-		const refreshEmployees = () => setEmployees(loadEmployees())
+		const refreshEmployees = async () => setEmployees(await loadEmployees())
+		refreshEmployees()
 		window.addEventListener('employees-updated', refreshEmployees)
 		return () => window.removeEventListener('employees-updated', refreshEmployees)
 	}, [])

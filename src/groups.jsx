@@ -2,29 +2,21 @@ import { useEffect, useState } from 'react'
 import logo from './images/logo.png'
 import Footer from './Footer.jsx'
 import groupsHeroImage from './images/company_events/dji_fly_20250901_114758_0019_1756701704954_photo.jpg'
-import infovisionLogo from './images/logos/infovision.png'
-import Link2InfoLogo from './images/logos/link2info.png'
-import InfozLogo from './images/logos/infoz.png'
-import infotrade from './images/logos/infotrade.png'	
-import henzplace from './images/logos/henzplace.png'
-
-const groupItems = [
-	{ number: '01', name: 'Infovision Research Systems', logo: infovisionLogo, url: 'https://www.infovisionresearch.com/home/', category: 'OUTSOURCING SERVICES', description: 'A leading provider of research and business process solutions built around dependable service.' },
-	{ number: '02', name: 'Jobsvision Human Capital', category: 'HR', description: 'Connecting organizations with the people and capabilities they need to grow.' },
-	{ number: '03', name: 'Link2Info Outsourcing', logo: Link2InfoLogo, url: 'https://link2info-outsourcing.com/', category: 'OUTSOURCING SERVICES', description: 'Practical outsourcing support that helps businesses work smarter and serve better.' },
-	{ number: '04', name: 'InfoZ IT Works', logo: InfozLogo, url: 'https://www.infozitworks.com/', category: 'IT', description: 'Technology solutions that help modern businesses become more connected and capable.' },
-	{ number: '05', name: 'Infotrade Resources', logo: infotrade, url: 'https://www.facebook.com/infotraderesources/', category: 'TRADING & MANUFACTURING', description: 'Building a growing presence in trade through products, partnerships, and local insight.' },
-	{ number: '06', name: 'Henzplace@Sea Residences', logo: henzplace, url: 'https://www.facebook.com/HenzplaceSeaResidences/', category: 'REAL ESTATE', description: 'A property and leasing business focused on useful, well-managed spaces.' },
-]
+import { loadGroups } from './siteContent.js'
 
 function Groups() {
 	const [menuOpen, setMenuOpen] = useState(false)
 	const [selectedCategory, setSelectedCategory] = useState('ALL GROUPS')
+	const [groupItems, setGroupItems] = useState([])
 	const categories = ['ALL GROUPS', ...new Set(groupItems.map((group) => group.category))]
 	const visibleGroups = selectedCategory === 'ALL GROUPS' ? groupItems : groupItems.filter((group) => group.category === selectedCategory)
 
 	useEffect(() => {
 		window.scrollTo(0, 0)
+		const refreshGroups = async () => setGroupItems(await loadGroups())
+		refreshGroups()
+		window.addEventListener('site-content-updated', refreshGroups)
+		return () => window.removeEventListener('site-content-updated', refreshGroups)
 	}, [])
 
 	return (

@@ -3,6 +3,7 @@ import logo from './images/logo.png'
 import { departments, defaultEmployees, loadEmployees, resetEmployees, saveEmployees } from './employeeData.js'
 import { defaultEvents, loadEvents, resetEvents, saveEvents } from './eventData.js'
 import { supabase, supabaseConfigured } from './supabaseClient.js'
+import { defaultArchiveEntries, defaultGroups, defaultWhatWeDo, loadArchiveEntries, loadGroups, loadWhatWeDo, saveSiteContent, resetSiteContent } from './siteContent.js'
 
 const emptyEmployee = { name: '', role: '', department: departments[0], description: '', image: '' }
 
@@ -10,18 +11,92 @@ function Admin() {
   const [authenticated, setAuthenticated] = useState(false)
   const [login, setLogin] = useState({ username: '', password: '' })
   const [loginError, setLoginError] = useState('')
-  const [employees, setEmployees] = useState(loadEmployees)
+  const [employees, setEmployees] = useState([])
   const [form, setForm] = useState(emptyEmployee)
   const [editingId, setEditingId] = useState(null)
   const [filter, setFilter] = useState('ALL DEPARTMENTS')
-  const [events, setEvents] = useState(loadEvents)
+  const [events, setEvents] = useState([])
+  const [whatWeDo, setWhatWeDo] = useState({})
+  const [archiveEntries, setArchiveEntries] = useState({})
+  const [groups, setGroups] = useState([])
+  const [contentCard, setContentCard] = useState({ category: '', title: '', text: '' })
+  const [editingCard, setEditingCard] = useState(null)
+  const [groupForm, setGroupForm] = useState({ name: '', category: '', description: '', url: '', logo: '' })
+  const [editingGroup, setEditingGroup] = useState(null)
   const visibleEmployees = filter === 'ALL DEPARTMENTS' ? employees : employees.filter((employee) => employee.department === filter)
+
+  const updateArchive = (key, field, value) => {
+    const updated = { ...archiveEntries, [key]: { ...archiveEntries[key], [field]: value } }
+    setArchiveEntries(updated)
+    saveSiteContent('archive', updated)
+  }
+
+  const saveContentCard = (event) => {
+    event.preventDefault()
+    if (!contentCard.category.trim() || !contentCard.title.trim()) return
+    const category = contentCard.category.trim()
+    const updated = { ...whatWeDo, [category]: [...(whatWeDo[category] || []).filter((_, index) => index !== editingCard), { title: contentCard.title.trim(), text: contentCard.text.trim() }] }
+    setWhatWeDo(updated)
+    saveSiteContent('whatWeDo', updated)
+    setContentCard({ category: '', title: '', text: '' })
+    setEditingCard(null)
+  }
+
+  const editContentCard = (category, index) => {
+    setEditingCard(index)
+    setContentCard({ category, ...whatWeDo[category][index] })
+  }
+
+  const removeContentCard = (category, index) => {
+    const updated = { ...whatWeDo, [category]: whatWeDo[category].filter((_, cardIndex) => cardIndex !== index) }
+    setWhatWeDo(updated)
+    saveSiteContent('whatWeDo', updated)
+  }
+
+  const saveGroup = (event) => {
+    event.preventDefault()
+    if (!groupForm.name.trim() || !groupForm.category.trim()) return
+    const group = { ...groupForm, name: groupForm.name.trim(), category: groupForm.category.trim(), number: editingGroup ? groups.find((item) => item.number === editingGroup).number : String(groups.length + 1).padStart(2, '0') }
+    const updated = editingGroup ? groups.map((item) => item.number === editingGroup ? group : item) : [...groups, group]
+    setGroups(updated)
+    saveSiteContent('groups', updated)
+    setGroupForm({ name: '', category: '', description: '', url: '', logo: '' })
+    setEditingGroup(null)
+  }
+
+  const editGroup = (group) => { setEditingGroup(group.number); setGroupForm({ ...group }) }
+  const removeGroup = (number) => {
+    if (!window.confirm('Remove this company from the groups page?')) return
+    const updated = groups.filter((group) => group.number !== number)
+    setGroups(updated)
+    saveSiteContent('groups', updated)
+  }
+
+  const handleGroupLogo = (event) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => setGroupForm((current) => ({ ...current, logo: reader.result }))
+    reader.readAsDataURL(file)
+  }
 
   useEffect(() => {
     if (!supabaseConfigured) return undefined
     supabase.auth.getSession().then(({ data }) => setAuthenticated(Boolean(data.session)))
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => setAuthenticated(Boolean(session)))
     return () => authListener.subscription.unsubscribe()
+  }, [])
+
+  useEffect(() => {
+    const loadAdminContent = async () => {
+      const [loadedEmployees, loadedEvents, loadedWhatWeDo, loadedArchive, loadedGroups] = await Promise.all([loadEmployees(), loadEvents(), loadWhatWeDo(), loadArchiveEntries(), loadGroups()])
+      setEmployees(loadedEmployees)
+      setEvents(loadedEvents)
+      setWhatWeDo(loadedWhatWeDo)
+      setArchiveEntries(loadedArchive)
+      setGroups(loadedGroups)
+    }
+    loadAdminContent()
   }, [])
 
   const updateForm = (event) => setForm({ ...form, [event.target.name]: event.target.value })
@@ -172,6 +247,21 @@ function Admin() {
           <div className="admin-list-heading"><div><p className="eyebrow">Home page gallery</p><h2>{events.length} company events</h2></div><label className="admin-upload-button">Add image<input type="file" accept="image/*" onChange={addEventImage} /></label></div>
           <div className="admin-events-grid">{events.map((image, index) => <article className="admin-event" key={`${image}-${index}`}><img src={image} alt={`Company event ${index + 1}`} /><div><strong>Event {String(index + 1).padStart(2, '0')}</strong><label className="admin-replace-button">Replace<input type="file" accept="image/*" onChange={(event) => replaceEventImage(index, event)} /></label><button type="button" onClick={() => removeEventImage(index)}>Remove</button></div></article>)}</div>
           <button className="admin-reset-button" type="button" onClick={restoreEventDefaults}>Reset default events</button>
+        </section>
+        <section className="admin-events-section">
+          <div className="admin-list-heading"><div><p className="eyebrow">Home content</p><h2>What we do</h2></div><button className="admin-reset-button" type="button" onClick={() => { resetSiteContent('whatWeDo'); setWhatWeDo(defaultWhatWeDo) }}>Reset cards</button></div>
+          <form className="admin-content-form" onSubmit={saveContentCard}><select value={contentCard.category} onChange={(event) => setContentCard({ ...contentCard, category: event.target.value })} required><option value="">Select or type a category below</option>{Object.keys(whatWeDo).map((category) => <option key={category}>{category}</option>)}</select><input value={contentCard.category} onChange={(event) => setContentCard({ ...contentCard, category: event.target.value })} placeholder="Category name" required /><input value={contentCard.title} onChange={(event) => setContentCard({ ...contentCard, title: event.target.value })} placeholder="Card title" required /><textarea value={contentCard.text} onChange={(event) => setContentCard({ ...contentCard, text: event.target.value })} placeholder="Card text" rows="3" /><button className="admin-primary-button" type="submit">{editingCard === null ? 'Add card' : 'Save card'}</button></form>
+          {Object.entries(whatWeDo).map(([category, cards]) => <div className="admin-content-group" key={category}><h3>{category}</h3>{cards.map((card, index) => <div className="admin-content-row" key={`${category}-${index}`}><span><strong>{card.title}</strong><small>{card.text}</small></span><button type="button" onClick={() => editContentCard(category, index)}>Edit</button><button type="button" onClick={() => removeContentCard(category, index)}>Remove</button></div>)}</div>)}
+        </section>
+        <section className="admin-events-section">
+          <div className="admin-list-heading"><div><p className="eyebrow">Home content</p><h2>Vision, mission & values</h2></div></div>
+          {Object.entries(archiveEntries).map(([key, entry]) => <div className="admin-archive-editor" key={key}><h3>{key}</h3><input value={entry.label} onChange={(event) => updateArchive(key, 'label', event.target.value)} placeholder="Label" /><input value={entry.title} onChange={(event) => updateArchive(key, 'title', event.target.value)} placeholder="Title" /><textarea value={entry.text} onChange={(event) => updateArchive(key, 'text', event.target.value)} rows="3" placeholder="Description" /></div>)}
+          <button className="admin-reset-button" type="button" onClick={() => { resetSiteContent('archive'); setArchiveEntries(defaultArchiveEntries) }}>Reset archive content</button>
+        </section>
+        <section className="admin-events-section">
+          <div className="admin-list-heading"><div><p className="eyebrow">Portfolio content</p><h2>Groups & categories</h2></div><button className="admin-reset-button" type="button" onClick={() => { resetSiteContent('groups'); setGroups(defaultGroups) }}>Reset groups</button></div>
+          <form className="admin-content-form" onSubmit={saveGroup}><input value={groupForm.name} onChange={(event) => setGroupForm({ ...groupForm, name: event.target.value })} placeholder="Company name" required /><input value={groupForm.category} onChange={(event) => setGroupForm({ ...groupForm, category: event.target.value })} placeholder="Category" required /><input value={groupForm.url} onChange={(event) => setGroupForm({ ...groupForm, url: event.target.value })} placeholder="Website URL" /><textarea value={groupForm.description} onChange={(event) => setGroupForm({ ...groupForm, description: event.target.value })} placeholder="Company description" rows="3" /><label className="admin-upload-button">Upload logo<input type="file" accept="image/*" onChange={handleGroupLogo} /></label><button className="admin-primary-button" type="submit">{editingGroup ? 'Save company' : 'Add company'}</button></form>
+          <div className="admin-content-group">{groups.map((group) => <div className="admin-content-row" key={group.number}><span><strong>{group.name}</strong><small>{group.category}</small></span><button type="button" onClick={() => editGroup(group)}>Edit</button><button type="button" onClick={() => removeGroup(group.number)}>Remove</button></div>)}</div>
         </section>
       </section>
     </main>

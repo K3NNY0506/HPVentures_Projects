@@ -5,60 +5,9 @@ import Staff from './staff.jsx'
 import Admin from './Admin.jsx'
 import Footer from './Footer.jsx'
 import { defaultEvents, loadEvents } from './eventData.js'
+import { defaultArchiveEntries, defaultWhatWeDo, loadArchiveEntries, loadWhatWeDo } from './siteContent.js'
 
-const categories = {
-  'Investors Relations': [
-    { title: 'Financial Study', text: 'HP Ventures, Inc. is a growing investment holding company focused on building a diverse and profitable portfolio through strategic investments, prudent risk management, and sustainable growth.' },
-    { title: 'Corporate Trends', text: 'HP Ventures, Inc. has various exposures in the local outsourcing services industry, while expanding into trading, manufacturing, IT, and real estate through its growing portfolio.' },
-    { title: 'Banks', text: 'HP Ventures, Inc. has investments across outsourcing, IT, trading and manufacturing, and real estate, with affiliates managed for aligned and profitable operations.' },
-    { title: 'Portfolio Growth', text: 'A measured approach to expanding our portfolio, creating long-term value through thoughtful investment and responsible management.' },
-    { title: 'Risk Management', text: 'We balance opportunity with discipline, using clear analysis and prudent decision-making to protect the future of every investment.' },
-  ],
-  'Business Interest': [
-    { title: 'Outsourcing', text: 'Building dependable service businesses that help organizations operate with greater focus, speed, and confidence.' },
-    { title: 'Information Technology', text: 'Supporting practical technology solutions that make businesses more connected, capable, and ready for change.' },
-    { title: 'Trading & Manufacturing', text: 'Growing our presence in the trading and manufacturing space through reliable products and local market knowledge.' },
-    { title: 'Real Estate', text: 'Investing in places and properties that serve people well and create durable value over time.' },
-    { title: 'New Opportunities', text: 'We stay curious about new markets, partners, and ideas that fit our values and strengthen our portfolio.' },
-  ],
-  'Social Responsibility': [
-    { title: 'Community', text: 'We participate in initiatives that nurture people, strengthen communities, and support a more inclusive future.' },
-    { title: 'Nation Building', text: 'Our work contributes to the growth of the communities and local economies where our businesses operate.' },
-    { title: 'Environment', text: 'We believe responsible growth includes caring for the environment and making thoughtful choices today.' },
-    { title: 'Collective Action', text: 'Partnership and shared effort help turn good intentions into meaningful, lasting outcomes.' },
-    { title: 'People First', text: 'We value the people behind every business and seek to create opportunities for them to thrive.' },
-  ],
-  Careers: [
-    { title: 'Join Our Team', text: 'Bring your perspective, expertise, and ambition to a growing group of businesses with room to make an impact.' },
-    { title: 'Growth Mindset', text: 'We support people who stay curious, take ownership, and keep looking for better ways forward.' },
-    { title: 'Shared Values', text: 'Integrity, accountability, and respect shape how we work with our colleagues, partners, and communities.' },
-    { title: 'Make An Impact', text: 'Your work can reach beyond a single role, contributing to businesses and initiatives that matter.' },
-    { title: 'Our Culture', text: 'We are building a culture that is collaborative, practical, and open to new ideas.' },
-  ],
-}
-
-const categoryNames = Object.keys(categories)
-
-const archiveEntries = {
-  VISION: {
-    label: '#1',
-    title: 'WHAT WE ENVISION.',
-    text: 'We envisioned a Highly Valuable entity providing Excellent products and services to all our customers in all our business segments.',
-    image: defaultEvents[7],
-  },
-  MISSION: {
-    label: '#2',
-    title: 'WHAT WE STRIVE FOR.',
-    text: 'Our Mission is embedded well within the goals and aspirations of all our business entities as they progress on their day to day business.',
-    image: defaultEvents[8],
-  },
-  'CORE VALUES': {
-    label: '#3',
-    title: 'WHAT STICKS US TOGETHER.',
-    text: 'Innovation, Teamwork, Customer Service, Calculated Risk, Growth Oriented, Hard Work, Perseverance.',
-    image: defaultEvents[9],
-  },
-}
+const defaultArchive = Object.fromEntries(Object.entries(defaultArchiveEntries).map(([key, entry], index) => [key, { ...entry, image: defaultEvents[index + 7] }]))
 
 function FeatureBanner({ image, title, text, reverse = false }) {
   return (
@@ -77,10 +26,11 @@ function FeatureBanner({ image, title, text, reverse = false }) {
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [heroIndex, setHeroIndex] = useState(0)
-  const [heroImages, setHeroImages] = useState(loadEvents)
+  const [heroImages, setHeroImages] = useState(defaultEvents)
   const [categoryIndex, setCategoryIndex] = useState(0)
   const [categoryDirection, setCategoryDirection] = useState('next')
   const [archiveTab, setArchiveTab] = useState('VISION')
+  const [content, setContent] = useState({ categories: defaultWhatWeDo, archive: defaultArchive })
 
   if (window.location.pathname === '/groups' || window.location.pathname === '/groups/') {
     return <Groups />
@@ -95,20 +45,27 @@ function App() {
   }
 
   useEffect(() => {
-    const refreshEvents = () => setHeroImages(loadEvents())
+    const refreshContent = async () => {
+      const [categories, archive] = await Promise.all([loadWhatWeDo(), loadArchiveEntries()])
+      setContent({ categories, archive: Object.fromEntries(Object.entries(defaultArchive).map(([key, entry]) => [key, { ...entry, ...archive[key] }])) })
+    }
+    window.addEventListener('site-content-updated', refreshContent)
+    const refreshEvents = async () => setHeroImages(await loadEvents())
     window.addEventListener('events-updated', refreshEvents)
-    const heroTimer = setInterval(() => {
-      setHeroIndex((currentIndex) => (currentIndex + 1) % Math.max(heroImages.length, 1))
-    }, 5000)
+    refreshContent()
+    refreshEvents()
+    const heroTimer = setInterval(() => setHeroIndex((currentIndex) => (currentIndex + 1) % Math.max(heroImages.length, 1)), 5000)
 
     return () => {
       clearInterval(heroTimer)
       window.removeEventListener('events-updated', refreshEvents)
+      window.removeEventListener('site-content-updated', refreshContent)
     }
   }, [heroImages.length])
 
-  const activeCategory = categoryNames[categoryIndex]
-  const visibleCards = categories[activeCategory]
+  const categoryNames = Object.keys(content.categories)
+  const activeCategory = categoryNames[categoryIndex % categoryNames.length]
+  const visibleCards = content.categories[activeCategory] || []
 
   const moveCategory = (direction) => {
     document.getElementById('the-team')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -186,15 +143,15 @@ function App() {
           <h2>What We Believe<span>.</span></h2>
         </div>
         <div className="archive-tabs" role="tablist" aria-label="Mission, vision and core values">
-          {Object.keys(archiveEntries).map((tab) => <button className={archiveTab === tab ? 'active' : ''} role="tab" aria-selected={archiveTab === tab} key={tab} onClick={() => setArchiveTab(tab)}>{tab}</button>)}
+          {Object.keys(content.archive).map((tab) => <button className={archiveTab === tab ? 'active' : ''} role="tab" aria-selected={archiveTab === tab} key={tab} onClick={() => setArchiveTab(tab)}>{tab}</button>)}
         </div>
         <div className="archive-panel">
           <div className="archive-copy">
-            <p className="archive-file">{archiveEntries[archiveTab].label}</p>
-            <h3>{archiveEntries[archiveTab].title}</h3>
-            <p>{archiveEntries[archiveTab].text}</p>
+            <p className="archive-file">{content.archive[archiveTab].label}</p>
+            <h3>{content.archive[archiveTab].title}</h3>
+            <p>{content.archive[archiveTab].text}</p>
           </div>
-          <div className="archive-image" style={{ backgroundImage: `url("${archiveEntries[archiveTab].image}")` }} role="img" aria-label={archiveTab} />
+          <div className="archive-image" style={{ backgroundImage: `url("${content.archive[archiveTab].image}")` }} role="img" aria-label={archiveTab} />
         </div>
       </section>
 
