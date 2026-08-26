@@ -740,6 +740,10 @@ h3 {
   background-position: center 46%;
 }
 
+.employee-card:hover {
+  justify-content: flex-start;
+}
+
 .employee-card.selected {
   animation: staff-selected-left .55s cubic-bezier(.22, .61, .36, 1) both;
   will-change: transform;
@@ -761,12 +765,22 @@ h3 {
   opacity: 1;
 }
 
+.employee-card:hover::before {
+  background: #ff565d;
+  opacity: 1;
+}
+
+.employee-card.selected:hover::before {
+  background: linear-gradient(180deg, transparent 45%, #062337b8);
+}
+
 .employee-number,
 .employee-card strong,
 .employee-card > span:last-child {
   position: relative;
   z-index: 1;
   opacity: 0;
+  visibility: hidden;
   transition: opacity .25s ease;
 }
 
@@ -777,6 +791,22 @@ h3 {
 .employee-card.selected strong,
 .employee-card.selected > span:last-child {
   opacity: 1;
+  visibility: visible;
+}
+
+.employee-card:hover .employee-number {
+  margin-bottom: 24px;
+}
+
+.employee-card:hover strong {
+  font-size: 23px;
+  line-height: 1.05;
+}
+
+.employee-card:hover > span:last-child {
+  margin-top: 9px;
+  font-size: 15px;
+  line-height: 1.2;
 }
 
 .employee-number {
@@ -803,6 +833,13 @@ h3 {
 .employee-card.selected .employee-number,
 .employee-card.selected > span:last-child {
   color: #fff;
+}
+
+.employee-card.selected .employee-number,
+.employee-card.selected strong,
+.employee-card.selected > span:last-child {
+  opacity: 0;
+  visibility: hidden;
 }
 
 .employee-detail {
