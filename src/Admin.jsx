@@ -15,6 +15,7 @@ function Admin() {
   const [form, setForm] = useState(emptyEmployee)
   const [editingId, setEditingId] = useState(null)
   const [filter, setFilter] = useState('ALL DEPARTMENTS')
+  const [draggedEmployeeId, setDraggedEmployeeId] = useState(null)
   const [events, setEvents] = useState([])
   const [whatWeDo, setWhatWeDo] = useState({})
   const [archiveEntries, setArchiveEntries] = useState({})
@@ -140,6 +141,25 @@ function Admin() {
     setForm(emptyEmployee)
   }
 
+  const reorderEmployees = (targetId) => {
+    if (!draggedEmployeeId || draggedEmployeeId === targetId) return
+    const visibleIds = visibleEmployees.map((employee) => employee.id)
+    const fromIndex = visibleIds.indexOf(draggedEmployeeId)
+    const toIndex = visibleIds.indexOf(targetId)
+    if (fromIndex < 0 || toIndex < 0) return
+    const reorderedVisible = [...visibleEmployees]
+    const [movedEmployee] = reorderedVisible.splice(fromIndex, 1)
+    reorderedVisible.splice(toIndex, 0, movedEmployee)
+    const visibleIdSet = new Set(visibleIds)
+    let reorderedIndex = 0
+    const updatedEmployees = employees.map((employee) => {
+      if (!visibleIdSet.has(employee.id)) return employee
+      return reorderedVisible[reorderedIndex++]
+    })
+    setEmployees(updatedEmployees)
+    saveEmployees(updatedEmployees)
+  }
+
   const restoreDefaults = () => {
     if (!window.confirm('Reset all staff records to the original defaults?')) return
     resetEmployees()
@@ -238,13 +258,13 @@ function Admin() {
             <button className="admin-primary-button" type="submit">{editingId ? 'Save employee' : 'Add employee'}</button>
           </form>
           <section className="admin-list-section">
-            <div className="admin-list-heading"><div><p className="eyebrow">Directory</p><h2>{employees.length} employees</h2></div><select value={filter} onChange={(event) => setFilter(event.target.value)} aria-label="Filter employees by department"><option>ALL DEPARTMENTS</option>{departments.map((department) => <option key={department}>{department}</option>)}</select></div>
-            <div className="admin-list">{visibleEmployees.map((employee) => <article className="admin-employee" key={employee.id}>{employee.image ? <img src={employee.image} alt="" /> : <div className="admin-avatar">{employee.name.slice(0, 1) || '?'}</div>}<div className="admin-employee-copy"><strong>{employee.name}</strong><span>{employee.role}</span><small>{employee.department}</small></div><div className="admin-row-actions"><button type="button" onClick={() => editEmployee(employee)}>Edit</button><button type="button" onClick={() => removeEmployee(employee.id)}>Remove</button></div></article>)}</div>
+            <div className="admin-list-heading"><div><p className="eyebrow">Directory</p><h2>{employees.length} employees</h2><small>Drag employees to reorder the current department.</small></div><select value={filter} onChange={(event) => setFilter(event.target.value)} aria-label="Filter employees by department"><option>ALL DEPARTMENTS</option>{departments.map((department) => <option key={department}>{department}</option>)}</select></div>
+            <div className="admin-list">{visibleEmployees.map((employee) => <article className={`admin-employee ${draggedEmployeeId === employee.id ? 'dragging' : ''}`} key={employee.id} draggable onDragStart={() => setDraggedEmployeeId(employee.id)} onDragOver={(event) => event.preventDefault()} onDrop={() => reorderEmployees(employee.id)} onDragEnd={() => setDraggedEmployeeId(null)}><span className="admin-drag-handle" aria-hidden="true">↕</span>{employee.image ? <img src={employee.image} alt="" /> : <div className="admin-avatar">{employee.name.slice(0, 1) || '?'}</div>}<div className="admin-employee-copy"><strong>{employee.name}</strong><span>{employee.role}</span><small>{employee.department}</small></div><div className="admin-row-actions"><button type="button" onClick={() => editEmployee(employee)}>Edit</button><button type="button" onClick={() => removeEmployee(employee.id)}>Remove</button></div></article>)}</div>
             <button className="admin-reset-button" type="button" onClick={restoreDefaults}>Reset default staff</button>
           </section>
         </div>
         <section className="admin-events-section">
-          <div className="admin-list-heading"><div><p className="eyebrow">Home page gallery</p><h2>{events.length} company events</h2></div><label className="admin-upload-button">Add image<input type="file" accept="image/*" onChange={addEventImage} /></label></div>
+          <div className="admin-list-heading"><div><p className="eyebrow">Home page gallery</p><h2>{events.length} Company Photos</h2></div><label className="admin-upload-button">Add image<input type="file" accept="image/*" onChange={addEventImage} /></label></div>
           <div className="admin-events-grid">{events.map((image, index) => <article className="admin-event" key={`${image}-${index}`}><img src={image} alt={`Company event ${index + 1}`} /><div><strong>Event {String(index + 1).padStart(2, '0')}</strong><label className="admin-replace-button">Replace<input type="file" accept="image/*" onChange={(event) => replaceEventImage(index, event)} /></label><button type="button" onClick={() => removeEventImage(index)}>Remove</button></div></article>)}</div>
           <button className="admin-reset-button" type="button" onClick={restoreEventDefaults}>Reset default events</button>
         </section>

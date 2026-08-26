@@ -1891,6 +1891,21 @@ h3 {
   border-bottom: 1px solid #d2dcdb;
 }
 
+.admin-employee[draggable="true"] {
+  cursor: grab;
+}
+
+.admin-employee.dragging {
+  opacity: .45;
+  background: #e8f1fb;
+}
+
+.admin-drag-handle {
+  color: #71818b;
+  font-size: 20px;
+  line-height: 1;
+}
+
 .admin-employee > img,
 .admin-avatar {
   width: 48px;
@@ -2229,4 +2244,11 @@ h3 {
     padding: 0 12px;
     font-size: 10px;
   }
+}
+
+.admin-list-heading small {
+  display: block;
+  margin-top: 5px;
+  color: #71818b;
+  font-size: 11px;
 }
