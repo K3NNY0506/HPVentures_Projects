@@ -1,26 +1,9 @@
 import { Fragment, useEffect, useState } from 'react'
 import logo from './images/logo.png'
 import Footer from './Footer.jsx'
-import itDepartmentImage from './images/it_department/mr. dpo.jpg'
-import rodImage from './images/it_department/rod.jpg'
-import roxanImage from './images/accounting_department/roxan.jpg'
-const departments = ['ALL DEPARTMENTS', 'LEADERSHIP', 'IT DEPARTMENT', 'FINANCE AND ACCOUNTING', 'HR DEPARTMENT', 'TAURUS CAFE']
+import { departments, loadEmployees } from './employeeData.js'
 
-const employees = [
-	{ name: 'Name Test', role: 'Chairman', department: 'LEADERSHIP', description: 'Guides the group with a long-term view of responsible growth, strong partnerships, and meaningful value creation.' },
-	{ name: 'Name Test', role: 'President', department: 'LEADERSHIP', description: 'Leads the company culture and day-to-day direction, keeping every business focused, agile, and people-first.' },
-	{ name: 'Adoneslim Dacalos Jr.', role: 'Data Protection Officer', department: 'IT DEPARTMENT', image: itDepartmentImage, description: 'Connects teams and operations so that good ideas become dependable, measurable results.' },
-	{ name: 'Name Test', role: 'Chief Financial Officer', department: 'FINANCE AND ACCOUNTING', description: 'Brings clarity and discipline to financial planning, risk management, and sustainable portfolio growth.' },
-	{ name: 'Name Test', role: 'Business Development', department: 'TAURUS CAFE', description: 'Builds relationships and explores opportunities that strengthen the group and its business interests.' },
-	{ name: 'Name Test', role: 'People & Culture', department: 'HR DEPARTMENT', description: 'Creates an environment where people can do thoughtful work, grow their skills, and feel part of the mission.' },
-	{ name: 'Rod Christian Camangyan', role: 'Web Developer', department: 'IT DEPARTMENT', image: rodImage, description: 'Helps the group use practical technology to work smarter, stay connected, and prepare for what is next.' },
-	{ name: 'Name Test', role: 'Corporate Affairs', department: 'HR DEPARTMENT', description: 'Supports trusted relationships with stakeholders and helps the group show up with integrity.' },
-	{ name: 'Roxan Beldesola', role: 'Investments', department: 'FINANCE AND ACCOUNTING', image: roxanImage, description: 'Studies markets and opportunities with patience, care, and a clear eye for long-term potential.' },
-	{ name: 'Name Test', role: 'Administration', department: 'TAURUS CAFE', description: 'Keeps the details moving smoothly and makes space for every team to do its best work.' },
-	{ name: 'Name Test', role: 'Web Developer', department: 'IT DEPARTMENT', description: 'Helps the group use practical technology to work smarter, stay connected, and prepare for what is next.' },
-	{ name: 'Name Test', role: 'Web Developer', department: 'IT DEPARTMENT', description: 'Helps the group use practical technology to work smarter, stay connected, and prepare for what is next.' },
-
-]
+const staffDepartments = ['ALL DEPARTMENTS', ...departments]
 
 
 function Staff() {
@@ -28,9 +11,13 @@ function Staff() {
 	const [menuOpen, setMenuOpen] = useState(false)
 	const [selectedEmployee, setSelectedEmployee] = useState(null)
 	const [selectedDepartment, setSelectedDepartment] = useState('ALL DEPARTMENTS')
+	const [employees, setEmployees] = useState(loadEmployees)
 
 	useEffect(() => {
 		window.scrollTo(0, 0)
+		const refreshEmployees = () => setEmployees(loadEmployees())
+		window.addEventListener('employees-updated', refreshEmployees)
+		return () => window.removeEventListener('employees-updated', refreshEmployees)
 	}, [])
 
 	const filteredEmployees = employees.filter((employee) => selectedDepartment === 'ALL DEPARTMENTS' || employee.department === selectedDepartment)
@@ -60,7 +47,7 @@ function Staff() {
 					<div><p className="eyebrow">Our Staff</p><h2>A Team With purpose.</h2></div>
 				</div>
 				<div className="category-selector" role="tablist" aria-label="Staff departments">
-					{departments.map((department) => <button className={selectedDepartment === department ? 'active' : ''} role="tab" aria-selected={selectedDepartment === department} key={department} onClick={() => { setSelectedDepartment(department); setSelectedEmployee(null) }}>{department}</button>)}
+					{staffDepartments.map((department) => <button className={selectedDepartment === department ? 'active' : ''} role="tab" aria-selected={selectedDepartment === department} key={department} onClick={() => { setSelectedDepartment(department); setSelectedEmployee(null) }}>{department}</button>)}
 				</div>
 				<div className="staff-layout">
 					<div className="employee-grid">

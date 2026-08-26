@@ -2,23 +2,9 @@ import { useEffect, useState } from 'react'
 import logo from './images/logo.png'
 import Groups from './groups.jsx'
 import Staff from './staff.jsx'
+import Admin from './Admin.jsx'
 import Footer from './Footer.jsx'
-import heroImageOne from './images/company_events/171-Enhanced-NR.jpg'
-import heroImageTwo from './images/company_events/187-Enhanced-NR.jpg'
-import heroImageThree from './images/company_events/268-Enhanced-NR.jpg'
-import heroImageFour from './images/company_events/280-Enhanced-NR.jpg'
-import heroImageFive from './images/company_events/491222308_1139710681502200_736987314008467945_n.jpg'
-import heroImageSix from './images/company_events/491339986_1139565998183335_2328618360663044858_n.jpg'
-import heroImageSeven from './images/company_events/492124794_1140941494712452_1302670891728671341_n.jpg'
-import heroImageEight from './images/company_events/8006541_DSC_0043.JPG'
-import heroImageNine from './images/company_events/8006541_DSC_0049_high.JPG'
-import heroImageTen from './images/company_events/dji_fly_20250901_114622_0014_1756701711042_photo.jpg'
-import heroImageEleven from './images/company_events/dji_fly_20250901_114758_0019_1756701704954_photo.jpg'
-
-const heroImages = [
-  heroImageOne, heroImageTwo, heroImageThree, heroImageFour, heroImageFive,
-  heroImageSix, heroImageSeven, heroImageEight, heroImageNine, heroImageTen, heroImageEleven,
-]
+import { defaultEvents, loadEvents } from './eventData.js'
 
 const categories = {
   'Investors Relations': [
@@ -58,19 +44,19 @@ const archiveEntries = {
     label: '#1',
     title: 'WHAT WE ENVISION.',
     text: 'We envisioned a Highly Valuable entity providing Excellent products and services to all our customers in all our business segments.',
-    image: heroImageEight,
+    image: defaultEvents[7],
   },
   MISSION: {
     label: '#2',
     title: 'WHAT WE STRIVE FOR.',
     text: 'Our Mission is embedded well within the goals and aspirations of all our business entities as they progress on their day to day business.',
-    image: heroImageNine,
+    image: defaultEvents[8],
   },
   'CORE VALUES': {
     label: '#3',
     title: 'WHAT STICKS US TOGETHER.',
     text: 'Innovation, Teamwork, Customer Service, Calculated Risk, Growth Oriented, Hard Work, Perseverance.',
-    image: heroImageTen,
+    image: defaultEvents[9],
   },
 }
 
@@ -91,6 +77,7 @@ function FeatureBanner({ image, title, text, reverse = false }) {
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [heroIndex, setHeroIndex] = useState(0)
+  const [heroImages, setHeroImages] = useState(loadEvents)
   const [categoryIndex, setCategoryIndex] = useState(0)
   const [categoryDirection, setCategoryDirection] = useState('next')
   const [archiveTab, setArchiveTab] = useState('VISION')
@@ -103,13 +90,22 @@ function App() {
     return <Staff />
   }
 
+  if (window.location.pathname === '/admin' || window.location.pathname === '/admin/') {
+    return <Admin />
+  }
+
   useEffect(() => {
+    const refreshEvents = () => setHeroImages(loadEvents())
+    window.addEventListener('events-updated', refreshEvents)
     const heroTimer = setInterval(() => {
-      setHeroIndex((currentIndex) => (currentIndex + 1) % heroImages.length)
+      setHeroIndex((currentIndex) => (currentIndex + 1) % Math.max(heroImages.length, 1))
     }, 5000)
 
-    return () => clearInterval(heroTimer)
-  }, [])
+    return () => {
+      clearInterval(heroTimer)
+      window.removeEventListener('events-updated', refreshEvents)
+    }
+  }, [heroImages.length])
 
   const activeCategory = categoryNames[categoryIndex]
   const visibleCards = categories[activeCategory]
@@ -162,7 +158,7 @@ function App() {
       </section>
 
       <FeatureBanner
-        image={heroImageFour}
+        image={heroImages[3] || defaultEvents[3]}
         title="People who build progress."
         text="Our work is made possible by the people, partnerships, and communities that move every idea forward."
       />
