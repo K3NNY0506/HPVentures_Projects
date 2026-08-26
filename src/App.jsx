@@ -93,7 +93,7 @@ function App() {
   const visibleCards = categories[activeCategory]
 
   const moveCategory = (direction) => {
-    document.getElementById('services')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    document.getElementById('the-team')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     setCategoryDirection(direction > 0 ? 'next' : 'previous')
     setCategoryIndex((currentIndex) => (currentIndex + direction + categoryNames.length) % categoryNames.length)
   }
@@ -104,7 +104,7 @@ function App() {
         <a className="brand" href="/" aria-label="HP Ventures home"><img className="brand-logo" src={logo} alt="HP Ventures" /></a>
         <button className="menu-toggle" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /> <span /> <span /></button>
         <div className={menuOpen ? 'nav-links open' : 'nav-links'}>
-          {['About us', 'Groups', 'Services', 'Projects', 'Contacts'].map((item) => <a href={item === 'Groups' ? '/groups' : `#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>) }
+          {['About us', 'Groups', 'The Team', 'Projects', 'Contacts'].map((item) => <a href={item === 'Groups' ? '/groups' : item === 'The Team' ? '/staff' : `#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>) }
         </div>
         <a className="phone-link" href="tel:(032) 343-9651 "><span aria-hidden="true">☎</span> (032) 343-9651 </a>
       </nav>
@@ -114,7 +114,7 @@ function App() {
         <div className="hero-copy">
           <h1>Emancipating of<br />Quality and Quantifiable Investments<span>.</span></h1>
           <div className="hero-actions">
-            <a className="primary-action" href="#contacts">Request a quote</a><a className="secondary-action" href="#services">Learn more</a>
+            <a className="primary-action" href="#contacts">Request a quote</a><a className="secondary-action" href="#the-team">Learn more</a>
           </div>
         </div>
       </section>
@@ -145,7 +145,7 @@ function App() {
         text="Our work is made possible by the people, partnerships, and communities that move every idea forward."
       />
 
-      <section className="workspace-section" id="services">
+      <section className="workspace-section" id="the-team">
         <div className="section-heading">
           <div>
             <p className="eyebrow"><big>What we do</big></p><h2>{activeCategory}</h2>
