@@ -2182,11 +2182,15 @@ h3 {
   white-space: nowrap;
 }
 
-.category-selector button:hover,
-.category-selector button.active {
+.category-selector button:hover {
   border-color: #cf3d43;
   background: #fff;
   color: #a12828;
+}
+.category-selector button.active {
+  border-color: #1b74da;
+  background: #1b74da;
+  color: #ffffff;
 }
 
 @media (max-width: 700px) {
