@@ -1,4 +1,4 @@
-import HPV_LOGO_WHITE from './images/HPV_LOGO_WHITE.png'
+import HPV_LOGO_WHITE from './images/company_events/HPV_LOGO_WHITE.png'
 
 const footerColumns = [
   { title: 'Company', links: ['About us', 'Groups', 'Investors', 'Suppliers', 'Newsroom'] },

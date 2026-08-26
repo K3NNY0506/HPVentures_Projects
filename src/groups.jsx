@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import logo from './images/logo.png'
 import Footer from './Footer.jsx'
-import groupsHeroImage from './images/Image_20260825_140643_663.jpeg'
+import groupsHeroImage from './images/company_events/Image_20260825_140643_663.jpeg'
 
 const groupItems = [
 	{ number: '01', name: 'Infovision Research Systems', type: 'Outsourcing Services', description: 'A leading provider of research and business process solutions built around dependable service.' },
@@ -25,7 +25,7 @@ function Groups() {
 				<a className="brand" href="/" aria-label="HP Ventures home"><img className="brand-logo" src={logo} alt="HP Ventures" /></a>
 				<button className="menu-toggle" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /> <span /> <span /></button>
 				<div className={menuOpen ? 'nav-links open' : 'nav-links'}>
-					{['About us', 'Groups', 'Services', 'Projects', 'Contacts'].map((item) => <a className={item === 'Groups' ? 'active' : ''} href={item === 'Groups' ? '/groups' : `/#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>)}
+					{['About us', 'Groups', 'The Team', 'Projects', 'Contacts'].map((item) => <a href={item === 'Groups' ? '/groups' : item === 'The Team' ? '/staff' : `#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>) }
 				</div>
 				<a className="phone-link" href="tel:(032) 343-9651"><span aria-hidden="true">☎</span> (032) 343-9651</a>
 			</nav>
