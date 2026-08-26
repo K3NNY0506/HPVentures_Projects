@@ -1,6 +1,18 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import logo from './images/logo.png'
 import Footer from './Footer.jsx'
+import employeeImageOne from './images/171-Enhanced-NR.jpg'
+import employeeImageTwo from './images/187-Enhanced-NR.jpg'
+import employeeImageThree from './images/268-Enhanced-NR.jpg'
+import employeeImageFour from './images/280-Enhanced-NR.jpg'
+import employeeImageFive from './images/491222308_1139710681502200_736987314008467945_n.jpg'
+import employeeImageSix from './images/491339986_1139565998183335_2328618360663044858_n.jpg'
+import employeeImageSeven from './images/492124794_1140941494712452_1302670891728671341_n.jpg'
+import employeeImageEight from './images/8006541_DSC_0043.JPG'
+import employeeImageNine from './images/8006541_DSC_0049_high.JPG'
+import employeeImageTen from './images/dji_fly_20250901_114622_0014_1756701711042_photo.jpg'
+
+const employeeImages = [employeeImageOne, employeeImageTwo, employeeImageThree, employeeImageFour, employeeImageFive, employeeImageSix, employeeImageSeven, employeeImageEight, employeeImageNine, employeeImageTen]
 
 const employees = [
 	{ name: 'Name Test', role: 'Chairman', description: 'Guides the group with a long-term view of responsible growth, strong partnerships, and meaningful value creation.' },
@@ -24,6 +36,12 @@ function Staff() {
 		window.scrollTo(0, 0)
 	}, [])
 
+	const employeeRows = Array.from({ length: Math.ceil(employees.length / 5) }, (_, rowIndex) => {
+		const rowEmployees = employees.slice(rowIndex * 5, rowIndex * 5 + 5).map((employee, offset) => ({ employee, index: rowIndex * 5 + offset }))
+		const selectedInRow = rowEmployees.find(({ index }) => index === selectedEmployee)
+		return selectedInRow ? [selectedInRow, ...rowEmployees.filter(({ index }) => index !== selectedEmployee)] : rowEmployees
+	})
+
 	return (
 		<main className="site-shell staff-page">
 			<nav className="topbar" aria-label="Primary navigation">
@@ -46,14 +64,21 @@ function Staff() {
 				</div>
 				<div className="staff-layout">
 					<div className="employee-grid">
-						{employees.map((employee, index) => <button className={`employee-card ${selectedEmployee?.name === employee.name ? 'selected' : ''}`} key={employee.name} onClick={() => setSelectedEmployee(employee)} aria-pressed={selectedEmployee?.name === employee.name}>
-							<span className="employee-number">{String(index + 1).padStart(2, '0')}</span>
-							<strong>{employee.name}</strong>
-							<span>{employee.role}</span>
-						</button>)}
-					</div>
-					<div className={`employee-detail ${selectedEmployee ? 'visible' : ''}`} aria-live="polite">
-						{selectedEmployee ? <><p className="eyebrow">Profile {String(employees.indexOf(selectedEmployee) + 1).padStart(2, '0')}</p><h3>{selectedEmployee.name}</h3><p className="detail-role">{selectedEmployee.role}</p><p>{selectedEmployee.description}</p></> : <p className="detail-placeholder">Select a profile to view their story.</p>}
+						{employeeRows.map((row, rowIndex) => <div className={`employee-row ${selectedEmployee !== null && Math.floor(selectedEmployee / 5) === rowIndex ? 'has-selection' : ''}`} key={rowIndex}>
+							{row.map(({ employee, index }) => <Fragment key={`${employee.name}-${index}`}>
+								<button className={`employee-card ${selectedEmployee === index ? 'selected' : ''}`} style={{ backgroundImage: `url("${employeeImages[index]}")` }} onClick={() => setSelectedEmployee(selectedEmployee === index ? null : index)} aria-pressed={selectedEmployee === index}>
+									<span className="employee-number">{String(index + 1).padStart(2, '0')}</span>
+									<strong>{employee.name}</strong>
+									<span>{employee.role}</span>
+								</button>
+								{selectedEmployee === index && <div className="employee-detail visible" aria-live="polite">
+								<p className="eyebrow">Profile {String(selectedEmployee + 1).padStart(2, '0')}</p>
+								<h3>{employees[selectedEmployee].name}</h3>
+								<p className="detail-role">{employees[selectedEmployee].role}</p>
+								<p>{employees[selectedEmployee].description}</p>
+								</div>}
+							</Fragment>)}
+						</div>)}
 					</div>
 				</div>
 			</section>
