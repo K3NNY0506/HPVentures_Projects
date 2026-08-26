@@ -53,6 +53,27 @@ const categories = {
 
 const categoryNames = Object.keys(categories)
 
+const archiveEntries = {
+  VISION: {
+    label: '#1',
+    title: 'WHAT WE ENVISION.',
+    text: 'We envisioned a Highly Valuable entity providing Excellent products and services to all our customers in all our business segments.',
+    image: heroImageEight,
+  },
+  MISSION: {
+    label: '#2',
+    title: 'WHAT WE STRIVE FOR.',
+    text: 'Our Mission is embedded well within the goals and aspirations of all our business entities as they progress on their day to day business.',
+    image: heroImageNine,
+  },
+  'CORE VALUES': {
+    label: '#3',
+    title: 'WHAT STICKS US TOGETHER.',
+    text: 'Innovation, Teamwork, Customer Service, Calculated Risk, Growth Oriented, Hard Work, Perseverance.',
+    image: heroImageTen,
+  },
+}
+
 function FeatureBanner({ image, title, text, reverse = false }) {
   return (
     <section className={`feature-banner ${reverse ? 'reverse' : ''}`}>
@@ -72,6 +93,7 @@ function App() {
   const [heroIndex, setHeroIndex] = useState(0)
   const [categoryIndex, setCategoryIndex] = useState(0)
   const [categoryDirection, setCategoryDirection] = useState('next')
+  const [archiveTab, setArchiveTab] = useState('VISION')
 
   if (window.location.pathname === '/groups' || window.location.pathname === '/groups/') {
     return <Groups />
@@ -160,6 +182,24 @@ function App() {
           {visibleCards.map((card, index) => <article className="project-card" key={card.title}><span>{String(index + 1).padStart(2, '0')}</span><h3>{card.title}</h3><p>{card.text}</p></article>)}
         </div>
         
+      </section>
+
+      <section className="archive-section" id="mission-vision-values">
+        <div className="archive-heading">
+          <p className="archive-kicker">The HP Group / Our foundation</p>
+          <h2>What We Believe<span>.</span></h2>
+        </div>
+        <div className="archive-tabs" role="tablist" aria-label="Mission, vision and core values">
+          {Object.keys(archiveEntries).map((tab) => <button className={archiveTab === tab ? 'active' : ''} role="tab" aria-selected={archiveTab === tab} key={tab} onClick={() => setArchiveTab(tab)}>{tab}</button>)}
+        </div>
+        <div className="archive-panel">
+          <div className="archive-copy">
+            <p className="archive-file">{archiveEntries[archiveTab].label}</p>
+            <h3>{archiveEntries[archiveTab].title}</h3>
+            <p>{archiveEntries[archiveTab].text}</p>
+          </div>
+          <div className="archive-image" style={{ backgroundImage: `url("${archiveEntries[archiveTab].image}")` }} role="img" aria-label={archiveTab} />
+        </div>
       </section>
 
 
