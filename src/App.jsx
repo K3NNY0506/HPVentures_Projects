@@ -182,7 +182,8 @@ function App() {
 
       <section className="companies-partners-section">
         <div className="logo-ticker-section">
-          <p className="logo-ticker-heading">Companies &amp; Partners</p>
+          <p className="logo-ticker-heading">Our Partners</p>
+          <p className="logo-ticker-subheading">We work closely with trusted partners to deliver meaningful value,<br></br> foster sustainable growth, and build long-term <br></br> success through strong collaboration and shared goals.</p>
           <div className="logo-ticker-track-wrapper">
             <div className="logo-ticker-track">
               {[...(groupsList.length ? groupsList : defaultGroups), ...(groupsList.length ? groupsList : defaultGroups), ...(groupsList.length ? groupsList : defaultGroups)].map((item, idx) => (

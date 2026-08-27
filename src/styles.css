@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=Poppins:wght@300;400;500;600;700&display=swap');
 
 
 /* =========================================================
@@ -394,13 +394,22 @@ h1 span {
 .logo-ticker-heading {
   margin-top: 0;
   margin-bottom: 30px;
-  color: #d42929;
-  text-align: center;
+  color: #1b456d;
+  text-align: left;
 
-  font: 300 24px / 1.2 'Barlow', sans-serif;
-  letter-spacing: 0.04em;
-  font-size: 30px;
-  font-weight: 400;
+  font: 500 60px / 1.2 'Poppins', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.logo-ticker-subheading {
+  margin-top: 0;
+  margin-bottom: 30px;
+  color: #1b456d;
+  text-align: left;
+  text-align: justify;
+
+  font: 200 18px / 1.2 'Poppins', sans-serif;
+  letter-spacing: -0.02em;
 }
 
 .logo-ticker-track-wrapper {
@@ -1032,7 +1041,7 @@ h3 {
 }
 
 .companies-partners-section {
-  padding: 0px 13.7% 40px;
+  padding: 20px 4.7% 40px;
   background: #f4f6f5;
 }
 
