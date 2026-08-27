@@ -61,6 +61,7 @@ function App() {
   const [categoryDirection, setCategoryDirection] = useState('next')
   const [archiveTab, setArchiveTab] = useState('VISION')
   const [content, setContent] = useState({ categories: defaultWhatWeDo, archive: defaultArchive })
+  const [groupsList, setGroupsList] = useState(defaultGroups)
 
   if (window.location.pathname === '/groups' || window.location.pathname === '/groups/') {
     return <Groups />
@@ -76,8 +77,11 @@ function App() {
 
   useEffect(() => {
     const refreshContent = async () => {
-      const [categories, archive] = await Promise.all([loadWhatWeDo(), loadArchiveEntries()])
+      const [categories, archive, loadedGroups] = await Promise.all([loadWhatWeDo(), loadArchiveEntries(), loadGroups()])
       setContent({ categories, archive: Object.fromEntries(Object.entries(defaultArchive).map(([key, entry]) => [key, { ...entry, ...archive[key] }])) })
+      if (loadedGroups && loadedGroups.length) {
+        setGroupsList(loadedGroups)
+      }
     }
     window.addEventListener('site-content-updated', refreshContent)
     const refreshEvents = async () => setHeroImages(await loadEvents())
@@ -125,6 +129,7 @@ function App() {
       </section>
 
       <section className="workspace-section" id="about-us">
+        <div className="about-orange-shape" aria-hidden="true" />
         <div className="section-heading">
           <div>
             <p className="eyebrow"><big>About Us</big></p><h2>The HP Group</h2>
@@ -134,13 +139,13 @@ function App() {
           </div>
         </div>
         <div>
-          <p> The Group aims to nurture the key strengths of each individual under the umbrella with the aim to the enhancement and development of each person's skills and capabilities, exudes enough confidence, highlighting each and everyone's worh while valuing the synergy and interoperatability within our key business points.</p>
+          <p style={{ textAlign: "justify" }}> The Group aims to nurture the key strengths of each individual under the umbrella with the aim to the enhancement and development of each person's skills and capabilities, exudes enough confidence, highlighting each and everyone's worh while valuing the synergy and interoperatability within our key business points.</p>
           
-          <p>Our strategy is underlined in our determination to pursue growth from within while exploring the business opportunities under the framework of justice and equity.</p>
+          <p style={{ textAlign: "justify" }} >Our strategy is underlined in our determination to pursue growth from within while exploring the business opportunities under the framework of justice and equity.</p>
           
-          <p>We put emphasis in the Value of our people whom we considered our key assets. We invest accordingly with our stakeholders best interest in mind. We put Value in every trust and confidence our stakeholders gave us.</p>
+          <p style={{ textAlign: "justify" }}>We put emphasis in the Value of our people whom we considered our key assets. We invest accordingly with our stakeholders best interest in mind. We put Value in every trust and confidence our stakeholders gave us.</p>
           
-          <p>We move towards Excellence in everything we do in a timely and orderly fashion.</p>
+          <p style={{ textAlign: "justify" }}>We move towards Excellence in everything we do in a timely and orderly fashion.</p>
         </div>
 
       </section>
@@ -165,7 +170,25 @@ function App() {
         <div className={`project-grid category-slide ${categoryDirection}`} key={categoryIndex}>
           {visibleCards.map((card, index) => <article className="project-card" key={card.title}><span>{String(index + 1).padStart(2, '0')}</span><h3>{card.title}</h3><p>{card.text}</p></article>)}
         </div>
-        
+      </section>
+
+      <section className="companies-partners-section">
+        <div className="logo-ticker-section">
+          <p className="logo-ticker-heading">Companies &amp; Partners</p>
+          <div className="logo-ticker-track-wrapper">
+            <div className="logo-ticker-track">
+              {[...(groupsList.length ? groupsList : defaultGroups), ...(groupsList.length ? groupsList : defaultGroups), ...(groupsList.length ? groupsList : defaultGroups)].map((item, idx) => (
+                <div key={idx} className="logo-ticker-item">
+                  {item.logo ? (
+                    <img src={item.logo} alt={item.name} />
+                  ) : (
+                    <span>{item.name}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className="archive-section" id="mission-vision-values">
@@ -193,26 +216,13 @@ function App() {
         </div>
       </section>
 
-
+      
       <Footer />
     </main>
   )
 }
 
 export default App
-{/* <div className="logo-ticker-section">
-          <p className="logo-ticker-heading">Companies &amp; Partners</p>
-          <div className="logo-ticker-track-wrapper">
-            <div className="logo-ticker-track">
-              {defaultGroups.concat(defaultGroups).concat(defaultGroups).map((item, idx) => (
-                <div key={idx} className="logo-ticker-item">
-                  {item.logo ? (
-                    <img src={item.logo} alt={item.name} />
-                  ) : (
-                    <span>{item.name}</span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div> */}
+
+
+  

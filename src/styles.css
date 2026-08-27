@@ -319,9 +319,22 @@ h1 span {
 
 .workspace-section {
   padding: 70px 13.7%;
-
+  
   background: #f4f6f5;
   color: #062337;
+}
+
+#about-us {
+  position: relative;
+  overflow: hidden;
+}
+
+
+
+#about-us > * {
+  position: relative;
+  z-index: 2;
+  margin-right: 350px;
 }
 
 /* =========================================================
@@ -330,7 +343,7 @@ h1 span {
 
 
 .logo-ticker-heading {
-  margin-top: 30px;
+  margin-top: 0;
   margin-bottom: 30px;
   color: #d42929;
   text-align: center;
@@ -338,13 +351,14 @@ h1 span {
   font: 300 24px / 1.2 'Barlow', sans-serif;
   letter-spacing: 0.04em;
   font-size: 30px;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .logo-ticker-track-wrapper {
   position: relative;
   width: 100%;
   overflow: hidden;
+  height: 150px;
 
   /* Soft fade gradient edges on left and right */
   mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
@@ -356,6 +370,7 @@ h1 span {
   align-items: center;
   gap: 70px;
   width: max-content;
+  margin-top: 40px;
   animation: logo-scroll 25s linear infinite;
 }
 
@@ -372,7 +387,7 @@ h1 span {
 }
 
 .logo-ticker-item img {
-  max-height: 48px;
+  max-height: 80px;
   max-width: 150px;
   object-fit: contain;
   transition: filter 0.3s ease, transform 0.3s ease;
@@ -741,7 +756,7 @@ h3 {
 
 .archive-section {
   padding: 72px 2.7% 82px;
-  background: #ffffff;
+  background: #f4f6f5;
   color: #111;
 }
 
@@ -909,6 +924,68 @@ h3 {
   to { opacity: 1; transform: scale(1); }
 }
 
+
+/* =========================================================
+   RIBBON BANNER SEPARATOR & COMPANIES SECTION
+   ========================================================= */
+
+.ribbon-banner-separator {
+  position: relative;
+  width: 100%;
+  padding: 16px 0;
+  overflow: hidden;
+  background: #062337;
+  border-top: 2px solid #ff5a3d;
+  border-bottom: 2px solid #ff5a3d;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4), 0 4px 18px rgba(0, 0, 0, 0.12);
+  z-index: 5;
+}
+
+.ribbon-banner-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: ribbon-scroll 35s linear infinite;
+}
+
+.ribbon-banner-track:hover {
+  animation-play-state: paused;
+}
+
+.ribbon-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  padding-right: 36px;
+  white-space: nowrap;
+}
+
+.ribbon-banner-content span {
+  color: #ffffff;
+  font: 700 13px 'Barlow', sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.ribbon-banner-content .ribbon-accent {
+  color: #f6c03c;
+  font: 800 15px 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.18em;
+}
+
+@keyframes ribbon-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.companies-partners-section {
+  padding: 0px 13.7% 40px;
+  background: #f4f6f5;
+}
 
 /* =========================================================
    GROUPS PAGE
@@ -1567,6 +1644,14 @@ h3 {
     padding: 55px 24px;
   }
 
+  .about-orange-shape {
+    width: 130px;
+    height: 170px;
+    left: 0;
+    border-radius: 0 0 70px 70px;
+    opacity: 0.5;
+  }
+
   .section-heading {
     align-items: start;
     flex-direction: column;
@@ -1674,6 +1759,10 @@ h3 {
     border-width: 2px;
     border-radius: 12px;
     box-shadow: 0 0 0 6px #111;
+  }
+
+  .companies-partners-section {
+    padding: 0px 24px 60px;
   }
 
 

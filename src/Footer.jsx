@@ -20,6 +20,22 @@ function Footer() {
         </div>
         {footerColumns.map((column) => <div className="footer-column" key={column.title}><h3>{column.title}</h3>{column.links.map((link) => <a href={`#${link.toLowerCase().replaceAll(' ', '-')}`} key={link}>{link}</a>)}</div>)}
       </div>
+
+<div className="ribbon-banner-separator" aria-hidden="true">
+        <div className="ribbon-banner-track">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="ribbon-banner-content">
+              <span>✦ EXCELLENCE &amp; INTEGRITY</span>
+              <span className="ribbon-accent">HP VENTURES GROUP</span>
+              <span>✦ VALUE &amp; GROWTH</span>
+              <span className="ribbon-accent">EST. 2014</span>
+              <span>✦ INNOVATION &amp; TEAMWORK</span>
+              <span className="ribbon-accent">BUILT ON TRUST</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </footer>
   )
 }
