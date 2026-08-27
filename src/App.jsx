@@ -5,7 +5,7 @@ import Staff from './staff.jsx'
 import Admin from './Admin.jsx'
 import Footer from './Footer.jsx'
 import { defaultEvents, loadEvents } from './eventData.js'
-import { defaultArchiveEntries, defaultWhatWeDo, loadArchiveEntries, loadWhatWeDo } from './siteContent.js'
+import { defaultArchiveEntries, defaultGroups, defaultWhatWeDo, loadArchiveEntries, loadGroups, loadWhatWeDo } from './siteContent.js'
 
 const defaultArchive = Object.fromEntries(Object.entries(defaultArchiveEntries).map(([key, entry], index) => [key, { ...entry, image: defaultEvents[index + 7] }]))
 
@@ -20,6 +20,36 @@ function FeatureBanner({ image, title, text, reverse = false }) {
         <a className="feature-link" href="/staff">Discover more <span>→</span></a>
       </div>
     </section>
+  )
+}
+
+function WordScroller({ text }) {
+  const words = text
+    .split(',')
+    .map((item) => item.trim().replace(/\.$/, '').toUpperCase())
+    .filter(Boolean)
+
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  useEffect(() => {
+    setCurrentIndex(0)
+    if (words.length <= 1) return
+
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % words.length)
+    }, 2200)
+
+    return () => clearInterval(timer)
+  }, [text])
+
+  if (words.length === 0) return null
+
+  return (
+    <span className="archive-word-scroller-box">
+      <span key={currentIndex} className="archive-word-scroller-item">
+        {words[currentIndex]}
+      </span>
+    </span>
   )
 }
 
@@ -79,7 +109,7 @@ function App() {
         <a className="brand" href="/" aria-label="HP Ventures home"><img className="brand-logo" src={logo} alt="HP Ventures" /></a>
         <button className="menu-toggle" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /> <span /> <span /></button>
         <div className={menuOpen ? 'nav-links open' : 'nav-links'}>
-          {['About us', 'Groups', 'The Team', 'Contacts'].map((item) => <a href={item === 'Groups' ? '/groups' : item === 'The Team' ? '/staff' : `#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>) }
+          {['About us', 'Groups', 'The Team', 'Placeholder'].map((item) => <a href={item === 'Groups' ? '/groups' : item === 'The Team' ? '/staff' : `#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>) }
         </div>
         <a className="phone-link" href="tel:(032) 343-9651 "><span aria-hidden="true">☎</span> (032) 343-9651 </a>
       </nav>
@@ -89,7 +119,7 @@ function App() {
         <div className="hero-copy">
           <h1>Emancipating of<br />Quality and Quantifiable Investments<span>.</span></h1>
           <div className="hero-actions">
-            <a className="primary-action" href="#contacts">Request a quote</a><a className="secondary-action" href="#the-team">Learn more</a>
+            <a className="primary-action" href="#placeholder">Request a quote</a><a className="secondary-action" href="#the-team">Learn more</a>
           </div>
         </div>
       </section>
@@ -112,6 +142,7 @@ function App() {
           
           <p>We move towards Excellence in everything we do in a timely and orderly fashion.</p>
         </div>
+
       </section>
 
       <FeatureBanner
@@ -145,11 +176,18 @@ function App() {
         <div className="archive-tabs" role="tablist" aria-label="Mission, vision and core values">
           {Object.keys(content.archive).map((tab) => <button className={archiveTab === tab ? 'active' : ''} role="tab" aria-selected={archiveTab === tab} key={tab} onClick={() => setArchiveTab(tab)}>{tab}</button>)}
         </div>
-        <div className="archive-panel">
+        <div className="archive-panel" key={archiveTab}>
           <div className="archive-copy">
             <p className="archive-file">{content.archive[archiveTab].label}</p>
             <h3>{content.archive[archiveTab].title}</h3>
-            <p>{content.archive[archiveTab].text}</p>
+
+            {content.archive[archiveTab].text.includes(',') ? (
+              <div className="archive-word-scroller-container">
+                <WordScroller text={content.archive[archiveTab].text} />
+              </div>
+            ) : (
+              <p>{content.archive[archiveTab].text}</p>
+            )}
           </div>
           <div className="archive-image" style={{ backgroundImage: `url("${content.archive[archiveTab].image}")` }} role="img" aria-label={archiveTab} />
         </div>
@@ -162,3 +200,19 @@ function App() {
 }
 
 export default App
+{/* <div className="logo-ticker-section">
+          <p className="logo-ticker-heading">Companies &amp; Partners</p>
+          <div className="logo-ticker-track-wrapper">
+            <div className="logo-ticker-track">
+              {defaultGroups.concat(defaultGroups).concat(defaultGroups).map((item, idx) => (
+                <div key={idx} className="logo-ticker-item">
+                  {item.logo ? (
+                    <img src={item.logo} alt={item.name} />
+                  ) : (
+                    <span>{item.name}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div> */}
