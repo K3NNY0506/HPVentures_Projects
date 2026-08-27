@@ -40,7 +40,15 @@ export async function saveEmployees(employees) {
   if (supabaseConfigured) {
     try {
       await supabase.from('employees').delete().not('id', 'is', null)
-      const { error } = await supabase.from('employees').insert(employees.map(({ image, ...employee }) => ({ ...employee, image_url: image || null })))
+      const payload = employees.map(({ image, ...employee }) => ({
+        id: String(employee.id),
+        name: employee.name || '',
+        role: employee.role || '',
+        department: employee.department || '',
+        description: employee.description || '',
+        image_url: image || null
+      }))
+      const { error } = await supabase.from('employees').insert(payload)
       if (error) console.error('Supabase employee save error:', error)
     } catch (err) {
       console.error('Supabase employee save exception:', err)
