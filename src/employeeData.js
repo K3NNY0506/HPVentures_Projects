@@ -38,9 +38,13 @@ export async function loadEmployees() {
 
 export async function saveEmployees(employees) {
   if (supabaseConfigured) {
-    await supabase.from('employees').delete().not('id', 'is', null)
-    const { error } = await supabase.from('employees').insert(employees.map(({ image, ...employee }) => ({ ...employee, image_url: image || null })))
-    if (error) throw error
+    try {
+      await supabase.from('employees').delete().not('id', 'is', null)
+      const { error } = await supabase.from('employees').insert(employees.map(({ image, ...employee }) => ({ ...employee, image_url: image || null })))
+      if (error) console.error('Supabase employee save error:', error)
+    } catch (err) {
+      console.error('Supabase employee save exception:', err)
+    }
   }
   window.localStorage.setItem(storageKey, JSON.stringify(employees))
   window.dispatchEvent(new Event('employees-updated'))

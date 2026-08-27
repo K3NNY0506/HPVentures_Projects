@@ -318,7 +318,7 @@ h1 span {
    ========================================================= */
 
 .workspace-section {
-  padding: 70px 13.7%;
+  padding: 70px 12.7%;
   
   background: #f4f6f5;
   color: #062337;
@@ -326,15 +326,64 @@ h1 span {
 
 #about-us {
   position: relative;
+  padding-bottom: 0;
   overflow: hidden;
 }
 
-
-
-#about-us > * {
+.about-container {
+  margin-top: -100px;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 0px;
+  align-items: end;
   position: relative;
   z-index: 2;
-  margin-right: 350px;
+}
+
+.about-copy {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 70px;
+}
+
+.about-subheading {
+  margin: 0;
+  color: #71818b;
+  font: 500 15px / 1.4 'Barlow', sans-serif;
+}
+
+.about-text p {
+  margin: 0 0 16px;
+  color: #062337;
+  font-size: 15px;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+.about-text p strong {
+  color: #d42929;
+  font-weight: 600;
+}
+
+.about-ceo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+  height: 100%;
+}
+
+.about-ceo-image {
+  max-width: auto;
+  max-height: 600px;
+  object-fit: cover;
+  object-position: top center;
+  filter: drop-shadow(0 12px 24px rgba(6, 35, 55, 0.15));
+  transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.about-ceo-wrapper:hover .about-ceo-image {
+  transform: scale(1.03) translateY(-4px);
 }
 
 /* =========================================================
@@ -1131,7 +1180,7 @@ h3 {
 }
 
 .employee-card.selected {
-  animation: staff-selected-left .55s cubic-bezier(.22, .61, .36, 1) both;
+  animation: staff-selected-left .55s cubic-bezier(0.2, 0.2, 0.2, 0.2) both;
   will-change: transform;
 }
 
@@ -1240,7 +1289,7 @@ h3 {
   border-top: 4px solid #6b7073;
   background: #6b7073;
   color: #fff;
-  animation: staff-detail-in .55s cubic-bezier(.22, .61, .36, 1) both;
+  animation: staff-detail-in .55s cubic-bezier(.32, 0, 0, 0) both;
   will-change: transform, opacity;
 }
 
@@ -1642,6 +1691,19 @@ h3 {
 
   .workspace-section {
     padding: 55px 24px;
+  }
+
+  .about-container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .about-copy {
+    padding-bottom: 0;
+  }
+
+  .about-ceo-image {
+    max-height: 340px;
   }
 
   .about-orange-shape {

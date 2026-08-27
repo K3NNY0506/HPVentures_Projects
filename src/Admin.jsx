@@ -110,14 +110,18 @@ function Admin() {
     reader.readAsDataURL(file)
   }
 
-  const submitForm = (event) => {
+  const submitForm = async (event) => {
     event.preventDefault()
     if (!form.name.trim() || !form.role.trim()) return
     const updatedEmployees = editingId
       ? employees.map((employee) => employee.id === editingId ? { ...form, id: editingId, name: form.name.trim(), role: form.role.trim() } : employee)
       : [...employees, { ...form, id: `employee-${Date.now()}`, name: form.name.trim(), role: form.role.trim() }]
     setEmployees(updatedEmployees)
-    saveEmployees(updatedEmployees)
+    try {
+      await saveEmployees(updatedEmployees)
+    } catch (err) {
+      console.error('Error saving employees:', err)
+    }
     setForm(emptyEmployee)
     setEditingId(null)
   }
