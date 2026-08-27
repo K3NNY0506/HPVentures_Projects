@@ -964,7 +964,7 @@ h3 {
 }
 
 @keyframes archive-panel-in {
-  from { opacity: .65; transform: translateY(12px); }
+  from { opacity: .65; }
   to { opacity: 1; transform: translateY(0); }
 }
 
