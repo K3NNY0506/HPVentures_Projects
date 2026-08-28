@@ -1,20 +1,22 @@
 import { useEffect, useState } from 'react'
 import logo from './images/logo.png'
-import { departments, defaultEmployees, loadEmployees, resetEmployees, saveEmployees } from './employeeData.js'
+import { defaultEmployees, loadDepartments, loadEmployees, resetDepartments, resetEmployees, saveDepartments, saveEmployees } from './employeeData.js'
 import { defaultEvents, loadEvents, resetEvents, saveEvents } from './eventData.js'
 import { supabase, supabaseConfigured } from './supabaseClient.js'
 import { defaultArchiveEntries, defaultGroups, defaultWhatWeDo, loadArchiveEntries, loadGroups, loadWhatWeDo, saveSiteContent, resetSiteContent } from './siteContent.js'
 
-const emptyEmployee = { name: '', role: '', department: departments[0], description: '', image: '' }
+const createEmptyEmployee = (department = '') => ({ name: '', role: '', department, description: '', image: '' })
 
 function Admin() {
   const [authenticated, setAuthenticated] = useState(false)
   const [login, setLogin] = useState({ username: '', password: '' })
   const [loginError, setLoginError] = useState('')
+  const [departmentList, setDepartmentList] = useState(loadDepartments())
   const [employees, setEmployees] = useState([])
-  const [form, setForm] = useState(emptyEmployee)
+  const [form, setForm] = useState(createEmptyEmployee(loadDepartments()[0] || ''))
   const [editingId, setEditingId] = useState(null)
   const [filter, setFilter] = useState('ALL DEPARTMENTS')
+  const [departmentDraft, setDepartmentDraft] = useState('')
   const [draggedEmployeeId, setDraggedEmployeeId] = useState(null)
   const [events, setEvents] = useState([])
   const [whatWeDo, setWhatWeDo] = useState({})
@@ -91,14 +93,56 @@ function Admin() {
   useEffect(() => {
     const loadAdminContent = async () => {
       const [loadedEmployees, loadedEvents, loadedWhatWeDo, loadedArchive, loadedGroups] = await Promise.all([loadEmployees(), loadEvents(), loadWhatWeDo(), loadArchiveEntries(), loadGroups()])
+      const loadedDepartments = loadDepartments()
+      setDepartmentList(loadedDepartments)
       setEmployees(loadedEmployees)
       setEvents(loadedEvents)
       setWhatWeDo(loadedWhatWeDo)
       setArchiveEntries(loadedArchive)
       setGroups(loadedGroups)
+      setForm((currentForm) => ({ ...currentForm, department: loadedEmployees.some((employee) => employee.id === editingId) ? currentForm.department : loadedDepartments[0] || '' }))
     }
     loadAdminContent()
-  }, [])
+  }, [editingId])
+
+  const syncDepartments = (nextDepartments) => {
+    const cleanedDepartments = nextDepartments.map((department) => String(department).trim()).filter(Boolean)
+    const normalizedDepartments = cleanedDepartments.length ? cleanedDepartments : [...loadDepartments()]
+    const savedDepartments = saveDepartments(normalizedDepartments)
+    setDepartmentList(savedDepartments)
+    setForm((currentForm) => ({ ...currentForm, department: savedDepartments.includes(currentForm.department) ? currentForm.department : savedDepartments[0] || '' }))
+  }
+
+  const addDepartment = () => {
+    const nextDepartment = departmentDraft.trim()
+    if (!nextDepartment || departmentList.includes(nextDepartment)) return
+    syncDepartments([...departmentList, nextDepartment])
+    setDepartmentDraft('')
+  }
+
+  const renameDepartment = (oldName, nextName) => {
+    const trimmedName = nextName.trim()
+    if (!trimmedName || trimmedName === oldName) return
+    const nextDepartments = departmentList.map((department) => department === oldName ? trimmedName : department)
+    syncDepartments(nextDepartments)
+    setEmployees((currentEmployees) => currentEmployees.map((employee) => employee.department === oldName ? { ...employee, department: trimmedName } : employee))
+  }
+
+  const removeDepartment = (departmentName) => {
+    if (departmentList.length <= 1) return
+    const nextDepartments = departmentList.filter((department) => department !== departmentName)
+    const fallbackDepartment = nextDepartments[0]
+    syncDepartments(nextDepartments)
+    setEmployees((currentEmployees) => currentEmployees.map((employee) => employee.department === departmentName ? { ...employee, department: fallbackDepartment } : employee))
+    saveEmployees((employees || []).map((employee) => employee.department === departmentName ? { ...employee, department: fallbackDepartment } : employee))
+  }
+
+  const resetDepartmentList = () => {
+    const defaults = resetDepartments()
+    setDepartmentList(defaults)
+    setForm((currentForm) => ({ ...currentForm, department: defaults.includes(currentForm.department) ? currentForm.department : defaults[0] || '' }))
+    setEmployees((currentEmployees) => currentEmployees.map((employee) => ({ ...employee, department: defaults.includes(employee.department) ? employee.department : defaults[0] || '' })))
+  }
 
   const updateForm = (event) => setForm({ ...form, [event.target.name]: event.target.value })
 
@@ -122,7 +166,7 @@ function Admin() {
     } catch (err) {
       console.error('Error saving employees:', err)
     }
-    setForm(emptyEmployee)
+    setForm(createEmptyEmployee(departmentList[0] || ''))
     setEditingId(null)
   }
 
@@ -142,7 +186,7 @@ function Admin() {
 
   const cancelEdit = () => {
     setEditingId(null)
-    setForm(emptyEmployee)
+    setForm(createEmptyEmployee(departmentList[0] || ''))
   }
 
   const reorderEmployees = (targetId) => {
@@ -255,14 +299,19 @@ function Admin() {
             <div className="admin-form-heading"><h2>{editingId ? 'Edit employee' : 'Add employee'}</h2>{editingId && <button type="button" className="admin-text-button" onClick={cancelEdit}>Cancel</button>}</div>
             <label>Name<input name="name" value={form.name} onChange={updateForm} placeholder="Employee name" required /></label>
             <label>Position / Role<input name="role" value={form.role} onChange={updateForm} placeholder="Position or role" required /></label>
-            <label>Department<select name="department" value={form.department} onChange={updateForm}>{departments.map((department) => <option key={department}>{department}</option>)}</select></label>
+            <label>Department<select name="department" value={form.department} onChange={updateForm}>{departmentList.map((department) => <option key={department}>{department}</option>)}</select></label>
+            <div className="admin-department-editor">
+              <div className="admin-department-header"><h3>Departments</h3><button type="button" className="admin-text-button" onClick={resetDepartmentList}>Reset</button></div>
+              <div className="admin-department-list">{departmentList.map((department) => <div className="admin-department-row" key={department}><input value={department} onChange={(event) => renameDepartment(department, event.target.value)} /><button type="button" className="admin-text-button" onClick={() => removeDepartment(department)} disabled={departmentList.length <= 1}>Remove</button></div>)}</div>
+              <div className="admin-department-row admin-department-add"><input value={departmentDraft} onChange={(event) => setDepartmentDraft(event.target.value)} placeholder="New department name" /><button type="button" className="admin-primary-button admin-primary-button-compact" onClick={addDepartment}>Add</button></div>
+            </div>
             <label>Description<textarea name="description" value={form.description} onChange={updateForm} placeholder="Short employee description" rows="5" /></label>
             <label>Profile image<input type="file" accept="image/*" onChange={handleImage} /></label>
             <div className="admin-image-actions">{form.image && <><img src={form.image} alt="Selected profile preview" /><button type="button" className="admin-text-button" onClick={() => setForm({ ...form, image: '' })}>Remove image</button></>}</div>
             <button className="admin-primary-button" type="submit">{editingId ? 'Save employee' : 'Add employee'}</button>
           </form>
           <section className="admin-list-section">
-            <div className="admin-list-heading"><div><p className="eyebrow">Directory</p><h2>{employees.length} employees</h2><small>Drag employees to reorder the current department.</small></div><select value={filter} onChange={(event) => setFilter(event.target.value)} aria-label="Filter employees by department"><option>ALL DEPARTMENTS</option>{departments.map((department) => <option key={department}>{department}</option>)}</select></div>
+            <div className="admin-list-heading"><div><p className="eyebrow">Directory</p><h2>{employees.length} employees</h2><small>Drag employees to reorder the current department.</small></div><select value={filter} onChange={(event) => setFilter(event.target.value)} aria-label="Filter employees by department"><option>ALL DEPARTMENTS</option>{departmentList.map((department) => <option key={department}>{department}</option>)}</select></div>
             <div className="admin-list">{visibleEmployees.map((employee) => <article className={`admin-employee ${draggedEmployeeId === employee.id ? 'dragging' : ''}`} key={employee.id} draggable onDragStart={() => setDraggedEmployeeId(employee.id)} onDragOver={(event) => event.preventDefault()} onDrop={() => reorderEmployees(employee.id)} onDragEnd={() => setDraggedEmployeeId(null)}><span className="admin-drag-handle" aria-hidden="true">↕</span>{employee.image ? <img src={employee.image} alt="" /> : <div className="admin-avatar">{employee.name.slice(0, 1) || '?'}</div>}<div className="admin-employee-copy"><strong>{employee.name}</strong><span>{employee.role}</span><small>{employee.department}</small></div><div className="admin-row-actions"><button type="button" onClick={() => editEmployee(employee)}>Edit</button><button type="button" onClick={() => removeEmployee(employee.id)}>Remove</button></div></article>)}</div>
             <button className="admin-reset-button" type="button" onClick={restoreDefaults}>Reset default staff</button>
           </section>

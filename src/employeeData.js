@@ -3,7 +3,32 @@ import rodImage from './images/it_department/rod.jpg'
 import roxanImage from './images/accounting_department/roxan.jpg'
 import { supabase, supabaseConfigured } from './supabaseClient.js'
 
-export const departments = ['LEADERSHIP', 'IT DEPARTMENT', 'FINANCE AND ACCOUNTING', 'HR DEPARTMENT', 'TAURUS CAFE']
+export const defaultDepartments = ['LEADERSHIP', 'IT DEPARTMENT', 'FINANCE AND ACCOUNTING', 'HR DEPARTMENT', 'TAURUS CAFE']
+
+export function loadDepartments() {
+  try {
+    const savedDepartments = window.localStorage.getItem('hp-ventures-departments')
+    const departments = savedDepartments ? JSON.parse(savedDepartments) : defaultDepartments
+    if (!Array.isArray(departments) || !departments.length) return [...defaultDepartments]
+    return departments.map((department) => String(department).trim()).filter(Boolean)
+  } catch {
+    return [...defaultDepartments]
+  }
+}
+
+export function saveDepartments(departments) {
+  const sanitized = [...new Set((departments || []).map((department) => String(department).trim()).filter(Boolean))]
+  const nextDepartments = sanitized.length ? sanitized : [...defaultDepartments]
+  window.localStorage.setItem('hp-ventures-departments', JSON.stringify(nextDepartments))
+  return nextDepartments
+}
+
+export function resetDepartments() {
+  window.localStorage.removeItem('hp-ventures-departments')
+  return [...defaultDepartments]
+}
+
+export const departments = loadDepartments()
 
 export const defaultEmployees = [
   { id: 'employee-1', name: 'Name Test', role: 'Chairman', department: 'LEADERSHIP', description: 'Guides the group with a long-term view of responsible growth, strong partnerships, and meaningful value creation.' },
