@@ -14,15 +14,33 @@ function Staff() {
 	const [selectorOffset, setSelectorOffset] = useState(0)
 	const [selectorVisibleWidth, setSelectorVisibleWidth] = useState(0)
 	const [selectorContentWidth, setSelectorContentWidth] = useState(0)
+	const [headerScrolled, setHeaderScrolled] = useState(false)
 	const selectorRef = useRef(null)
 	const selectorTrackRef = useRef(null)
 
 	useEffect(() => {
 		window.scrollTo(0, 0)
-		const refreshEmployees = async () => setEmployees(await loadEmployees())
+		setSelectedDepartment('All')
+		const refreshEmployees = async () => {
+			const loadedEmployees = await loadEmployees()
+			setEmployees(loadedEmployees)
+			setSelectedDepartment('All')
+		}
 		refreshEmployees()
 		window.addEventListener('employees-updated', refreshEmployees)
-		return () => window.removeEventListener('employees-updated', refreshEmployees)
+
+		const updateHeaderState = () => {
+			const heroSection = document.querySelector('.staff-hero')
+			if (!heroSection) return
+			setHeaderScrolled(window.scrollY > heroSection.offsetTop + heroSection.offsetHeight - 90)
+		}
+
+		updateHeaderState()
+		window.addEventListener('scroll', updateHeaderState, { passive: true })
+		return () => {
+			window.removeEventListener('employees-updated', refreshEmployees)
+			window.removeEventListener('scroll', updateHeaderState)
+		}
 	}, [])
 
 	useEffect(() => {
@@ -70,6 +88,12 @@ function Staff() {
 	useEffect(() => {
 		const buttons = Array.from(selectorTrackRef.current?.querySelectorAll('button') || [])
 		if (!selectorVisibleWidth || !buttons.length) return
+
+		if (selectedDepartment === 'All') {
+			setSelectorOffset(0)
+			return
+		}
+
 		const center = selectorOffset + (selectorVisibleWidth / 2)
 		const centeredButton = buttons.reduce((closest, button) => {
 			const distance = Math.abs(button.offsetLeft + (button.offsetWidth / 2) - center)
@@ -87,13 +111,13 @@ function Staff() {
 
 	return (
 		<main className="site-shell staff-page">
-			<nav className="topbar" aria-label="Primary navigation">
+			<nav className={`topbar ${headerScrolled ? 'scrolled' : 'transparent'}`} aria-label="Primary navigation">
 				<a className="brand" href="/" aria-label="HP Ventures home"><img className="brand-logo" src={logo} alt="HP Ventures" /></a>
 				<button className="menu-toggle" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /> <span /> <span /></button>
 				<div className={menuOpen ? 'nav-links open' : 'nav-links'}>
-					{['About us', 'Groups', 'The Team', 'Contacts'].map((item) => <a href={item === 'Groups' ? '/groups' : item === 'The Team' ? '/staff' : `/#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>)}
+					{['About us', 'Groups', 'The Team', 'Careers'].map((item) => <a href={item === 'Groups' ? '/groups' : item === 'The Team' ? '/staff' : item === 'Careers' ? '/careers' : `/#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>)}
 				</div>
-				<a className="phone-link" href="tel:(032) 343-9651"><span aria-hidden="true">☎</span> (032) 343-9651</a>
+				<a className="phone-link" href="#"><span aria-hidden="true">☎</span> (032) 343-9651</a>
 			</nav>
 			<header className="staff-hero">
 				<p className="eyebrow">Our people</p>

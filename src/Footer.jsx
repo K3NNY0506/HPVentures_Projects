@@ -15,6 +15,7 @@ function Footer() {
         <div className="footer-brand-column">
           <img className="brand-logo-footer" src={HPV_LOGO_WHITE} alt="HP Ventures" />
           <p>HP Ventures Holding Company</p>
+          <p>HPV Corporate Center, A.S. Fortuna St. Bakilid, Mandaue City</p>
           <a href="mailto:info@hpobladorventures.com">info@hpobladorventures.com</a>
           <small>© 2026 HP Ventures</small>
         </div>

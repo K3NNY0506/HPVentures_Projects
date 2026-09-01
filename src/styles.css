@@ -58,10 +58,18 @@ button {
   align-items: center;
   justify-content: space-between;
 
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 10;
 
+  background: transparent;
+  box-shadow: none;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.topbar.scrolled {
   background: #fefeff;
   box-shadow: 0 2px 12px #0623371c;
 }
@@ -80,6 +88,15 @@ button {
 
   object-fit: contain;
   object-position: left center;
+  transition: filter 0.2s ease;
+}
+
+.topbar.transparent .brand-logo {
+  filter: brightness(0) invert(1);
+}
+
+.topbar.scrolled .brand-logo {
+  filter: none;
 }
 
 .brand-logo-footer {
@@ -106,6 +123,17 @@ button {
   font-size: 15px;
   font-weight: 600;
   text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.topbar.transparent .nav-links a,
+.topbar.transparent .phone-link {
+  color: #ffffff;
+}
+
+.topbar.scrolled .nav-links a,
+.topbar.scrolled .phone-link {
+  color: #000000;
 }
 
 .nav-links a:hover {
@@ -132,6 +160,14 @@ button {
   background: transparent;
 }
 
+.topbar.transparent .menu-toggle span {
+  background: #ffffff;
+}
+
+.topbar.scrolled .menu-toggle span {
+  background: #000000;
+}
+
 
 /* =========================================================
    HERO
@@ -139,10 +175,10 @@ button {
 
 .hero-section {
   min-height: 500px;
-  height: calc(100vh - 140px);
-  max-height: 630px;
+  height: 100vh;
+  max-height: none;
 
-  padding: 0 13.7%;
+  padding: 110px 13.7% 0;
 
   display: flex;
   align-items: center;
@@ -197,7 +233,7 @@ button {
   position: relative;
   z-index: 2;
 
-  margin-top: 100px;
+  margin-top: 0;
 }
 
 h1 {
@@ -342,12 +378,40 @@ h1 span {
   align-items: end;
   position: relative;
   z-index: 2;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.about-container.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .about-copy {
   display: flex;
   flex-direction: column;
   padding-bottom: 70px;
+  opacity: 0;
+  transform: translateX(-90px);
+  transition: opacity 0.8s ease 0.1s, transform 0.8s ease 0.1s;
+}
+
+.about-ceo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+  height: 100%;
+  opacity: 0;
+  transform: translateX(90px);
+  transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+}
+
+.about-container.is-visible .about-copy,
+.about-container.is-visible .about-ceo-wrapper {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .about-subheading {
@@ -367,14 +431,6 @@ h1 span {
 .about-text p strong {
   color: #d42929;
   font-weight: 600;
-}
-
-.about-ceo-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  position: relative;
-  height: 100%;
 }
 
 .about-ceo-image {
@@ -677,6 +733,14 @@ h3 {
   overflow: hidden;
 
   background: #d8e1e4;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.feature-banner.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .feature-image {
@@ -698,6 +762,25 @@ h3 {
 
   background: #cf3d43;
   color: #fff;
+  opacity: 0;
+  transform: translateX(120px);
+  transition: opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s;
+}
+
+.feature-banner.is-visible .feature-panel {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.feature-panel > * {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 0.6s ease 0.45s, transform 0.6s ease 0.45s;
+}
+
+.feature-banner.is-visible .feature-panel > * {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .feature-panel::before {
@@ -1072,6 +1155,20 @@ h3 {
   color: #fff;
 }
 
+.groups-page .topbar.transparent .nav-links a,
+.groups-page .topbar.transparent .phone-link,
+.groups-page .topbar.transparent .brand-logo {
+  color: #fff;
+  filter: brightness(0) invert(1);
+}
+
+.groups-page .topbar.scrolled .nav-links a,
+.groups-page .topbar.scrolled .phone-link,
+.groups-page .topbar.scrolled .brand-logo {
+  color: #000;
+  filter: none;
+}
+
 .groups-page .nav-links a.active {
   color: #f5ae13;
 }
@@ -1420,7 +1517,8 @@ h3 {
 }
 
 .groups-hero {
-  min-height: 430px;
+  min-height: 100vh;
+  height: 100vh;
 
   display: flex;
   flex-direction: column;
@@ -1456,6 +1554,173 @@ h3 {
 
   font-size: 17px;
   line-height: 1.5;
+}
+
+.careers-page {
+  background: #f4f6f5;
+  color: #062337;
+}
+
+.careers-hero {
+  min-height: 100vh;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 110px 13.7% 105px;
+
+  background-position: center;
+  background-size: cover;
+
+  color: #fff;
+}
+
+.careers-hero .eyebrow {
+  margin: 0 0 20px;
+}
+
+.careers-hero h1 {
+  margin: 0 0 20px;
+  font-size: clamp(58px, 8vw, 110px);
+}
+
+.careers-hero h1 span {
+  color: #f5ae13;
+}
+
+.careers-hero > p:last-child {
+  max-width: 480px;
+  margin: 0;
+  color: #e0e8ea;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.careers-content {
+  padding: 80px 10.7% 100px;
+  background: #f4f6f5;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.careers-content.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.careers-value-hero {
+  margin-bottom: 56px;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s;
+}
+
+.careers-content.is-visible .careers-value-hero {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.careers-value-hero h2 {
+  margin: 0;
+  color: #bb1c1c;
+  font: 500 clamp(58px, 7vw, 150px) / 0.92 'Barlow', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.careers-value-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 54px 60px;
+  align-items: start;
+}
+
+.career-value-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.career-value-item:nth-child(1) { transition-delay: 0.15s; }
+.career-value-item:nth-child(2) { transition-delay: 0.25s; }
+.career-value-item:nth-child(3) { transition-delay: 0.35s; }
+.career-value-item:nth-child(4) { transition-delay: 0.45s; }
+
+.careers-content.is-visible .career-value-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.career-value-item h3 {
+  margin: 0;
+  color: #244f88;
+  font: 500 clamp(24px, 2vw, 38px) / 1.08 'Poppins', sans-serif;
+  letter-spacing: -0.04em;
+}
+
+.career-value-item p {
+  margin: 0;
+  color: #062031;
+  font: 300 16px / 1.5 'Poppins', sans-serif;
+}
+
+.careers-overview {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 32px;
+  align-items: end;
+  margin-bottom: 48px;
+}
+
+.careers-overview h2 {
+  margin: 0;
+}
+
+.careers-overview > p:last-child {
+  margin: 0;
+  color: #414f5a;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.careers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.career-card {
+  padding: 28px 24px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 18px 30px rgba(6, 35, 55, 0.06);
+}
+
+.career-card span {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: #d42929;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.career-card h3 {
+  margin: 0 0 14px;
+  color: #062337;
+  font-size: 26px;
+}
+
+.career-card p {
+  margin: 0;
+  color: #4c5862;
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 

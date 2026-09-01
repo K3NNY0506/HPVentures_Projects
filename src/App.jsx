@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import logo from './images/logo.png'
 import ceoImage from './images/leadership/CEO_CROPPED (2).png'
 import Groups from './groups.jsx'
 import Staff from './staff.jsx'
+import Careers from './Careers.jsx'
 import Admin from './Admin.jsx'
 import Footer from './Footer.jsx'
 import { defaultEvents, loadEvents } from './eventData.js'
@@ -10,9 +11,9 @@ import { defaultArchiveEntries, defaultGroups, defaultWhatWeDo, loadArchiveEntri
 
 const defaultArchive = Object.fromEntries(Object.entries(defaultArchiveEntries).map(([key, entry], index) => [key, { ...entry, image: defaultEvents[index + 7] }]))
 
-function FeatureBanner({ image, title, text, reverse = false }) {
+function FeatureBanner({ image, title, text, reverse = false, isVisible = false, sectionRef }) {
   return (
-    <section className={`feature-banner ${reverse ? 'reverse' : ''}`}>
+    <section ref={sectionRef} className={`feature-banner ${reverse ? 'reverse' : ''} ${isVisible ? 'is-visible' : ''}`}>
       <div className="feature-image" style={{ backgroundImage: `url("${image}")` }} role="img" aria-label={title} />
       <div className="feature-panel">
         <p className="eyebrow">Featured</p>
@@ -63,6 +64,11 @@ function App() {
   const [archiveTab, setArchiveTab] = useState('VISION')
   const [content, setContent] = useState({ categories: defaultWhatWeDo, archive: defaultArchive })
   const [groupsList, setGroupsList] = useState(defaultGroups)
+  const [headerScrolled, setHeaderScrolled] = useState(false)
+  const [aboutVisible, setAboutVisible] = useState(false)
+  const [featureVisible, setFeatureVisible] = useState(false)
+  const aboutSectionRef = useRef(null)
+  const featureBannerRef = useRef(null)
 
   if (window.location.pathname === '/groups' || window.location.pathname === '/groups/') {
     return <Groups />
@@ -70,6 +76,10 @@ function App() {
 
   if (window.location.pathname === '/staff' || window.location.pathname === '/staff/') {
     return <Staff />
+  }
+
+  if (window.location.pathname === '/careers' || window.location.pathname === '/careers/') {
+    return <Careers />
   }
 
   if (window.location.pathname === '/infozadminz' || window.location.pathname === '/infozadminz/') {
@@ -91,10 +101,48 @@ function App() {
     refreshEvents()
     const heroTimer = setInterval(() => setHeroIndex((currentIndex) => (currentIndex + 1) % Math.max(heroImages.length, 1)), 5000)
 
+    const updateHeaderState = () => {
+      const heroSection = document.querySelector('.hero-section')
+      if (!heroSection) return
+      setHeaderScrolled(window.scrollY > heroSection.offsetTop + heroSection.offsetHeight - 90)
+    }
+
+    const aboutObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setAboutVisible(true)
+        }
+      },
+      { threshold: 0.2 }
+    )
+
+    const featureObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setFeatureVisible(true)
+        }
+      },
+      { threshold: 0.25 }
+    )
+
+    if (aboutSectionRef.current) {
+      aboutObserver.observe(aboutSectionRef.current)
+    }
+
+    if (featureBannerRef.current) {
+      featureObserver.observe(featureBannerRef.current)
+    }
+
+    updateHeaderState()
+    window.addEventListener('scroll', updateHeaderState, { passive: true })
+
     return () => {
       clearInterval(heroTimer)
+      aboutObserver.disconnect()
+      featureObserver.disconnect()
       window.removeEventListener('events-updated', refreshEvents)
       window.removeEventListener('site-content-updated', refreshContent)
+      window.removeEventListener('scroll', updateHeaderState)
     }
   }, [heroImages.length])
 
@@ -110,13 +158,13 @@ function App() {
 
   return (
     <main className="site-shell">
-      <nav className="topbar" aria-label="Primary navigation">
+      <nav className={`topbar ${headerScrolled ? 'scrolled' : 'transparent'}`} aria-label="Primary navigation">
         <a className="brand" href="/" aria-label="HP Ventures home"><img className="brand-logo" src={logo} alt="HP Ventures" /></a>
         <button className="menu-toggle" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /> <span /> <span /></button>
         <div className={menuOpen ? 'nav-links open' : 'nav-links'}>
-          {['About us', 'Groups', 'The Team', 'Placeholder'].map((item) => <a href={item === 'Groups' ? '/groups' : item === 'The Team' ? '/staff' : `#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>) }
+          {['About us', 'Groups', 'The Team', 'Careers'].map((item) => <a href={item === 'Groups' ? '/groups' : item === 'The Team' ? '/staff' : item === 'Careers' ? '/careers' : `#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>) }
         </div>
-        <a className="phone-link" href="tel:(032) 343-9651 "><span aria-hidden="true">☎</span> (032) 343-9651 </a>
+        <a className="phone-link" href="#"><span aria-hidden="true">☎</span> (032) 343-9651 </a>
       </nav>
 
       <section className="hero-section" id="#about-us">
@@ -124,14 +172,14 @@ function App() {
         <div className="hero-copy">
           <h1>Emancipating of<br />Quality and Quantifiable Investments<span>.</span></h1>
           <div className="hero-actions">
-            <a className="primary-action" href="#placeholder">Request a quote</a><a className="secondary-action" href="#the-team">Learn more</a>
+            <a className="primary-action" href="#Careers">Request a quote</a><a className="secondary-action" href="#the-team">Learn more</a>
           </div>
         </div>
       </section>
 
-      <section className="workspace-section" id="about-us">
+      <section className="workspace-section" id="about-us" ref={aboutSectionRef}>
         <div className="about-orange-shape" aria-hidden="true" />
-        <div className="about-container">
+        <div className={`about-container ${aboutVisible ? 'is-visible' : ''}`}>
           <div className="about-copy">
             <div className="section-heading">
               <div>
@@ -162,6 +210,8 @@ function App() {
         image={heroImages[3] || defaultEvents[3]}
         title="People who build progress."
         text="Our work is made possible by the people, partnerships, and communities that move every idea forward."
+        isVisible={featureVisible}
+        sectionRef={featureBannerRef}
       />
 
       <section className="workspace-section" id="the-team">

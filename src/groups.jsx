@@ -8,26 +8,48 @@ function Groups() {
 	const [menuOpen, setMenuOpen] = useState(false)
 	const [selectedCategory, setSelectedCategory] = useState('ALL GROUPS')
 	const [groupItems, setGroupItems] = useState([])
+	const [headerScrolled, setHeaderScrolled] = useState(false)
 	const categories = ['ALL GROUPS', ...new Set(groupItems.map((group) => group.category))]
 	const visibleGroups = selectedCategory === 'ALL GROUPS' ? groupItems : groupItems.filter((group) => group.category === selectedCategory)
 
 	useEffect(() => {
+		setSelectedCategory('ALL GROUPS')
+	}, [])
+
+	useEffect(() => {
 		window.scrollTo(0, 0)
-		const refreshGroups = async () => setGroupItems(await loadGroups())
+		setSelectedCategory('ALL GROUPS')
+		const refreshGroups = async () => {
+			const loadedGroups = await loadGroups()
+			setGroupItems(loadedGroups)
+			setSelectedCategory('ALL GROUPS')
+		}
 		refreshGroups()
 		window.addEventListener('site-content-updated', refreshGroups)
-		return () => window.removeEventListener('site-content-updated', refreshGroups)
+
+		const updateHeaderState = () => {
+			const heroSection = document.querySelector('.groups-hero')
+			if (!heroSection) return
+			setHeaderScrolled(window.scrollY > heroSection.offsetTop + heroSection.offsetHeight - 90)
+		}
+
+		updateHeaderState()
+		window.addEventListener('scroll', updateHeaderState, { passive: true })
+		return () => {
+			window.removeEventListener('site-content-updated', refreshGroups)
+			window.removeEventListener('scroll', updateHeaderState)
+		}
 	}, [])
 
 	return (
 		<main className="site-shell groups-page">
-			<nav className="topbar" aria-label="Primary navigation">
+			<nav className={`topbar ${headerScrolled ? 'scrolled' : 'transparent'}`} aria-label="Primary navigation">
 				<a className="brand" href="/" aria-label="HP Ventures home"><img className="brand-logo" src={logo} alt="HP Ventures" /></a>
 				<button className="menu-toggle" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /> <span /> <span /></button>
 				<div className={menuOpen ? 'nav-links open' : 'nav-links'}>
-					{['About us', 'Groups', 'The Team', 'Contacts'].map((item) => <a href={item === 'About us' ? '/#about-us' : item === 'Groups' ? '/groups' : item === 'The Team' ? '/staff' : `#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>) }
+					{['About us', 'Groups', 'The Team', 'Careers'].map((item) => <a href={item === 'About us' ? '/#about-us' : item === 'Groups' ? '/groups' : item === 'The Team' ? '/staff' : item === 'Careers' ? '/careers' : `#${item.toLowerCase().replace(' ', '-')}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>) }
 				</div>
-				<a className="phone-link" href="tel:(032) 343-9651"><span aria-hidden="true">☎</span> (032) 343-9651</a>
+				<a className="phone-link" href="#"><span aria-hidden="true">☎</span> (032) 343-9651</a>
 			</nav>
 
 			<header className="groups-hero" style={{ backgroundImage: `linear-gradient(90deg, #062337dd 0%, #06233799 52%, #06233744), url("${groupsHeroImage}")` }}>
