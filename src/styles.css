@@ -1723,6 +1723,80 @@ h3 {
   line-height: 1.6;
 }
 
+.careers-showcase {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 200px;
+  margin-top: 80px;
+}
+
+.careers-copy-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s;
+}
+
+.careers-content.is-visible .careers-copy-block {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.careers-mini-mark {
+  display: grid;
+  grid-template-columns: repeat(4, 10px);
+  gap: 7px;
+  width: fit-content;
+  margin-bottom: 28px;
+}
+
+.careers-mini-mark span {
+  display: block;
+  width: 8px;
+  height: 8px;
+  background: #1e1d1d;
+  border-radius: 1px;
+  opacity: 0.9;
+}
+
+.careers-copy-block h2 {
+  margin: 0 0 28px;
+  color: #1d1d2b;
+  font: 500 clamp(48px, 7vw, 96px) / .9 'Poppins', sans-serif;
+  letter-spacing: -0.05em;
+}
+
+.careers-copy-block p {
+  max-width: 560px;
+  margin: 0;
+  color: #5a5a6a;
+  font: 400 16px / 1.6 'Poppins', sans-serif;
+}
+
+.careers-image-panel {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.8s ease 0.25s, transform 0.8s ease 0.25s;
+}
+
+.careers-content.is-visible .careers-image-panel {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.careers-portrait {
+  width: 100%;
+  min-height: 560px;
+  border-radius: 36px;
+  background:
+    linear-gradient(rgba(0,0,0,0.04), rgba(0,0,0,0.04)),
+    url('./images/accounting_department/roxan.jpg') center / cover no-repeat;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
 
 /* =========================================================
    GROUPS LIST

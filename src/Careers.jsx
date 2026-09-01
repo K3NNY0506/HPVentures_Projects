@@ -20,7 +20,12 @@ function Careers() {
 
     const contentObserver = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) setContentVisible(true)
+        if (entry.isIntersecting) {
+          setContentVisible(false)
+          requestAnimationFrame(() => setContentVisible(true))
+        } else {
+          setContentVisible(false)
+        }
       },
       { threshold: 0.2 }
     )
@@ -62,23 +67,44 @@ function Careers() {
 
         <div className="careers-value-grid">
           <div className="career-value-item">
-            <h3>Entrepreneurial culture</h3>
-            <p>Work in a fast-moving environment where you can help build something meaningful from the ground up.</p>
+            <h3>Build from the start</h3>
+            <p>Join a dynamic team where you can roll up your sleeves and create something meaningful with real ownership and impact.</p>
           </div>
 
           <div className="career-value-item">
-            <h3>Practical learning and coaching</h3>
-            <p>Develop your skills through structured mentorship, peer guidance, and tailored growth opportunities.</p>
+            <h3>Learn and grow</h3>
+            <p>Get hands-on experience paired with expert mentorship that develops your skills and accelerates your career in ways that matter.</p>
           </div>
 
           <div className="career-value-item">
-            <h3>Engaging, high-impact work</h3>
-            <p>Take part in strategic conversations and meaningful projects that influence major business decisions.</p>
+            <h3>Work that matters</h3>
+            <p>Lead strategic initiatives and high-impact projects that shape business outcomes and drive real change for clients and communities.</p>
           </div>
 
           <div className="career-value-item">
-            <h3>Healthy work-life rhythm</h3>
-            <p>Enjoy a flexible, respectful approach that helps you stay connected to your life outside work.</p>
+            <h3>Life and work balance</h3>
+            <p>We respect your time and priorities, offering flexibility that lets you deliver great work without sacrificing what matters most.</p>
+          </div>
+        </div>
+
+        <div className="careers-showcase">
+          <div className="careers-copy-block">
+            <div className="careers-mini-mark" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+
+            <h2>Where You<br />Can Thrive</h2>
+
+            <p>
+              We're building a venture company that brings together ambitious, curious people to solve meaningful problems and create lasting impact. You'll work alongside sharp collaborators on projects that matter, while growing your skills and staying connected to what's important.
+            </p>
+          </div>
+
+          <div className="careers-image-panel" aria-label="Team member portrait">
+            <div className="careers-portrait" />
           </div>
         </div>
       </section>
