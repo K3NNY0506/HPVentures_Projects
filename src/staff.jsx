@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import logo from './images/logo.png'
 import Footer from './Footer.jsx'
+import FloatingCertifications from './FloatingCertifications.jsx'
 import { loadDepartments, loadEmployees } from './employeeData.js'
 
 function Staff() {
@@ -156,6 +157,7 @@ function Staff() {
 					</div>
 				</div>
 			</section>
+			<FloatingCertifications />
 			<Footer />
 		</main>
 	)

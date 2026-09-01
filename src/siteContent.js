@@ -3,6 +3,8 @@ import Link2InfoLogo from './images/logos/link2info.png'
 import InfozLogo from './images/logos/infoz.png'
 import infotradeLogo from './images/logos/infotrade.png'
 import henzplaceLogo from './images/logos/henzplace.png'
+import certOne from './images/certifications/compliance_certificate_hpobladorventures_com_2026_07_16_conv_0.png'
+import certTwo from './images/certifications/CORSeal_conv_0_removebg.png'
 import { supabase, supabaseConfigured } from './supabaseClient.js'
 
 export const defaultWhatWeDo = {
@@ -43,7 +45,9 @@ export const defaultGroups = [
   { number: '06', name: 'Henzplace@Sea Residences', logo: henzplaceLogo, url: 'https://www.facebook.com/HenzplaceSeaResidences/', category: 'REAL ESTATE', description: 'A property and leasing business focused on useful, well-managed spaces.' },
 ]
 
-const keys = { whatWeDo: 'hp-ventures-what-we-do', archive: 'hp-ventures-archive', groups: 'hp-ventures-groups' }
+export const defaultCertifications = [certOne, certTwo]
+
+const keys = { whatWeDo: 'hp-ventures-what-we-do', archive: 'hp-ventures-archive', groups: 'hp-ventures-groups', certifications: 'hp-ventures-certifications' }
 
 function load(key, fallback) {
   try { return JSON.parse(window.localStorage.getItem(key)) || fallback } catch { return fallback }
@@ -73,6 +77,14 @@ export async function loadGroups() {
   return load(keys.groups, defaultGroups)
 }
 
+export async function loadCertifications() {
+  if (supabaseConfigured) {
+    const { data, error } = await supabase.from('certifications').select('*').order('sort_order')
+    if (!error && data?.length) return data.map((item) => item.image_url || item.image || '').filter(Boolean)
+  }
+  return load(keys.certifications, defaultCertifications)
+}
+
 export async function saveSiteContent(type, value) {
   if (supabaseConfigured) {
     if (type === 'whatWeDo') {
@@ -84,6 +96,9 @@ export async function saveSiteContent(type, value) {
     } else if (type === 'groups') {
       await supabase.from('groups').delete().not('id', 'is', null)
       if (value.length) await supabase.from('groups').insert(value.map(({ logo, ...group }) => ({ ...group, logo_url: logo || null })))
+    } else if (type === 'certifications') {
+      await supabase.from('certifications').delete().not('id', 'is', null)
+      if (value.length) await supabase.from('certifications').insert(value.map((image, index) => ({ image_url: image, sort_order: index })))
     }
   }
   window.localStorage.setItem(keys[type], JSON.stringify(value))
@@ -92,7 +107,7 @@ export async function saveSiteContent(type, value) {
 
 export async function resetSiteContent(type) {
   if (supabaseConfigured) {
-    const tables = { whatWeDo: 'what_we_do', archive: 'archive_entries', groups: 'groups' }
+    const tables = { whatWeDo: 'what_we_do', archive: 'archive_entries', groups: 'groups', certifications: 'certifications' }
     await supabase.from(tables[type]).delete().not('id', 'is', null)
   }
   window.localStorage.removeItem(keys[type])

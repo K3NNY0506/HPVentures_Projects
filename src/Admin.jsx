@@ -3,7 +3,7 @@ import logo from './images/logo.png'
 import { defaultEmployees, loadDepartments, loadEmployees, resetDepartments, resetEmployees, saveDepartments, saveEmployees } from './employeeData.js'
 import { defaultEvents, loadEvents, resetEvents, saveEvents } from './eventData.js'
 import { supabase, supabaseConfigured } from './supabaseClient.js'
-import { defaultArchiveEntries, defaultGroups, defaultWhatWeDo, loadArchiveEntries, loadGroups, loadWhatWeDo, saveSiteContent, resetSiteContent } from './siteContent.js'
+import { defaultArchiveEntries, defaultCertifications, defaultGroups, defaultWhatWeDo, loadArchiveEntries, loadCertifications, loadGroups, loadWhatWeDo, saveSiteContent, resetSiteContent } from './siteContent.js'
 
 const createEmptyEmployee = (department = '') => ({ name: '', role: '', department, description: '', image: '' })
 
@@ -19,6 +19,7 @@ function Admin() {
   const [departmentDraft, setDepartmentDraft] = useState('')
   const [draggedEmployeeId, setDraggedEmployeeId] = useState(null)
   const [events, setEvents] = useState([])
+  const [certifications, setCertifications] = useState([])
   const [whatWeDo, setWhatWeDo] = useState({})
   const [archiveEntries, setArchiveEntries] = useState({})
   const [groups, setGroups] = useState([])
@@ -92,11 +93,12 @@ function Admin() {
 
   useEffect(() => {
     const loadAdminContent = async () => {
-      const [loadedEmployees, loadedEvents, loadedWhatWeDo, loadedArchive, loadedGroups] = await Promise.all([loadEmployees(), loadEvents(), loadWhatWeDo(), loadArchiveEntries(), loadGroups()])
+      const [loadedEmployees, loadedEvents, loadedWhatWeDo, loadedArchive, loadedGroups, loadedCertifications] = await Promise.all([loadEmployees(), loadEvents(), loadWhatWeDo(), loadArchiveEntries(), loadGroups(), loadCertifications()])
       const loadedDepartments = loadDepartments()
       setDepartmentList(loadedDepartments)
       setEmployees(loadedEmployees)
       setEvents(loadedEvents)
+      setCertifications(loadedCertifications)
       setWhatWeDo(loadedWhatWeDo)
       setArchiveEntries(loadedArchive)
       setGroups(loadedGroups)
@@ -252,6 +254,32 @@ function Admin() {
     setEvents(defaultEvents)
   }
 
+  const addCertificationImage = (event) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      const updatedCertifications = [...certifications, reader.result]
+      setCertifications(updatedCertifications)
+      saveSiteContent('certifications', updatedCertifications)
+      event.target.value = ''
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const removeCertificationImage = (index) => {
+    if (!window.confirm('Remove this certification image?')) return
+    const updatedCertifications = certifications.filter((_, certIndex) => certIndex !== index)
+    setCertifications(updatedCertifications)
+    saveSiteContent('certifications', updatedCertifications)
+  }
+
+  const restoreCertificationDefaults = () => {
+    if (!window.confirm('Reset certifications to the default images?')) return
+    setCertifications(defaultCertifications)
+    saveSiteContent('certifications', defaultCertifications)
+  }
+
   const submitLogin = async (event) => {
     event.preventDefault()
     if (!supabaseConfigured) {
@@ -316,6 +344,11 @@ function Admin() {
             <button className="admin-reset-button" type="button" onClick={restoreDefaults}>Reset default staff</button>
           </section>
         </div>
+        <section className="admin-events-section">
+          <div className="admin-list-heading"><div><p className="eyebrow">Floating badges</p><h2>{certifications.length} Certifications</h2></div><label className="admin-upload-button">Add certificate<input type="file" accept="image/*" onChange={addCertificationImage} /></label></div>
+          <div className="admin-events-grid">{certifications.map((image, index) => <article className="admin-event" key={`${image}-${index}`}><img src={image} alt={`Certification ${index + 1}`} /><div><strong>Certificate {String(index + 1).padStart(2, '0')}</strong><button type="button" onClick={() => removeCertificationImage(index)}>Remove</button></div></article>)}</div>
+          <button className="admin-reset-button" type="button" onClick={restoreCertificationDefaults}>Reset default certificates</button>
+        </section>
         <section className="admin-events-section">
           <div className="admin-list-heading"><div><p className="eyebrow">Home page gallery</p><h2>{events.length} Company Photos</h2></div><label className="admin-upload-button">Add image<input type="file" accept="image/*" onChange={addEventImage} /></label></div>
           <div className="admin-events-grid">{events.map((image, index) => <article className="admin-event" key={`${image}-${index}`}><img src={image} alt={`Company event ${index + 1}`} /><div><strong>Event {String(index + 1).padStart(2, '0')}</strong><label className="admin-replace-button">Replace<input type="file" accept="image/*" onChange={(event) => replaceEventImage(index, event)} /></label><button type="button" onClick={() => removeEventImage(index)}>Remove</button></div></article>)}</div>

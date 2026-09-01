@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import logo from './images/logo.png'
 import Footer from './Footer.jsx'
+import FloatingCertifications from './FloatingCertifications.jsx'
 import careersHeroImage from './images/company_events/dji_fly_20250901_114758_0019_1756701704954_photo.jpg'
 
 function Careers() {
@@ -109,6 +110,7 @@ function Careers() {
         </div>
       </section>
 
+      <FloatingCertifications />
       <Footer />
     </main>
   )

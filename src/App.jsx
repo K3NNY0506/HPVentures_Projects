@@ -6,8 +6,10 @@ import Staff from './staff.jsx'
 import Careers from './Careers.jsx'
 import Admin from './Admin.jsx'
 import Footer from './Footer.jsx'
+import Card3D from './Card3D.jsx'
+import FloatingCertifications from './FloatingCertifications.jsx'
 import { defaultEvents, loadEvents } from './eventData.js'
-import { defaultArchiveEntries, defaultGroups, defaultWhatWeDo, loadArchiveEntries, loadGroups, loadWhatWeDo } from './siteContent.js'
+import { defaultArchiveEntries, defaultCertifications, defaultGroups, defaultWhatWeDo, loadArchiveEntries, loadCertifications, loadGroups, loadWhatWeDo } from './siteContent.js'
 
 const defaultArchive = Object.fromEntries(Object.entries(defaultArchiveEntries).map(([key, entry], index) => [key, { ...entry, image: defaultEvents[index + 7] }]))
 
@@ -67,6 +69,9 @@ function App() {
   const [headerScrolled, setHeaderScrolled] = useState(false)
   const [aboutVisible, setAboutVisible] = useState(false)
   const [featureVisible, setFeatureVisible] = useState(false)
+  const [certifications, setCertifications] = useState(defaultCertifications)
+  const [certIndex, setCertIndex] = useState(0)
+  const [selectedCert, setSelectedCert] = useState(null)
   const aboutSectionRef = useRef(null)
   const featureBannerRef = useRef(null)
 
@@ -88,10 +93,13 @@ function App() {
 
   useEffect(() => {
     const refreshContent = async () => {
-      const [categories, archive, loadedGroups] = await Promise.all([loadWhatWeDo(), loadArchiveEntries(), loadGroups()])
+      const [categories, archive, loadedGroups, loadedCertifications] = await Promise.all([loadWhatWeDo(), loadArchiveEntries(), loadGroups(), loadCertifications()])
       setContent({ categories, archive: Object.fromEntries(Object.entries(defaultArchive).map(([key, entry]) => [key, { ...entry, ...archive[key] }])) })
       if (loadedGroups && loadedGroups.length) {
         setGroupsList(loadedGroups)
+      }
+      if (loadedCertifications && loadedCertifications.length) {
+        setCertifications(loadedCertifications)
       }
     }
     window.addEventListener('site-content-updated', refreshContent)
@@ -100,6 +108,9 @@ function App() {
     refreshContent()
     refreshEvents()
     const heroTimer = setInterval(() => setHeroIndex((currentIndex) => (currentIndex + 1) % Math.max(heroImages.length, 1)), 5000)
+    const certTimer = setInterval(() => {
+      setCertIndex((currentIndex) => (currentIndex + 1) % Math.max(certifications.length, 1))
+    }, 4000)
 
     const updateHeaderState = () => {
       const heroSection = document.querySelector('.hero-section')
@@ -138,6 +149,7 @@ function App() {
 
     return () => {
       clearInterval(heroTimer)
+      clearInterval(certTimer)
       aboutObserver.disconnect()
       featureObserver.disconnect()
       window.removeEventListener('events-updated', refreshEvents)
@@ -145,6 +157,10 @@ function App() {
       window.removeEventListener('scroll', updateHeaderState)
     }
   }, [heroImages.length])
+
+  useEffect(() => {
+    setCertIndex((currentIndex) => currentIndex % Math.max(certifications.length, 1))
+  }, [certifications.length])
 
   const categoryNames = Object.keys(content.categories)
   const activeCategory = categoryNames[categoryIndex % categoryNames.length]
@@ -180,7 +196,7 @@ function App() {
       <section className="workspace-section" id="about-us" ref={aboutSectionRef}>
         <div className="about-orange-shape" aria-hidden="true" />
         <div className={`about-container ${aboutVisible ? 'is-visible' : ''}`}>
-          <div className="about-copy">
+          <Card3D className="about-copy">
             <div className="section-heading">
               <div>
                 <p className="eyebrow"><big>About Us</big></p>
@@ -199,7 +215,7 @@ function App() {
               
               <p style={{ textAlign: "justify" }}>We move towards <strong>Excellence</strong> in everything we do in a timely and orderly fashion.</p>
             </div>
-          </div>
+          </Card3D>
           <div className="about-ceo-wrapper">
             <img src={ceoImage} alt="HP Group Leadership" className="about-ceo-image" />
           </div>
@@ -226,7 +242,7 @@ function App() {
           </div>
         </div>
         <div className={`project-grid category-slide ${categoryDirection}`} key={categoryIndex}>
-          {visibleCards.map((card, index) => <article className="project-card" key={card.title}><span>{String(index + 1).padStart(2, '0')}</span><h3>{card.title}</h3><p>{card.text}</p></article>)}
+          {visibleCards.map((card, index) => <Card3D className="project-card" key={card.title}><span>{String(index + 1).padStart(2, '0')}</span><h3>{card.title}</h3><p>{card.text}</p></Card3D>)}
         </div>
       </section>
 
@@ -275,6 +291,7 @@ function App() {
         </div>
       </section>
 
+      <FloatingCertifications />
       
       <Footer />
     </main>
