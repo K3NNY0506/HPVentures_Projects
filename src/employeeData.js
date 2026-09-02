@@ -1,5 +1,5 @@
 import itDepartmentImage from './images/it_department/mr. dpo.jpg'
-import rodImage from './images/it_department/rod.jpg'
+import rodImage from './images/it_department/rod.png'
 import roxanImage from './images/accounting_department/roxan.jpg'
 import { supabase, supabaseConfigured } from './supabaseClient.js'
 

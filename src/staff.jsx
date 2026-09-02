@@ -9,7 +9,6 @@ function Staff() {
 	const selectorDepartments = [...staffDepartments, ...staffDepartments]
 
 	const [menuOpen, setMenuOpen] = useState(false)
-	const [selectedEmployee, setSelectedEmployee] = useState(null)
 	const [selectedDepartment, setSelectedDepartment] = useState('All')
 	const [employees, setEmployees] = useState([])
 	const [selectorOffset, setSelectorOffset] = useState(0)
@@ -63,7 +62,6 @@ function Staff() {
 		const targetOffset = button.offsetLeft + (button.offsetWidth / 2) - (selectorVisibleWidth / 2)
 		setSelectorOffset(Math.max(0, Math.min(targetOffset, maxSelectorOffset)))
 		setSelectedDepartment(button.textContent)
-		setSelectedEmployee(null)
 	}
 
 	const scrollDepartmentSelector = (direction) => {
@@ -139,19 +137,15 @@ function Staff() {
 				</div>
 				<div className="staff-layout">
 					<div className="employee-grid">
-						{employeeRows.map((row, rowIndex) => <div className={`employee-row ${selectedEmployee !== null && Math.floor(selectedEmployee / 5) === rowIndex ? 'has-selection' : ''}`} key={rowIndex}>
+						{employeeRows.map((row, rowIndex) => <div className="employee-row" key={rowIndex}>
 							{row.map(({ employee, index }) => <Fragment key={`${employee.name}-${index}`}>
-								<button className={`employee-card ${selectedEmployee === index ? 'selected' : ''}`} data-column={index % 5} data-mobile-column={index % 2} style={employee.image ? { backgroundImage: `url("${employee.image}")` } : undefined} onClick={() => setSelectedEmployee(selectedEmployee === index ? null : index)} aria-pressed={selectedEmployee === index}>
-									<span className="employee-number">{String(index + 1).padStart(2, '0')}</span>
-									<strong>{employee.name}</strong>
-									<span>{employee.role}</span>
-								</button>
-								{selectedEmployee === index && <div className="employee-detail visible" data-column={index % 5} aria-live="polite">
-								<p className="eyebrow">Profile {String(selectedEmployee + 1).padStart(2, '0')}</p>
-								<h3>{employee.name}</h3>
-								<p className="detail-role">{employee.role}</p>
-								<p>{employee.description}</p>
-								</div>}
+								<div className="employee-card" data-column={index % 5} data-mobile-column={index % 2} style={employee.image ? { backgroundImage: `url("${employee.image}")` } : undefined}>
+									<div className="employee-card-info">
+										<span className="employee-name">{employee.name}</span>
+										<span className="employee-role">{employee.role}</span>
+										<span className="employee-description">{employee.description}</span>
+									</div>
+								</div>
 							</Fragment>)}
 						</div>)}
 					</div>
