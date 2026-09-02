@@ -188,7 +188,7 @@ function App() {
         <div className="hero-copy">
           <h1>Emancipating of<br />Quality and Quantifiable Investments<span>.</span></h1>
           <div className="hero-actions">
-            <a className="primary-action" href="#Careers">Request a quote</a><a className="secondary-action" href="#the-team">Learn more</a>
+            <a className="primary-action" href="#about-us">Learn More</a>
           </div>
         </div>
       </section>
