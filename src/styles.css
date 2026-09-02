@@ -3456,3 +3456,73 @@ h3 {
     animation: none;
   }
 }
+
+/* Focal point picker */
+.admin-focal-picker {
+  position: relative;
+  width: 140px;
+  height: 160px;
+  overflow: hidden;
+  border: 1px solid #c7d2d2;
+  background: #dfe7e8;
+  cursor: crosshair;
+  user-select: none;
+  touch-action: none;
+}
+
+.admin-focal-picker img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.admin-focal-marker {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #1b74da;
+  box-shadow: 0 0 0 2px rgba(6, 35, 55, 0.35), 0 2px 8px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.admin-focal-marker::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.admin-focal-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 4px 6px;
+  background: rgba(6, 35, 55, 0.75);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+}
+
+.admin-focal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-image-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin: -3px 0 20px;
+}

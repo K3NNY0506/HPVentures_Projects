@@ -6,7 +6,14 @@ import { defaultEvents, loadEvents, resetEvents, saveEvents } from './eventData.
 import { supabase, supabaseConfigured } from './supabaseClient.js'
 import { defaultArchiveEntries, defaultCertifications, defaultGroups, defaultWhatWeDo, loadArchiveEntries, loadCertifications, loadGroups, loadWhatWeDo, saveSiteContent, resetSiteContent } from './siteContent.js'
 
-const createEmptyEmployee = (department = '') => ({ name: '', role: '', department, description: '', image: '' })
+const createEmptyEmployee = (department = '') => ({
+  name: '',
+  role: '',
+  department,
+  description: '',
+  image: '',
+  imagePosition: { x: 50, y: 50 },
+})
 
 const validateRequiredText = (value, fieldName, { minLength = 2, maxLength = 200 } = {}) => {
   const trimmed = String(value ?? '').trim()
@@ -53,6 +60,8 @@ function Admin() {
   const successTimeoutRef = useRef(null)
   const [confirmDialog, setConfirmDialog] = useState(null)
   const confirmResolverRef = useRef(null)
+  const focalPickerRef = useRef(null)
+  const isDraggingFocalRef = useRef(false)
   const [departmentList, setDepartmentList] = useState(loadDepartments())
   const [employees, setEmployees] = useState([])
   const [form, setForm] = useState(createEmptyEmployee(loadDepartments()[0] || ''))
@@ -103,6 +112,59 @@ function Admin() {
     setConfirmDialog(null)
     resolve?.(Boolean(result))
   }
+
+  const updateImagePositionFromPointer = (clientX, clientY) => {
+    const el = focalPickerRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    if (!rect.width || !rect.height) return
+
+    const x = Math.round(((clientX - rect.left) / rect.width) * 100)
+    const y = Math.round(((clientY - rect.top) / rect.height) * 100)
+
+    setForm((current) => ({
+      ...current,
+      imagePosition: {
+        x: Math.min(100, Math.max(0, x)),
+        y: Math.min(100, Math.max(0, y)),
+      },
+    }))
+  }
+
+  const handleFocalPointerDown = (event) => {
+    event.preventDefault()
+    isDraggingFocalRef.current = true
+    const point = event.touches ? event.touches[0] : event
+    updateImagePositionFromPointer(point.clientX, point.clientY)
+  }
+
+  useEffect(() => {
+    const handleMove = (event) => {
+      if (!isDraggingFocalRef.current) return
+      const point = event.touches ? event.touches[0] : event
+      if (!point) return
+      event.preventDefault()
+      updateImagePositionFromPointer(point.clientX, point.clientY)
+    }
+
+    const handleUp = () => {
+      isDraggingFocalRef.current = false
+    }
+
+    window.addEventListener('mousemove', handleMove)
+    window.addEventListener('mouseup', handleUp)
+    window.addEventListener('touchmove', handleMove, { passive: false })
+    window.addEventListener('touchend', handleUp)
+    window.addEventListener('touchcancel', handleUp)
+
+    return () => {
+      window.removeEventListener('mousemove', handleMove)
+      window.removeEventListener('mouseup', handleUp)
+      window.removeEventListener('touchmove', handleMove)
+      window.removeEventListener('touchend', handleUp)
+      window.removeEventListener('touchcancel', handleUp)
+    }
+  }, [])
 
   useEffect(() => () => {
     if (validationTimeoutRef.current) clearTimeout(validationTimeoutRef.current)
@@ -355,8 +417,12 @@ function Admin() {
           loadCertifications(),
         ])
       const loadedDepartments = loadDepartments()
+      const normalizedEmployees = loadedEmployees.map((emp) => ({
+        ...emp,
+        imagePosition: emp.imagePosition || { x: 50, y: 50 },
+      }))
       setDepartmentList(loadedDepartments)
-      setEmployees(loadedEmployees)
+      setEmployees(normalizedEmployees)
       setEvents(loadedEvents)
       setCertifications(loadedCertifications)
       setWhatWeDo(loadedWhatWeDo)
@@ -364,7 +430,7 @@ function Admin() {
       setGroups(loadedGroups)
       setForm((currentForm) => ({
         ...currentForm,
-        department: loadedEmployees.some((employee) => employee.id === editingId)
+        department: normalizedEmployees.some((employee) => employee.id === editingId)
           ? currentForm.department
           : loadedDepartments[0] || '',
       }))
@@ -520,7 +586,12 @@ function Admin() {
       return
     }
     const reader = new FileReader()
-    reader.onload = () => setForm((currentForm) => ({ ...currentForm, image: reader.result }))
+    reader.onload = () =>
+      setForm((currentForm) => ({
+        ...currentForm,
+        image: reader.result,
+        imagePosition: { x: 50, y: 50 },
+      }))
     reader.readAsDataURL(file)
   }
 
@@ -570,13 +641,20 @@ function Admin() {
     })
     if (!confirmed) return
 
+    const employeePayload = {
+      ...form,
+      name,
+      role,
+      department,
+      description,
+      imagePosition: form.imagePosition || { x: 50, y: 50 },
+    }
+
     const updatedEmployees = editingId
       ? employees.map((employee) =>
-          employee.id === editingId
-            ? { ...form, id: editingId, name, role, department, description }
-            : employee
+          employee.id === editingId ? { ...employeePayload, id: editingId } : employee
         )
-      : [...employees, { ...form, id: `employee-${Date.now()}`, name, role, department, description }]
+      : [...employees, { ...employeePayload, id: `employee-${Date.now()}` }]
 
     setEmployees(updatedEmployees)
     try {
@@ -597,7 +675,10 @@ function Admin() {
       return
     }
     setEditingId(employee.id)
-    setForm({ ...employee })
+    setForm({
+      ...employee,
+      imagePosition: employee.imagePosition || { x: 50, y: 50 },
+    })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -661,7 +742,12 @@ function Admin() {
     })
     if (!confirmed) return
     resetEmployees()
-    setEmployees(defaultEmployees)
+    setEmployees(
+      defaultEmployees.map((emp) => ({
+        ...emp,
+        imagePosition: emp.imagePosition || { x: 50, y: 50 },
+      }))
+    )
     cancelEdit()
     showSuccessNotice('Staff records reset to defaults.')
   }
@@ -1088,14 +1174,52 @@ function Admin() {
             <div className="admin-image-actions">
               {form.image && (
                 <>
-                  <img src={form.image} alt="Selected profile preview" />
-                  <button
-                    type="button"
-                    className="admin-text-button"
-                    onClick={() => setForm({ ...form, image: '' })}
+                  <div
+                    ref={focalPickerRef}
+                    className="admin-focal-picker"
+                    onMouseDown={handleFocalPointerDown}
+                    onTouchStart={handleFocalPointerDown}
+                    title="Drag to set focal point"
                   >
-                    Remove image
-                  </button>
+                    <img src={form.image} alt="Selected profile preview" draggable={false} />
+                    <span
+                      className="admin-focal-marker"
+                      style={{
+                        left: `${form.imagePosition?.x ?? 50}%`,
+                        top: `${form.imagePosition?.y ?? 50}%`,
+                      }}
+                    />
+                    <span className="admin-focal-hint">
+                      Drag to set focal point · {form.imagePosition?.x ?? 50}% {form.imagePosition?.y ?? 50}%
+                    </span>
+                  </div>
+                  <div className="admin-focal-actions">
+                    <button
+                      type="button"
+                      className="admin-text-button"
+                      onClick={() =>
+                        setForm((current) => ({
+                          ...current,
+                          imagePosition: { x: 50, y: 50 },
+                        }))
+                      }
+                    >
+                      Reset center
+                    </button>
+                    <button
+                      type="button"
+                      className="admin-text-button"
+                      onClick={() =>
+                        setForm({
+                          ...form,
+                          image: '',
+                          imagePosition: { x: 50, y: 50 },
+                        })
+                      }
+                    >
+                      Remove image
+                    </button>
+                  </div>
                 </>
               )}
             </div>
@@ -1136,7 +1260,14 @@ function Admin() {
                     ↕
                   </span>
                   {employee.image ? (
-                    <img src={employee.image} alt="" />
+                    <img
+                      src={employee.image}
+                      alt=""
+                      style={{
+                        objectFit: 'cover',
+                        objectPosition: `${employee.imagePosition?.x ?? 50}% ${employee.imagePosition?.y ?? 50}%`,
+                      }}
+                    />
                   ) : (
                     <div className="admin-avatar">{employee.name.slice(0, 1) || '?'}</div>
                   )}
@@ -1237,11 +1368,7 @@ function Admin() {
               <p className="eyebrow">Home content</p>
               <h2>What we do</h2>
             </div>
-            <button
-              className="admin-reset-button"
-              type="button"
-              onClick={restoreWhatWeDoDefaults}
-            >
+            <button className="admin-reset-button" type="button" onClick={restoreWhatWeDoDefaults}>
               Reset cards
             </button>
           </div>
@@ -1328,11 +1455,7 @@ function Admin() {
               />
             </div>
           ))}
-          <button
-            className="admin-reset-button"
-            type="button"
-            onClick={restoreArchiveDefaults}
-          >
+          <button className="admin-reset-button" type="button" onClick={restoreArchiveDefaults}>
             Reset archive content
           </button>
         </section>
@@ -1344,11 +1467,7 @@ function Admin() {
               <p className="eyebrow">Portfolio content</p>
               <h2>Groups & categories</h2>
             </div>
-            <button
-              className="admin-reset-button"
-              type="button"
-              onClick={restoreGroupDefaults}
-            >
+            <button className="admin-reset-button" type="button" onClick={restoreGroupDefaults}>
               Reset groups
             </button>
           </div>

@@ -41,6 +41,9 @@ create table if not exists public.groups (
   description text default ''
 );
 
+alter table employees
+add column if not exists image_position jsonb default '{"x":50,"y":50}'::jsonb;
+
 alter table public.employees alter column id type text using id::text;
 
 alter table public.employees enable row level security;
