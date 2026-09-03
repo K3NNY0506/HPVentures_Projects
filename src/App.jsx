@@ -10,6 +10,7 @@ import Card3D from './Card3D.jsx'
 import FloatingCertifications from './FloatingCertifications.jsx'
 import { defaultEvents, loadEvents } from './eventData.js'
 import { defaultArchiveEntries, defaultCertifications, defaultGroups, defaultWhatWeDo, loadArchiveEntries, loadCertifications, loadGroups, loadWhatWeDo } from './siteContent.js'
+import { motion } from "framer-motion";
 
 const defaultArchive = Object.fromEntries(Object.entries(defaultArchiveEntries).map(([key, entry], index) => [key, { ...entry, image: defaultEvents[index + 7] }]))
 

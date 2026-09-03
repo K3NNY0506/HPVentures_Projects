@@ -1571,28 +1571,51 @@ h3 {
 }
 
 .careers-content {
+  position: relative;
+  overflow: hidden;
   padding: 80px 10.7% 100px;
   background: #f4f6f5;
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.careers-content.is-visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .careers-value-hero {
+  position: relative;
+  min-height: 45vh;
+  display: flex;
+  align-items: center;
   margin-bottom: 56px;
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s;
 }
 
-.careers-content.is-visible .careers-value-hero {
-  opacity: 1;
-  transform: translateY(0);
+.careers-scroll-sticky {
+  position: sticky;
+  top: 0;
+  height: 10vh;
+  min-height: 700px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.careers-scroll-sequence {
+  position: relative;
+  height: 40vh;
+}
+
+.careers-scroll-section {
+  position: relative;
+  height: 400vh;
+}
+
+.careers-sticky-content {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  overflow: hidden;
 }
 
 .careers-value-hero h2 {
@@ -1600,33 +1623,31 @@ h3 {
   color: #bb1c1c;
   font: 500 clamp(58px, 7vw, 150px) / 0.92 'Barlow', sans-serif;
   letter-spacing: -0.02em;
+  /* overflow: hidden; */
 }
 
 .careers-value-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 54px 60px;
-  align-items: start;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  width: 100%;
+  /* align-items: start; */
 }
 
 .career-value-item {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  width: 100%;
 }
 
-.career-value-item:nth-child(1) { transition-delay: 0.15s; }
-.career-value-item:nth-child(2) { transition-delay: 0.25s; }
-.career-value-item:nth-child(3) { transition-delay: 0.35s; }
-.career-value-item:nth-child(4) { transition-delay: 0.45s; }
 
-.careers-content.is-visible .career-value-item {
-  opacity: 1;
-  transform: translateY(0);
+.careers-value-hero {
+  position: relative;
+  z-index: 2;
 }
+
+.career-value-item{
+  min-width: 0;
+}
+
 
 .career-value-item h3 {
   margin: 0;
@@ -1698,23 +1719,20 @@ h3 {
 .careers-showcase {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
+  padding: 50px;
   align-items: center;
   gap: 200px;
   margin-top: 80px;
+}
+
+.careers-showcase-section {
+  position: relative;
 }
 
 .careers-copy-block {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  opacity: 0;
-  transform: translateX(-60px);
-  transition: opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s;
-}
-
-.careers-content.is-visible .careers-copy-block {
-  opacity: 1;
-  transform: translateX(0);
 }
 
 .careers-mini-mark {
@@ -1748,16 +1766,6 @@ h3 {
   font: 400 16px / 1.6 'Poppins', sans-serif;
 }
 
-.careers-image-panel {
-  opacity: 0;
-  transform: translateX(60px);
-  transition: opacity 0.8s ease 0.25s, transform 0.8s ease 0.25s;
-}
-
-.careers-content.is-visible .careers-image-panel {
-  opacity: 1;
-  transform: translateX(0);
-}
 
 .careers-portrait {
   width: 100%;
@@ -3526,3 +3534,138 @@ h3 {
   gap: 14px;
   margin: -3px 0 20px;
 }
+
+
+/* Careers – slide-in boxes from the right */
+.careers-thrive-boxes {
+  margin-top: 72px;
+  display: grid;
+  gap: 18px;
+}
+
+.careers-thrive-box {
+  opacity: 0;
+  transform: translateX(72px);
+  padding: 28px 30px;
+  border-left: 4px solid #cf3d43;
+  background: #ffffff;
+  box-shadow: 0 14px 30px rgba(6, 35, 55, 0.06);
+  color: #062337;
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.careers-thrive-box.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Stagger delays */
+.careers-thrive-box:nth-child(1) { transition-delay: 0.05s; }
+.careers-thrive-box:nth-child(2) { transition-delay: 0.15s; }
+.careers-thrive-box:nth-child(3) { transition-delay: 0.25s; }
+.careers-thrive-box:nth-child(4) { transition-delay: 0.35s; }
+
+.careers-thrive-box h3 {
+  margin: 0 0 10px;
+  color: #062337;
+  font: 500 28px / 1.1 'Barlow Condensed', sans-serif;
+}
+
+.careers-thrive-box p {
+  margin: 0;
+  color: #4c5862;
+  font-size: 15px;
+  line-height: 1.55;
+  max-width: 62ch;
+}
+
+.careers-thrive-box .eyebrow {
+  margin: 0 0 8px;
+}
+
+@media (max-width: 700px) {
+  .careers-thrive-boxes {
+    margin-top: 48px;
+    gap: 14px;
+  }
+
+  .careers-thrive-box {
+    padding: 22px 20px;
+    transform: translateX(40px);
+  }
+
+  .careers-thrive-box h3 {
+    font-size: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .careers-thrive-box {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.careers-thrive-boxes {
+  margin-top: 72px;
+  display: grid;
+  gap: 18px;
+}
+
+.careers-thrive-box {
+  opacity: 0;
+  transform: translateX(72px);
+  padding: 28px 30px;
+  border-left: 4px solid #cf3d43;
+  background: #ffffff;
+  box-shadow: 0 14px 30px rgba(6, 35, 55, 0.06);
+  color: #062337;
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.careers-thrive-box.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.careers-thrive-box:nth-child(1) { transition-delay: 0.05s; }
+.careers-thrive-box:nth-child(2) { transition-delay: 0.15s; }
+.careers-thrive-box:nth-child(3) { transition-delay: 0.25s; }
+.careers-thrive-box:nth-child(4) { transition-delay: 0.35s; }
+
+.careers-thrive-box h3 {
+  margin: 0 0 10px;
+  color: #062337;
+  font: 500 28px / 1.1 'Barlow Condensed', sans-serif;
+}
+
+.careers-thrive-box p {
+  margin: 0;
+  color: #4c5862;
+  font-size: 15px;
+  line-height: 1.55;
+  max-width: 62ch;
+}
+
+@media (max-width: 700px) {
+  .careers-thrive-box {
+    transform: translateX(40px);
+    padding: 22px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .careers-thrive-box {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
