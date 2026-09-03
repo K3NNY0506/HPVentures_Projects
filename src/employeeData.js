@@ -102,11 +102,16 @@ export async function loadEmployees() {
 }
 
 export async function saveEmployees(employees) {
-  const normalized = (employees || []).map((employee, index) => normalizeEmployee(employee, index))
+  const normalized = (employees || []).map((employee, index) =>
+    normalizeEmployee(employee, index)
+  )
 
   if (supabaseConfigured) {
     try {
-      await supabase.from('employees').delete().not('id', 'is', null)
+      await supabase
+        .from('employees')
+        .delete()
+        .not('id', 'is', null)
 
       const payload = normalized.map((employee) => ({
         id: String(employee.id),
@@ -115,22 +120,34 @@ export async function saveEmployees(employees) {
         department: employee.department || '',
         description: employee.description || '',
         image_url: employee.image || null,
-        // Prefer a single JSON/JSONB column if you have it:
         image_position: employee.imagePosition || { x: 50, y: 50 },
-        // Also send split columns if your table uses those instead:
-        image_position_x: employee.imagePosition?.x ?? 50,
-        image_position_y: employee.imagePosition?.y ?? 50,
       }))
 
-      const { error } = await supabase.from('employees').insert(payload)
-      if (error) console.error('Supabase employee save error:', error)
+      console.log('SENDING TO SUPABASE:', payload)
+
+      const { data, error } = await supabase
+        .from('employees')
+        .insert(payload)
+        .select()
+
+      if (error) {
+        console.error('SUPABASE ERROR:', error)
+        throw error
+      }
+
+      console.log('SUPABASE SAVED:', data)
+
     } catch (err) {
-      console.error('Supabase employee save exception:', err)
+      console.error('SUPABASE EMPLOYEE SAVE EXCEPTION:', err)
+      throw err
     }
   }
 
-  // Always keep a full local copy (includes imagePosition)
-  window.localStorage.setItem(storageKey, JSON.stringify(normalized))
+  window.localStorage.setItem(
+    storageKey,
+    JSON.stringify(normalized)
+  )
+
   window.dispatchEvent(new Event('employees-updated'))
 }
 
