@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { motion, useScroll, useTransform } from "framer-motion";
 import logo from './images/logo.png'
 import ceoImage from './images/leadership/CEO_CROPPED (2).png'
 import Groups from './groups.jsx'
@@ -10,7 +11,7 @@ import Card3D from './Card3D.jsx'
 import FloatingCertifications from './FloatingCertifications.jsx'
 import { defaultEvents, loadEvents } from './eventData.js'
 import { defaultArchiveEntries, defaultCertifications, defaultGroups, defaultWhatWeDo, loadArchiveEntries, loadCertifications, loadGroups, loadWhatWeDo } from './siteContent.js'
-import { motion } from "framer-motion";
+
 
 const defaultArchive = Object.fromEntries(Object.entries(defaultArchiveEntries).map(([key, entry], index) => [key, { ...entry, image: defaultEvents[index + 7] }]))
 
@@ -73,8 +74,20 @@ function App() {
   const [certifications, setCertifications] = useState(defaultCertifications)
   const [certIndex, setCertIndex] = useState(0)
   const [selectedCert, setSelectedCert] = useState(null)
+  const heroAboutRef = useRef(null)
   const aboutSectionRef = useRef(null)
   const featureBannerRef = useRef(null)
+
+  const { scrollYProgress } = useScroll({
+  target: heroAboutRef,
+  offset: ["start start", "end start"]
+})
+
+const aboutY = useTransform(
+  scrollYProgress,
+  [0, 0.55],
+  ["100%", "0%"]
+)
 
   if (window.location.pathname === '/groups' || window.location.pathname === '/groups/') {
     return <Groups />
@@ -184,7 +197,8 @@ function App() {
         <a className="phone-link" href="#"><span aria-hidden="true">☎</span> (032) 343-9651 </a>
       </nav>
 
-      <section className="hero-section" id="#about-us">
+  <div className="hero-about-reveal" ref={heroAboutRef}>
+      <section className="hero-section" id="about-us">
         <div className="hero-background" key={heroIndex} style={{ backgroundImage: `url("${heroImages[heroIndex]}")` }} aria-hidden="true" />
         <div className="hero-copy">
           <h1>Emancipating of<br />Quality and Quantifiable Investments<span>.</span></h1>
@@ -193,6 +207,10 @@ function App() {
           </div>
         </div>
       </section>
+
+      
+  </div>
+
 
       <section className="workspace-section" id="about-us" ref={aboutSectionRef}>
         <div className="about-orange-shape" aria-hidden="true" />

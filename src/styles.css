@@ -2009,14 +2009,13 @@ h3 {
 
   /* Hero */
 
-  .hero-section {
-    min-height: 450px;
-    height: calc(100vh - 110px);
-
-    padding: 0 24px;
-
-    align-items: center;
-  }
+.hero-section {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  min-height: 100vh;
+  height: 100vh;
+}
 
   .hero-section::before {
     background-position: 62% center;
@@ -2042,6 +2041,16 @@ h3 {
   .workspace-section {
     padding: 55px 24px;
   }
+
+  .workspace-section#about-us {
+  position: relative;
+  z-index: 2;
+  background: #f4f6f5;
+  margin-top: 0;
+  /* Creates the “slide up over hero” feel */
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -20px 50px rgba(6, 35, 55, 0.12);
+}
 
   .about-container {
     grid-template-columns: 1fr;
