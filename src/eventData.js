@@ -30,11 +30,45 @@ export async function loadEvents() {
 
 export async function saveEvents(events) {
   if (supabaseConfigured) {
-    await supabase.from('company_events').delete().not('id', 'is', null)
-    const { error } = await supabase.from('company_events').insert(events.map((image_url) => ({ image_url })))
-    if (error) throw error
+    try {
+      const { error: deleteError } = await supabase
+        .from('company_events')
+        .delete()
+        .not('id', 'is', null)
+
+      if (deleteError) {
+        console.error('SUPABASE EVENT DELETE ERROR:', deleteError)
+        throw deleteError
+      }
+
+      const payload = events.map((image_url) => ({
+        image_url,
+      }))
+
+      console.log('EVENTS BEING SENT:', payload)
+
+      const { data, error } = await supabase
+        .from('company_events')
+        .insert(payload)
+        .select()
+
+      if (error) {
+        console.error('SUPABASE EVENT INSERT ERROR:', error)
+        throw error
+      }
+
+      console.log('EVENTS SAVED TO SUPABASE:', data)
+    } catch (err) {
+      console.error('SUPABASE EVENT SAVE ERROR:', err)
+      throw err
+    }
   }
-  window.localStorage.setItem(storageKey, JSON.stringify(events))
+
+  window.localStorage.setItem(
+    storageKey,
+    JSON.stringify(events)
+  )
+
   window.dispatchEvent(new Event('events-updated'))
 }
 
