@@ -5,6 +5,9 @@
    RESET / BASE
    ========================================================= */
 
+
+   
+
 :root {
   font-family: 'Barlow', sans-serif;
   color: #fff;
@@ -16,13 +19,30 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
+::-webkit-scrollbar {
+  width: 6px;
 }
 
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+html,
 body {
   margin: 0;
-  min-width: 320px;
+  padding: 0;
+  overflow-x: clip;
+  scrollbar-width: thin;
+  scrollbar-color:  white;
 }
 
 button,
@@ -925,12 +945,20 @@ h3 {
   color: #111;
 }
 
-.archive-heading,
+.archive-heading{
+  max-width: 1360px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 40px;
+  margin-top: -40px;
+  justify-content: center;
+}
 .archive-tabs,
 .archive-panel {
   max-width: 1360px;
   margin-right: auto;
   margin-left: auto;
+  justify-content: center;
 }
 
 .archive-kicker {
@@ -940,13 +968,16 @@ h3 {
   font-weight: 600;
   letter-spacing: .12em;
   text-transform: uppercase;
+  text-align:center;
 }
 
 .archive-heading h2 {
-  margin: 0 0 25px;
-  font-size: clamp(58px, 8vw, 112px);
-  line-height: .86;
-  text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(42px, 5vw, 72px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -2.5px;
+  text-align: center;
 }
 
 .archive-heading h2 span {
@@ -1028,7 +1059,7 @@ h3 {
 
 .archive-word-scroller-item {
   display: block;
-  color: #b6d5ff;
+  color: #aa1e14;
   font: 800 clamp(28px, 3.5vw, 48px) / 1.15 'Barlow Condensed', 'Barlow', sans-serif;
   letter-spacing: .05em;
   text-transform: uppercase;
@@ -1151,6 +1182,176 @@ h3 {
   padding: 20px 4.7% 40px;
   background: #f4f6f5;
 }
+
+.partners-mouse-content {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  will-change: transform;
+}
+
+.believe-mouse-content {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  will-change: transform;
+}
+
+/* ================================
+   WHAT WE BELIEVE
+================================ */
+
+.belief-cubes {
+  width: 100%;
+  max-width: 1200px;
+  margin: 60px auto 0;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+
+  perspective: 1200px;
+}
+
+.belief-cube {
+  position: relative;
+
+  min-height: 360px;
+
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: #f4f4f4;
+
+  cursor: pointer;
+
+  overflow: hidden;
+
+  transform-style: preserve-3d;
+
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.belief-cube:hover {
+  background: #eeeeee;
+  border-color: rgba(0, 0, 0, 0.35);
+
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.12);
+}
+
+/* NORMAL CUBE */
+
+.belief-cube-face {
+  width: 100%;
+  height: 360px;
+
+  padding: 30px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+
+  position: relative;
+}
+
+.belief-cube-number {
+  font-size: 140px;
+  font-weight: 700;
+  opacity: 0.06;
+  position: absolute;
+  right: -10px;
+  bottom: -30px;
+}
+
+.belief-cube-face h3 {
+  margin: 0;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: clamp(28px, 3vw, 48px);
+  font-weight: 600;
+
+  letter-spacing: -0.04em;
+}
+
+.belief-cube-arrow {
+  position: absolute;
+
+  right: 25px;
+  bottom: 25px;
+
+  font-size: 25px;
+
+  transition: transform 0.3s ease;
+}
+
+.belief-cube:hover .belief-cube-arrow {
+  transform: translate(4px, -4px);
+}
+
+
+/* OPEN CONTENT */
+
+.belief-cube.open {
+  cursor: pointer;
+
+  background: #ffffff;
+
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+.belief-cube-content {
+  width: 100%;
+  min-height: 360px;
+
+  padding: 35px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  text-align: left;
+}
+
+.belief-content-label {
+  font-size: 11px;
+  font-weight: 600;
+
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+
+  margin-bottom: 15px;
+}
+
+.belief-cube-content h3 {
+  margin: 0 0 18px;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: 26px;
+  line-height: 1.15;
+}
+
+.belief-cube-content p {
+  margin: 0;
+
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.belief-close {
+  margin-top: 25px;
+
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+
+  opacity: 0.5;
+}
+
 
 /* =========================================================
    GROUPS PAGE
@@ -1531,6 +1732,8 @@ h3 {
 .careers-page {
   background: #f4f6f5;
   color: #062337;
+  width: 100%;
+  overflow-x: clip;
 }
 
 .careers-hero {

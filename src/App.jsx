@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import logo from './images/logo.png'
 import ceoImage from './images/leadership/CEO_CROPPED (2).png'
 import Groups from './groups.jsx'
@@ -11,7 +11,6 @@ import Card3D from './Card3D.jsx'
 import FloatingCertifications from './FloatingCertifications.jsx'
 import { defaultEvents, loadEvents } from './eventData.js'
 import { defaultArchiveEntries, defaultCertifications, defaultGroups, defaultWhatWeDo, loadArchiveEntries, loadCertifications, loadGroups, loadWhatWeDo } from './siteContent.js'
-
 
 const defaultArchive = Object.fromEntries(Object.entries(defaultArchiveEntries).map(([key, entry], index) => [key, { ...entry, image: defaultEvents[index + 7] }]))
 
@@ -28,6 +27,7 @@ function FeatureBanner({ image, title, text, reverse = false, isVisible = false,
     </section>
   )
 }
+
 
 function WordScroller({ text }) {
   const words = text
@@ -60,12 +60,13 @@ function WordScroller({ text }) {
 }
 
 function App() {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [menuOpen, setMenuOpen] = useState(false)
   const [heroIndex, setHeroIndex] = useState(0)
   const [heroImages, setHeroImages] = useState(defaultEvents)
   const [categoryIndex, setCategoryIndex] = useState(0)
   const [categoryDirection, setCategoryDirection] = useState('next')
-  const [archiveTab, setArchiveTab] = useState('VISION')
+  const [archiveTab, setArchiveTab] = useState(null)
   const [content, setContent] = useState({ categories: defaultWhatWeDo, archive: defaultArchive })
   const [groupsList, setGroupsList] = useState(defaultGroups)
   const [headerScrolled, setHeaderScrolled] = useState(false)
@@ -77,6 +78,8 @@ function App() {
   const heroAboutRef = useRef(null)
   const aboutSectionRef = useRef(null)
   const featureBannerRef = useRef(null)
+  const believeRotateY = mousePosition.x * 12
+  const believeRotateX = mousePosition.y * -8
 
   const { scrollYProgress } = useScroll({
   target: heroAboutRef,
@@ -172,6 +175,21 @@ const aboutY = useTransform(
     }
   }, [heroImages.length])
 
+  
+useEffect(() => {
+  const handleMouseMove = (e) => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 2
+    const y = (e.clientY / window.innerHeight - 0.5) * 2
+
+    setMousePosition({ x, y })
+  }
+
+  window.addEventListener('mousemove', handleMouseMove)
+
+  return () => {
+    window.removeEventListener('mousemove', handleMouseMove)
+  }
+}, [])
   useEffect(() => {
     setCertIndex((currentIndex) => currentIndex % Math.max(certifications.length, 1))
   }, [certifications.length])
@@ -267,8 +285,35 @@ const aboutY = useTransform(
 
       <section className="companies-partners-section">
         <div className="logo-ticker-section">
-          <p className="logo-ticker-heading">Our Partners</p>
-          <p className="logo-ticker-subheading">We work closely with trusted partners to deliver meaningful value,<br></br> foster sustainable growth, and build long-term <br></br> success through strong collaboration and shared goals.</p>
+          <motion.div
+  className="partners-mouse-content"
+  animate={{
+    rotateY: mousePosition.x * 10,
+    rotateX: mousePosition.y * -10,
+    x: mousePosition.x * 10,
+    y: mousePosition.y * 10,
+  }}
+  transition={{
+    type: "spring",
+    stiffness: 50,
+    damping: 18,
+    mass: 0.6,
+  }}
+  style={{
+    transformPerspective: 1000,
+    transformStyle: "preserve-3d",
+  }}
+>
+  <p className="logo-ticker-heading">Our Partners</p>
+
+  <p className="logo-ticker-subheading">
+    We work closely with trusted partners to deliver meaningful value,
+    <br />
+    foster sustainable growth, and build long-term
+    <br />
+    success through strong collaboration and shared goals.
+  </p>
+</motion.div>
           <div className="logo-ticker-track-wrapper">
             <div className="logo-ticker-track">
               {[...(groupsList.length ? groupsList : defaultGroups), ...(groupsList.length ? groupsList : defaultGroups), ...(groupsList.length ? groupsList : defaultGroups)].map((item, idx) => (
@@ -285,30 +330,175 @@ const aboutY = useTransform(
         </div>
       </section>
 
-      <section className="archive-section" id="mission-vision-values">
-        <div className="archive-heading">
-          <p className="archive-kicker">The HP Group / Our foundation</p>
-          <h2>What We Believe<span>.</span></h2>
-        </div>
-        <div className="archive-tabs" role="tablist" aria-label="Mission, vision and core values">
-          {Object.keys(content.archive).map((tab) => <button className={archiveTab === tab ? 'active' : ''} role="tab" aria-selected={archiveTab === tab} key={tab} onClick={() => setArchiveTab(tab)}>{tab}</button>)}
-        </div>
-        <div className="archive-panel" key={archiveTab}>
-          <div className="archive-copy">
-            <p className="archive-file">{content.archive[archiveTab].label}</p>
-            <h3>{content.archive[archiveTab].title}</h3>
+     <section className="archive-section" id="mission-vision-values">
 
-            {content.archive[archiveTab].text.includes(',') ? (
-              <div className="archive-word-scroller-container">
-                <WordScroller text={content.archive[archiveTab].text} />
-              </div>
+  {/* WHAT WE BELIEVE HEADING */}
+  <div className="archive-heading" style={{ textAlign: "center" }}>
+    <p className="archive-kicker">
+      The HP Group / Our foundation
+    </p>
+
+    <motion.h2
+      animate={{
+        rotateY: mousePosition.x * 20,
+        rotateX: mousePosition.y * -12,
+        x: mousePosition.x * 6,
+        y: mousePosition.y * 6,
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 60,
+        damping: 15,
+        mass: 0.5,
+      }}
+      style={{
+        transformPerspective: 800,
+        transformStyle: "preserve-3d",
+        display: "inline-block",
+      }}
+    >
+      What We Believe<span>.</span>
+    </motion.h2>
+  </div>
+
+
+  {/* BELIEF CUBES */}
+  <div className="belief-cubes">
+
+    {Object.keys(content.archive).map((tab) => {
+
+      const isOpen = archiveTab === tab
+
+      return (
+        <motion.div
+          key={tab}
+          className={`belief-cube ${isOpen ? "open" : ""}`}
+          layout
+          onClick={() =>
+            setArchiveTab(isOpen ? null : tab)
+          }
+          whileHover={!isOpen ? {
+            y: -10,
+            rotateX: 4,
+            rotateY: -4,
+          } : {}}
+          whileTap={{ scale: 0.97 }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 25,
+          }}
+          style={{
+            transformPerspective: 1000,
+          }}
+        >
+
+          <AnimatePresence mode="wait" initial={false}>
+
+            {/* CLOSED CUBE */}
+            {!isOpen ? (
+
+              <motion.div
+                key="cube"
+                className="belief-cube-face"
+                initial={{
+                  opacity: 0,
+                  scale: 0.8,
+                }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.8,
+                }}
+                transition={{
+                  duration: 0.25,
+                }}
+              >
+
+                <span className="belief-cube-number">
+                  {String(
+                    Object.keys(content.archive).indexOf(tab) + 1
+                  ).padStart(2, "0")}
+                </span>
+
+                <h3>
+                  {tab}
+                </h3>
+
+                <span className="belief-cube-arrow">
+                  ↗
+                </span>
+
+              </motion.div>
+
             ) : (
-              <p>{content.archive[archiveTab].text}</p>
+
+              /* OPEN CONTENT */
+              <motion.div
+                key="content"
+                className="belief-cube-content"
+                initial={{
+                  opacity: 0,
+                  scale: 0.8,
+                }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.8,
+                }}
+                transition={{
+                  duration: 0.3,
+                }}
+              >
+
+                <span className="belief-content-label">
+                  {content.archive[tab].label}
+                </span>
+
+                <h3>
+                  {content.archive[tab].title}
+                </h3>
+
+                {content.archive[tab].text.includes(",") ? (
+
+                  <div className="archive-word-scroller-container">
+                    <WordScroller
+                      text={content.archive[tab].text}
+                    />
+                  </div>
+
+                ) : (
+
+                  <p>
+                    {content.archive[tab].text}
+                  </p>
+
+                )}
+
+                <span className="belief-close">
+                  Click to close
+                </span>
+
+              </motion.div>
+
             )}
-          </div>
-          <div className="archive-image" style={{ backgroundImage: `url("${content.archive[archiveTab].image}")` }} role="img" aria-label={archiveTab} />
-        </div>
-      </section>
+
+          </AnimatePresence>
+
+        </motion.div>
+      )
+
+    })}
+
+  </div>
+
+</section>
 
       <FloatingCertifications />
       
