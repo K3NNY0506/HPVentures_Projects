@@ -14,15 +14,99 @@ import { defaultArchiveEntries, defaultCertifications, defaultGroups, defaultWha
 
 const defaultArchive = Object.fromEntries(Object.entries(defaultArchiveEntries).map(([key, entry], index) => [key, { ...entry, image: defaultEvents[index + 7] }]))
 
-function FeatureBanner({ image, title, text, reverse = false, isVisible = false, sectionRef }) {
+function FeatureBanner({
+  image,
+  title,
+  text,
+  reverse = false,
+  isVisible = false,
+  sectionRef
+}) {
   return (
-    <section ref={sectionRef} className={`feature-banner ${reverse ? 'reverse' : ''} ${isVisible ? 'is-visible' : ''}`}>
-      <div className="feature-image" style={{ backgroundImage: `url("${image}")` }} role="img" aria-label={title} />
+    <section
+      ref={sectionRef}
+      className={`feature-banner ${reverse ? 'reverse' : ''} ${
+        isVisible ? 'is-visible' : ''
+      }`}
+    >
+      <div
+        className="feature-image"
+        style={{ backgroundImage: `url("${image}")` }}
+        role="img"
+        aria-label={title}
+      >
+        <div className="feature-image-overlay" />
+
+        <div className="feature-image-index">
+          <span>01</span>
+          <span>—</span>
+          <span>FEATURED</span>
+        </div>
+      </div>
+
       <div className="feature-panel">
-        <p className="eyebrow">Featured</p>
-        <h2>{title}</h2>
-        <p>{text}</p>
-        <a className="feature-link" href="/staff">Discover more <span>→</span></a>
+
+        {/* Decorative geometry */}
+        <div className="feature-orbit feature-orbit-one">
+          <span />
+        </div>
+
+        <div className="feature-orbit feature-orbit-two">
+          <span />
+        </div>
+
+        <div className="feature-grid-lines" />
+
+        {/* Large background number */}
+        <div className="feature-big-number">
+          01
+        </div>
+
+        {/* Top information */}
+        <div className="feature-panel-top">
+          <div className="feature-status">
+            <span className="feature-status-dot" />
+            <span>FEATURED</span>
+          </div>
+
+          <span className="feature-panel-count">
+            01 / 01
+          </span>
+        </div>
+
+        {/* Main content */}
+        <div className="feature-content">
+
+          <div className="feature-eyebrow">
+            <span className="feature-line" />
+            <span>PEOPLE &amp; PROGRESS</span>
+          </div>
+
+          <h2>{title}</h2>
+
+          <p>{text}</p>
+
+          <a className="feature-link" href="/staff">
+            <span className="feature-link-text">
+              Discover more
+            </span>
+
+            <span className="feature-link-arrow">
+              ↗
+            </span>
+          </a>
+        </div>
+
+        {/* Bottom information */}
+        <div className="feature-panel-bottom">
+          <span>THE HP GROUP</span>
+
+          <div className="feature-scroll-indicator">
+            <span>EXPLORE</span>
+            <span className="feature-scroll-line" />
+          </div>
+        </div>
+
       </div>
     </section>
   )
@@ -86,6 +170,38 @@ function App() {
   offset: ["start start", "end start"]
 })
 
+const [workspacePhotos, setWorkspacePhotos] = useState(() =>
+  heroImages.slice(0, 5)
+)
+
+const [isPhotoShuffling, setIsPhotoShuffling] = useState(false)
+
+useEffect(() => {
+  setWorkspacePhotos(heroImages.slice(0, 5))
+}, [heroImages])
+
+useEffect(() => {
+  if (workspacePhotos.length <= 1) return
+
+  const interval = setInterval(() => {
+    setIsPhotoShuffling(true)
+
+    setTimeout(() => {
+      setWorkspacePhotos((current) => {
+        if (current.length <= 1) return current
+
+        return [
+          ...current.slice(1),
+          current[0]
+        ]
+      })
+
+      setIsPhotoShuffling(false)
+    }, 650)
+  }, 3000)
+
+  return () => clearInterval(interval)
+}, [workspacePhotos.length])
 const aboutY = useTransform(
   scrollYProgress,
   [0, 0.55],
@@ -230,34 +346,253 @@ useEffect(() => {
   </div>
 
 
-      <section className="workspace-section" id="about-us" ref={aboutSectionRef}>
-        <div className="about-orange-shape" aria-hidden="true" />
-        <div className={`about-container ${aboutVisible ? 'is-visible' : ''}`}>
-          <Card3D className="about-copy">
-            <div className="section-heading">
-              <div>
-                <p className="eyebrow"><big>About Us</big></p>
-                <h2>The HP Group</h2>
-              </div>
-              <div>
-                <p className="about-subheading">A Commitment to Value and Excellence</p>
-              </div>
-            </div>
-            <div className="about-text">
-              <p style={{ textAlign: "justify" }}>The Group aims to nurture the key strengths of each individual under the umbrella with the aim to the enhancement and development of each person's skills and capabilities, exudes enough confidence, highlighting each and everyone's worth while valuing the synergy and interoperability within our key business points.</p>
-              
-              <p style={{ textAlign: "justify" }}>Our strategy is underlined in our determination to pursue growth from within while exploring the business opportunities under the framework of justice and equity.</p>
-              
-              <p style={{ textAlign: "justify" }}>We put emphasis in the <strong>Value of our people</strong> whom we considered our key assets. We invest accordingly with our stakeholders' best interest in mind. We put <strong>Value</strong> in every trust and confidence our stakeholders gave us.</p>
-              
-              <p style={{ textAlign: "justify" }}>We move towards <strong>Excellence</strong> in everything we do in a timely and orderly fashion.</p>
-            </div>
-          </Card3D>
-          <div className="about-ceo-wrapper">
-            <img src={ceoImage} alt="HP Group Leadership" className="about-ceo-image" />
-          </div>
+<section className="workspace-section" id="about-content" ref={aboutSectionRef}>
+  <div className="workspace-inner">
+
+    {/* TOP META */}
+    <motion.div
+      className="workspace-meta"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.7 }}
+    >
+      <span>THE HP GROUP</span>
+      <span>ABOUT US</span>
+      <span>01 / 04</span>
+    </motion.div>
+
+    {/* MAIN STATEMENT */}
+    <div className="workspace-heading">
+
+      <motion.p
+        className="workspace-kicker"
+        initial={{ opacity: 0, x: -30 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+      >
+        Who we are
+      </motion.p>
+
+      <motion.h2
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{
+          duration: 0.9,
+          ease: [0.22, 1, 0.36, 1]
+        }}
+      >
+        We build
+        <br />
+        <span>businesses.</span>
+      </motion.h2>
+
+      <motion.div
+        className="workspace-heading-accent"
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true }}
+        transition={{
+          duration: 0.8,
+          delay: 0.3,
+          ease: [0.22, 1, 0.36, 1]
+        }}
+      />
+    </div>
+
+    {/* IMAGE + CONTENT */}
+    <div className="workspace-grid">
+
+      {/* IMAGE */}
+      <div className="workspace-image-stack">
+
+  {/* Main image */}
+  <motion.div
+    className="workspace-image-wrap"
+    initial={{ opacity: 0, x: -80 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    viewport={{ once: true, amount: 0.25 }}
+    transition={{
+      duration: 1,
+      ease: [0.22, 1, 0.36, 1]
+    }}
+  >
+    <motion.div
+      className="workspace-image"
+      style={{
+        backgroundImage: `url("${heroImages[1] || defaultEvents[1]}")`
+      }}
+      whileHover={{ scale: 1.025 }}
+      transition={{
+        duration: 0.7,
+        ease: [0.22, 1, 0.36, 1]
+      }}
+    />
+
+    <div className="workspace-image-overlay" />
+
+    <div className="workspace-image-label">
+      <span>OUR WORKSPACE</span>
+      <span>EST. — 20XX</span>
+    </div>
+
+    <div className="workspace-image-number">
+      01
+    </div>
+  </motion.div>
+
+
+  {/* SHUFFLING PHOTO STACK */}
+  {/* SHUFFLING PHOTO STACK */}
+<div className="workspace-photo-stack">
+  {workspacePhotos.map((image, index) => {
+    const isFront = index === 0
+
+    return (
+      <motion.div
+        key={image}
+        className={`workspace-stack-photo ${
+          isFront && isPhotoShuffling
+            ? 'workspace-stack-photo-shuffling'
+            : ''
+        }`}
+        style={{
+          backgroundImage: `url("${image}")`,
+          zIndex: workspacePhotos.length - index,
+        }}
+        animate={{
+          x: isFront
+            ? isPhotoShuffling
+              ? 110
+              : 0
+            : index * 12,
+
+          y: isFront
+            ? isPhotoShuffling
+              ? -25
+              : 0
+            : index * -8,
+
+          rotate: isFront
+            ? isPhotoShuffling
+              ? 8
+              : 0
+            : index % 2 === 0
+              ? 3
+              : -3,
+
+          scale: isFront
+            ? 1
+            : 1 - index * 0.035,
+
+          opacity: isFront && isPhotoShuffling
+            ? 0
+            : 1,
+        }}
+        transition={{
+          duration: isFront && isPhotoShuffling ? 0.65 : 0.8,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+      />
+    )
+  })}
+</div>
+
+</div>
+
+
+      {/* TEXT */}
+      <motion.div
+        className="workspace-copy"
+        initial={{ opacity: 0, x: 70 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, amount: 0.25 }}
+        transition={{
+          duration: 0.9,
+          delay: 0.15,
+          ease: [0.22, 1, 0.36, 1]
+        }}
+      >
+
+        <div className="workspace-copy-label">
+          <span />
+          OUR APPROACH
         </div>
-      </section>
+
+        <h3>
+          Built for the
+          <br />
+          <em>long term.</em>
+        </h3>
+
+        <p>
+          We bring together people, ideas, and businesses with a
+          shared ambition to create meaningful and sustainable growth.
+        </p>
+
+        <p>
+          Through thoughtful leadership, collaboration, and a
+          long-term perspective, we build businesses that are
+          designed to move forward.
+        </p>
+
+        <div className="workspace-copy-footer">
+          <span>PEOPLE</span>
+          <span>PROGRESS</span>
+          <span>POSSIBILITY</span>
+        </div>
+
+      </motion.div>
+
+    </div>
+
+
+    {/* FLOATING STATEMENT */}
+    <motion.div
+      className="workspace-floating"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{
+        duration: 0.8,
+        delay: 0.3
+      }}
+    >
+      <span className="workspace-floating-number">
+        01
+      </span>
+
+      <p>
+        One group.
+        <br />
+        <strong>Multiple possibilities.</strong>
+      </p>
+
+      <span className="workspace-floating-arrow">
+        ↗
+      </span>
+    </motion.div>
+
+
+    {/* DECORATIVE ORBIT */}
+    <motion.div
+      className="workspace-orbit"
+      animate={{
+        rotate: 360
+      }}
+      transition={{
+        duration: 30,
+        repeat: Infinity,
+        ease: "linear"
+      }}
+    >
+      <span />
+    </motion.div>
+
+  </div>
+</section>
 
       <FeatureBanner
         image={heroImages[3] || defaultEvents[3]}

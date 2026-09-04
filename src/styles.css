@@ -753,20 +753,26 @@ h3 {
 
 .feature-banner {
   position: relative;
-
   display: grid;
-  grid-template-columns: 1.45fr 1fr;
+  grid-template-columns: 1.35fr 1fr;
 
-  min-height: 500px;
+  min-height: 620px;
+
   margin: 0 auto;
 
   overflow: hidden;
 
   background: #d8e1e4;
+
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: translateY(40px);
+
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+
 
 .feature-banner.is-visible {
   opacity: 1;
@@ -774,10 +780,19 @@ h3 {
 }
 
 .feature-image {
-  min-height: 330px;
+  position: relative;
+
+  min-height: 620px;
 
   background-position: center;
   background-size: cover;
+
+  overflow: hidden;
+
+  transform: scale(1.04);
+
+  transition:
+    transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .feature-panel {
@@ -801,6 +816,11 @@ h3 {
   opacity: 1;
   transform: translateX(0);
 }
+
+.feature-banner.is-visible .feature-image {
+  transform: scale(1);
+}
+
 
 .feature-panel > * {
   opacity: 0;
@@ -2322,6 +2342,67 @@ h3 {
     min-height: 220px;
     order: 0;
   }
+
+  .feature-image-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.05),
+      rgba(0, 0, 0, 0.35)
+    );
+
+  opacity: 0.7;
+
+  transition: opacity 0.5s ease;
+}
+
+
+.feature-banner:hover .feature-image-overlay {
+  opacity: 0.45;
+}
+
+.feature-image-index {
+  position: absolute;
+
+  top: 28px;
+  left: 30px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  color: #fff;
+
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  letter-spacing: 0.16em;
+
+  text-transform: uppercase;
+
+  z-index: 2;
+
+  opacity: 0;
+  transform: translateY(-15px);
+
+  transition:
+    opacity 0.6s ease 0.5s,
+    transform 0.6s ease 0.5s;
+}
+
+.feature-banner.is-visible .feature-image-index {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+
 
   .feature-panel,
   .feature-banner.reverse .feature-panel {
@@ -3881,3 +3962,1677 @@ h3 {
   }
 }
 
+/* =========================================================
+   FEATURE BANNER — EDITORIAL / INTERACTIVE
+   ========================================================= */
+
+.feature-banner {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+
+  min-height: 620px;
+
+  margin: 0 auto;
+
+  overflow: hidden;
+
+  background: #d8e1e4;
+
+  opacity: 0;
+  transform: translateY(40px);
+
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.feature-banner.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* =========================================================
+   IMAGE
+   ========================================================= */
+
+.feature-image {
+  position: relative;
+
+  min-height: 620px;
+
+  background-position: center;
+  background-size: cover;
+
+  overflow: hidden;
+
+  transform: scale(1.04);
+
+  transition:
+    transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.feature-banner.is-visible .feature-image {
+  transform: scale(1);
+}
+
+
+/* Dark image treatment */
+
+.feature-image-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.05),
+      rgba(0, 0, 0, 0.35)
+    );
+
+  opacity: 0.7;
+
+  transition: opacity 0.5s ease;
+}
+
+.feature-banner:hover .feature-image-overlay {
+  opacity: 0.45;
+}
+
+
+/* Image information */
+
+.feature-image-index {
+  position: absolute;
+
+  top: 28px;
+  left: 30px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  color: #fff;
+
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  letter-spacing: 0.16em;
+
+  text-transform: uppercase;
+
+  z-index: 2;
+
+  opacity: 0;
+  transform: translateY(-15px);
+
+  transition:
+    opacity 0.6s ease 0.5s,
+    transform 0.6s ease 0.5s;
+}
+
+.feature-banner.is-visible .feature-image-index {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* =========================================================
+   FEATURE PANEL
+   ========================================================= */
+
+.feature-panel {
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  min-height: 620px;
+
+  padding: 42px 11% 32px 12%;
+
+  background: #cf3d43;
+
+  color: #fff;
+
+  overflow: hidden;
+
+  opacity: 0;
+  transform: translateX(140px);
+
+  transition:
+    opacity 0.9s ease 0.15s,
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+}
+
+.feature-banner.is-visible .feature-panel {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+
+/* =========================================================
+   PANEL DECORATION
+   ========================================================= */
+
+.feature-panel::before {
+  content: "";
+
+  position: absolute;
+
+  top: 50%;
+  left: -170px;
+
+  width: 330px;
+  height: 330px;
+
+  transform: translateY(-50%);
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(255,255,255,0.18);
+
+  box-shadow:
+    0 0 0 35px rgba(255,255,255,0.035),
+    0 0 0 70px rgba(255,255,255,0.02);
+
+  pointer-events: none;
+}
+
+
+/* Grid */
+
+.feature-grid-lines {
+  position: absolute;
+  inset: 0;
+
+  opacity: 0.10;
+
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.55) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.55) 1px,
+      transparent 1px
+    );
+
+  background-size: 70px 70px;
+
+  /* Fade grid away around the main text */
+  mask-image:
+    radial-gradient(
+      ellipse 70% 55% at 35% 55%,
+      transparent 0%,
+      rgba(0, 0, 0, 0.15) 25%,
+      rgba(0, 0, 0, 0.55) 50%,
+      black 85%
+    );
+
+  -webkit-mask-image:
+    radial-gradient(
+      ellipse 70% 55% at 35% 55%,
+      transparent 0%,
+      rgba(0, 0, 0, 0.15) 25%,
+      rgba(0, 0, 0, 0.55) 50%,
+      black 85%
+    );
+
+  pointer-events: none;
+}
+
+.feature-banner.is-visible .feature-big-number {
+  transform: translateY(0);
+}
+
+
+/* =========================================================
+   ORBITS
+   ========================================================= */
+
+.feature-orbit {
+  position: absolute;
+
+  border: 1px solid rgba(255,255,255,0.2);
+
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+.feature-orbit span {
+  position: absolute;
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #fff;
+
+  box-shadow:
+    0 0 15px rgba(255,255,255,0.7);
+}
+
+
+/* First orbit */
+
+.feature-orbit-one {
+  width: 180px;
+  height: 180px;
+
+  right: -75px;
+  top: 80px;
+
+  animation: feature-orbit-rotate 14s linear infinite;
+}
+
+.feature-orbit-one span {
+  top: 50%;
+  left: -4px;
+
+  transform: translateY(-50%);
+}
+
+
+/* Second orbit */
+
+.feature-orbit-two {
+  width: 110px;
+  height: 110px;
+
+  right: 25px;
+  top: 115px;
+
+  opacity: 0.55;
+
+  animation:
+    feature-orbit-rotate-reverse
+    10s linear infinite;
+}
+
+.feature-orbit-two span {
+  bottom: -4px;
+  left: 50%;
+
+  transform: translateX(-50%);
+}
+
+
+@keyframes feature-orbit-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes feature-orbit-rotate-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+
+.feature-panel-top {
+  position: relative;
+
+  z-index: 3;
+
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+
+  opacity: 0;
+  transform: translateY(-20px);
+
+  transition:
+    opacity 0.6s ease 0.5s,
+    transform 0.6s ease 0.5s;
+}
+
+.feature-banner.is-visible .feature-panel-top {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+.feature-status {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  letter-spacing: 0.15em;
+
+  text-transform: uppercase;
+}
+
+
+.feature-status-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #fff;
+
+  animation: feature-pulse 2s ease-in-out infinite;
+}
+
+
+@keyframes feature-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+.feature-panel-count {
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 11px;
+
+  letter-spacing: 0.15em;
+
+  opacity: 0.6;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.feature-content {
+  position: relative;
+
+  z-index: 3;
+
+  max-width: 500px;
+
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+
+/* Eyebrow */
+
+.feature-eyebrow {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 25px;
+
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  letter-spacing: 0.16em;
+
+  text-transform: uppercase;
+
+  opacity: 0;
+  transform: translateX(-40px);
+
+  transition:
+    opacity 0.65s ease 0.55s,
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.55s;
+}
+
+.feature-banner.is-visible .feature-eyebrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+
+.feature-line {
+  width: 38px;
+  height: 1px;
+
+  background: rgba(255,255,255,0.7);
+}
+
+
+/* Heading */
+
+.feature-panel h2 {
+  position: relative;
+
+  margin: 0 0 25px;
+
+  max-width: 520px;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: clamp(42px, 4.5vw, 76px);
+
+  font-weight: 600;
+
+  line-height: 0.98;
+
+  letter-spacing: -0.055em;
+
+  color: #fff;
+
+  opacity: 0;
+  transform: translateX(-55px);
+
+  transition:
+    opacity 0.7s ease 0.65s,
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.65s;
+}
+
+.feature-banner.is-visible .feature-panel h2 {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+
+/* Description */
+
+.feature-panel > .feature-content > p {
+  max-width: 390px;
+
+  margin: 0 0 30px;
+
+  color: rgba(255,255,255,0.82);
+
+  font-size: 15px;
+
+  line-height: 1.7;
+
+  opacity: 0;
+  transform: translateX(-45px);
+
+  transition:
+    opacity 0.7s ease 0.8s,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.8s;
+}
+
+.feature-banner.is-visible .feature-content > p {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+
+/* =========================================================
+   FEATURE LINK
+   ========================================================= */
+
+.feature-link {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 18px;
+
+  align-self: flex-start;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #fff;
+
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  letter-spacing: 0.12em;
+
+  text-decoration: none;
+
+  text-transform: uppercase;
+
+  opacity: 0;
+  transform: translateX(-35px);
+
+  transition:
+    opacity 0.7s ease 0.95s,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.95s;
+}
+
+.feature-banner.is-visible .feature-link {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+
+.feature-link::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: -8px;
+
+  width: 100%;
+  height: 1px;
+
+  background: rgba(255,255,255,0.65);
+
+  transform-origin: left;
+
+  transform: scaleX(0);
+
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+.feature-link:hover::after {
+  transform: scaleX(1);
+}
+
+
+.feature-link-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  border: 1px solid rgba(255,255,255,0.5);
+
+  border-radius: 50%;
+
+  font-size: 17px;
+
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+
+.feature-link:hover .feature-link-arrow {
+  transform: translate(5px, -5px) rotate(8deg);
+
+  background: #fff;
+
+  color: #cf3d43;
+}
+
+
+/* =========================================================
+   BOTTOM BAR
+   ========================================================= */
+
+.feature-panel-bottom {
+  position: relative;
+
+  z-index: 3;
+
+  display: flex;
+  align-items: center;
+
+  justify-content: space-between;
+
+  width: 100%;
+
+  padding-top: 20px;
+
+  border-top: 1px solid rgba(255,255,255,0.2);
+
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.16em;
+
+  opacity: 0;
+
+  transform: translateY(20px);
+
+  transition:
+    opacity 0.6s ease 1s,
+    transform 0.6s ease 1s;
+}
+
+.feature-banner.is-visible .feature-panel-bottom {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+.feature-scroll-indicator {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  opacity: 0.65;
+}
+
+
+.feature-scroll-line {
+  width: 35px;
+  height: 1px;
+
+  background: #fff;
+}
+
+
+/* =========================================================
+   HOVER DEPTH
+   ========================================================= */
+
+.feature-banner:hover .feature-big-number {
+  transform: translate(-12px, -8px);
+}
+
+.feature-banner:hover .feature-orbit-one {
+  animation-duration: 8s;
+}
+
+.feature-banner:hover .feature-orbit-two {
+  animation-duration: 6s;
+}
+
+
+/* =========================================================
+   REVERSE VERSION
+   ========================================================= */
+
+.feature-banner.reverse {
+  grid-template-columns: 1fr 1.35fr;
+}
+
+.feature-banner.reverse .feature-panel {
+  order: -1;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .feature-banner,
+  .feature-banner.reverse {
+    display: flex;
+
+    flex-direction: column;
+
+    min-height: auto;
+  }
+
+  .feature-image {
+    order: 0;
+
+    min-height: 400px;
+  }
+
+  .feature-panel,
+  .feature-banner.reverse .feature-panel {
+    order: 1;
+
+    min-height: 560px;
+
+    padding: 45px 28px 30px;
+  }
+
+  .feature-panel h2 {
+    font-size: clamp(42px, 11vw, 65px);
+  }
+
+  .feature-big-number {
+    font-size: 190px;
+  }
+
+  .feature-orbit-one {
+    width: 140px;
+    height: 140px;
+  }
+
+  .feature-orbit-two {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+
+@media (max-width: 550px) {
+
+  .feature-image {
+    min-height: 300px;
+  }
+
+  .feature-panel,
+  .feature-banner.reverse .feature-panel {
+    min-height: 520px;
+
+    padding:
+      32px
+      22px
+      25px;
+  }
+
+  .feature-panel h2 {
+    font-size: 43px;
+  }
+
+  .feature-panel > .feature-content > p {
+    font-size: 14px;
+  }
+
+  .feature-big-number {
+    right: -20px;
+    bottom: -25px;
+
+    font-size: 150px;
+  }
+
+  .feature-image-index {
+    left: 20px;
+    top: 20px;
+  }
+
+  .feature-panel-bottom {
+    font-size: 9px;
+  }
+}
+
+
+/* Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .feature-banner,
+  .feature-image,
+  .feature-panel,
+  .feature-panel > *,
+  .feature-panel h2,
+  .feature-content > p {
+    transition: none !important;
+
+    animation: none !important;
+
+    transform: none !important;
+  }
+}
+
+/* =========================================================
+   FEATURE BANNER — 3D IMAGE DEPTH
+   ========================================================= */
+
+.feature-banner {
+  perspective: 1400px;
+}
+
+.feature-image {
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.feature-banner:hover .feature-image {
+  transform: scale(1.025);
+}
+
+.feature-panel {
+  transform-origin: center right;
+  will-change: transform;
+}
+
+.feature-banner:hover .feature-panel {
+  transform: translateZ(8px);
+}
+
+/* =========================================================
+   ABOUT US — EDITORIAL WORKSPACE
+   ========================================================= */
+
+.workspace-section {
+  position: relative;
+  overflow: hidden;
+
+  background: #f5f5f3;
+
+  color: #111;
+
+  padding: 150px 6vw 180px;
+}
+
+.workspace-inner {
+  position: relative;
+
+  max-width: 1500px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   META
+   ========================================================= */
+
+.workspace-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding-bottom: 22px;
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  letter-spacing: 0.18em;
+
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   HEADING
+   ========================================================= */
+
+.workspace-heading {
+  position: relative;
+
+  padding: 90px 0 110px;
+}
+
+.workspace-kicker {
+  margin: 0 0 25px;
+
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  letter-spacing: 0.18em;
+
+  text-transform: uppercase;
+
+  opacity: 0.55;
+}
+
+.workspace-heading h2 {
+  margin: 0;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: clamp(65px, 10vw, 155px);
+
+  font-weight: 600;
+
+  line-height: 0.88;
+
+  letter-spacing: -0.075em;
+}
+
+.workspace-heading h2 span {
+  opacity: 0.28;
+}
+
+.workspace-heading-accent {
+  width: 130px;
+  height: 2px;
+
+  margin-top: 45px;
+
+  background: #111;
+
+  transform-origin: left;
+}
+
+
+/* =========================================================
+   IMAGE + COPY
+   ========================================================= */
+
+.workspace-grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.35fr)
+    minmax(340px, 0.65fr);
+
+  gap: 8vw;
+
+  align-items: center;
+}
+
+
+/* =========================================================
+   IMAGE
+   ========================================================= */
+
+.workspace-image-wrap {
+  position: relative;
+  z-index: 10;
+}
+
+.workspace-image {
+  position: absolute;
+
+  inset: -2%;
+
+  background-size: cover;
+  background-position: center;
+
+  will-change: transform;
+}
+
+.workspace-image-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,0.08),
+      transparent 45%,
+      rgba(0,0,0,0.35)
+    );
+
+  pointer-events: none;
+}
+
+
+/* Image metadata */
+
+.workspace-image-label {
+  position: absolute;
+
+  top: 25px;
+  left: 25px;
+  right: 25px;
+
+  display: flex;
+  justify-content: space-between;
+
+  color: #fff;
+
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  letter-spacing: 0.16em;
+
+  z-index: 2;
+}
+
+.workspace-image-number {
+  position: absolute;
+
+  right: -20px;
+  bottom: -45px;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: 230px;
+
+  font-weight: 600;
+
+  line-height: 1;
+
+  letter-spacing: -0.08em;
+
+  color: rgba(255,255,255,0.13);
+
+  user-select: none;
+
+  z-index: 1;
+}
+
+
+/* =========================================================
+   COPY
+   ========================================================= */
+
+.workspace-copy {
+  position: relative;
+
+  max-width: 480px;
+}
+
+.workspace-copy-label {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 35px;
+
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  letter-spacing: 0.16em;
+
+  text-transform: uppercase;
+
+  opacity: 0.6;
+}
+
+.workspace-copy-label span {
+  display: block;
+
+  width: 35px;
+  height: 1px;
+
+  background: #111;
+}
+
+.workspace-copy h3 {
+  margin: 0 0 35px;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: clamp(42px, 4.5vw, 70px);
+
+  font-weight: 500;
+
+  line-height: 0.98;
+
+  letter-spacing: -0.06em;
+}
+
+.workspace-copy h3 em {
+  font-style: normal;
+
+  opacity: 0.35;
+}
+
+.workspace-copy p {
+  max-width: 420px;
+
+  margin: 0 0 20px;
+
+  font-size: 15px;
+
+  line-height: 1.8;
+
+  color: rgba(0,0,0,0.65);
+}
+
+
+/* =========================================================
+   COPY FOOTER
+   ========================================================= */
+
+.workspace-copy-footer {
+  display: flex;
+
+  gap: 25px;
+
+  margin-top: 45px;
+
+  padding-top: 20px;
+
+  border-top: 1px solid rgba(0,0,0,0.15);
+
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.15em;
+}
+
+
+/* =========================================================
+   FLOATING STATEMENT
+   ========================================================= */
+
+.workspace-floating {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  gap: 25px;
+
+  width: fit-content;
+
+  margin:
+    110px
+    0
+    0
+    auto;
+
+  padding: 25px 30px;
+
+  border: 1px solid rgba(0,0,0,0.15);
+
+  background: rgba(255,255,255,0.65);
+
+  backdrop-filter: blur(10px);
+}
+
+.workspace-floating-number {
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.15em;
+
+  opacity: 0.5;
+}
+
+.workspace-floating p {
+  margin: 0;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: 14px;
+
+  line-height: 1.4;
+}
+
+.workspace-floating p strong {
+  font-weight: 600;
+}
+
+.workspace-floating-arrow {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 38px;
+  height: 38px;
+
+  border: 1px solid rgba(0,0,0,0.25);
+
+  border-radius: 50%;
+
+  font-size: 18px;
+
+  transition:
+    transform 0.4s ease,
+    background 0.3s ease;
+}
+
+.workspace-floating:hover .workspace-floating-arrow {
+  transform: translate(4px, -4px);
+
+  background: #111;
+
+  color: #fff;
+}
+
+
+/* =========================================================
+   ORBIT
+   ========================================================= */
+
+.workspace-orbit {
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  right: -180px;
+  top: 330px;
+
+  border: 1px solid rgba(0,0,0,0.08);
+
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+.workspace-orbit::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 35px;
+
+  border: 1px solid rgba(0,0,0,0.06);
+
+  border-radius: 50%;
+}
+
+.workspace-orbit span {
+  position: absolute;
+
+  top: 50%;
+  left: -5px;
+
+  width: 9px;
+  height: 9px;
+
+  border-radius: 50%;
+
+  background: #111;
+}
+
+
+/* =========================================================
+   HOVER DETAILS
+   ========================================================= */
+
+.workspace-image-wrap {
+  cursor: crosshair;
+}
+
+.workspace-image-wrap:hover .workspace-image-overlay {
+  opacity: 0.55;
+}
+
+.workspace-image-wrap:hover .workspace-image-number {
+  transform: translate(-10px, -8px);
+}
+
+.workspace-image-number {
+  transition:
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .workspace-section {
+    padding:
+      100px
+      25px
+      120px;
+  }
+
+  .workspace-heading {
+    padding:
+      70px
+      0
+      70px;
+  }
+
+  .workspace-heading h2 {
+    font-size: clamp(60px, 15vw, 110px);
+  }
+
+  .workspace-grid {
+    grid-template-columns: 1fr;
+
+    gap: 60px;
+  }
+
+  .workspace-image-wrap {
+    min-height: 500px;
+  }
+
+  .workspace-copy {
+    max-width: 600px;
+  }
+
+  .workspace-floating {
+    margin-top: 80px;
+    margin-left: 0;
+  }
+
+  .workspace-orbit {
+    display: none;
+  }
+}
+
+
+@media (max-width: 550px) {
+
+  .workspace-section {
+    padding:
+      80px
+      18px
+      100px;
+  }
+
+  .workspace-meta {
+    font-size: 8px;
+  }
+
+  .workspace-meta span:nth-child(2) {
+    display: none;
+  }
+
+  .workspace-heading {
+    padding:
+      60px
+      0;
+  }
+
+  .workspace-heading h2 {
+    font-size: 62px;
+  }
+
+  .workspace-image-wrap {
+    min-height: 400px;
+  }
+
+  .workspace-image-label {
+    left: 18px;
+    right: 18px;
+    top: 18px;
+  }
+
+  .workspace-image-number {
+    font-size: 160px;
+  }
+
+  .workspace-copy h3 {
+    font-size: 45px;
+  }
+
+  .workspace-copy-footer {
+    gap: 15px;
+
+    flex-wrap: wrap;
+  }
+
+  .workspace-floating {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 20px;
+  }
+}
+
+/* =========================================================
+   WORKSPACE PHOTO STACK
+   ========================================================= */
+
+.workspace-image-stack {
+  position: relative;
+  width: 100%;
+  padding-bottom: 250px;
+}
+
+
+
+/* Main image stays on top */
+
+.workspace-image-stack .workspace-image-wrap {
+  position: relative;
+  z-index: 10;
+}
+
+
+/* =========================================================
+   PHOTO STACK
+   ========================================================= */
+
+
+.workspace-photo-stack {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+
+  width: 82%;
+  height: 155px;
+
+  transform: translateX(-50%);
+
+  perspective: 1000px;
+}
+
+
+/* Individual photos */
+
+.workspace-stack-photo {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+
+  height: 145px;
+
+  background-size: cover;
+  background-position: center;
+
+  border: 7px solid #fff;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    0 15px 30px rgba(0, 0, 0, 0.12);
+
+  transform-origin: center top;
+
+  transition:
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.4s ease;
+}
+
+
+/* =========================================================
+   STACK HOVER
+   ========================================================= */
+
+.workspace-photo-stack:hover .workspace-stack-photo {
+  filter: brightness(0.92);
+}
+
+.workspace-photo-stack:hover .workspace-stack-photo:nth-child(1) {
+  transform:
+    translateX(-15px)
+    rotate(-2deg)
+    translateY(5px);
+}
+
+.workspace-photo-stack:hover .workspace-stack-photo:nth-child(2) {
+  transform:
+    translateX(5px)
+    rotate(2deg)
+    translateY(2px);
+}
+
+.workspace-photo-stack:hover .workspace-stack-photo:nth-child(3) {
+  transform:
+    translateX(25px)
+    rotate(-1deg)
+    translateY(-2px);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .workspace-photo-stack {
+    width: 90%;
+    height: 120px;
+  }
+
+  .workspace-stack-photo {
+    height: 115px;
+  }
+}
+
+
+@media (max-width: 550px) {
+
+  .workspace-photo-stack {
+    width: 88%;
+    height: 100px;
+  }
+
+  .workspace-stack-photo {
+    height: 95px;
+    border-width: 5px;
+  }
+}
+
+.workspace-stack-photo {
+  position: absolute;
+
+  inset: 0;
+
+  height: 150px;
+
+  background-size: cover;
+  background-position: center;
+
+  border: 7px solid #fff;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    0 18px 35px rgba(0, 0, 0, 0.16);
+
+  transform-origin: center center;
+
+  will-change: transform;
+
+  cursor: pointer;
+}
+
+/* =========================================================
+   WORKSPACE PHOTO STACK
+   ========================================================= */
+
+.workspace-image-stack {
+  position: relative;
+  width: 100%;
+  
+  aspect-ratio: 1/1;
+}
+
+.workspace-photo-stack {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+
+  width: 82%;
+  aspect-ratio: 1 / 1;
+
+  transform: translateX(-50%);
+  perspective: 1200px;
+}
+
+.workspace-stack-photo {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  aspect-ratio: 1 / 1;
+
+  background-size: cover;
+  background-position: center;
+
+  border: 7px solid #fff;
+  box-sizing: border-box;
+
+  box-shadow:
+    0 18px 35px rgba(0, 0, 0, 0.16);
+
+  transform-origin: center center;
+  will-change: transform, opacity;
+
+  cursor: pointer;
+}
+
+.workspace-stack-photo::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.02),
+      rgba(0, 0, 0, 0.12)
+    );
+
+  pointer-events: none;
+}
+
+/* Card currently flying out */
+.workspace-stack-photo-shuffling {
+  filter: brightness(0.96);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .workspace-image-stack {
+    padding-bottom: 190px;
+  }
+
+  .workspace-photo-stack {
+    width: 85%;
+  }
+
+  .workspace-stack-photo {
+    border-width: 6px;
+  }
+}
+
+@media (max-width: 550px) {
+  .workspace-image-stack {
+    padding-bottom: 155px;
+  }
+
+  .workspace-photo-stack {
+    width: 88%;
+  }
+
+  .workspace-stack-photo {
+    border-width: 5px;
+  }
+}
