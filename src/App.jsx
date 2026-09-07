@@ -390,48 +390,55 @@ useEffect(() => {
     <span>businesses.</span>
   </motion.h2>
 
-  <motion.div
-  className="workspace-3d-logo"
-  animate={{
-  rotateY: [-12, 12, -12],
-  rotateX: [3, -3, 3],
-}}
-transition={{
-  rotateY: {
-    duration: 6,
-    repeat: Infinity,
-    ease: "easeInOut",
-  },
-  rotateX: {
-    duration: 6,
-    repeat: Infinity,
-    ease: "easeInOut",
-  },
-}}
-  whileHover={{
-    scale: 1.08,
-  }}
->
-  {/* Back layers = thickness */}
-  {Array.from({ length: 12 }).map((_, index) => (
-    <img
-      key={index}
-      src={logo}
-      alt=""
-      className="workspace-3d-logo-layer"
-      style={{
-        transform: `translateZ(${-index * 3}px)`,
-      }}
-    />
-  ))}
+  
 
-  {/* Front face */}
-  <img
-    src={logo}
-    alt="HP Ventures"
-    className="workspace-3d-logo-front"
-  />
-</motion.div>
+<div className="workspace-logo-wrapper">
+  {/* Static background number */}
+  <span className="workspace-logo-number">01</span>
+
+  {/* Only this rotates */}
+  <motion.div
+    className="workspace-3d-logo"
+    animate={{
+      rotateY: [-12, 12, -12],
+      rotateX: [3, -3, 3],
+    }}
+    transition={{
+      rotateY: {
+        duration: 6,
+        repeat: Infinity,
+        ease: "easeInOut",
+      },
+      rotateX: {
+        duration: 6,
+        repeat: Infinity,
+        ease: "easeInOut",
+      },
+    }}
+    whileHover={{
+      scale: 1.08,
+    }}
+  >
+    {/* Your existing 3D logo code */}
+    {Array.from({ length: 12 }).map((_, index) => (
+      <img
+        key={index}
+        src={logo}
+        alt=""
+        className="workspace-3d-logo-layer"
+        style={{
+          transform: `translateZ(${-index * 3}px)`,
+        }}
+      />
+    ))}
+
+    <img
+      src={logo}
+      alt="HP Ventures"
+      className="workspace-3d-logo-front"
+    />
+  </motion.div>
+  </div>
 </div>
 
       <motion.div
@@ -613,6 +620,133 @@ transition={{
     </motion.div>
 
   </div>
+</section>
+
+{/* =========================================================
+    HOW WE THINK
+    ========================================================= */}
+
+<section className="thinking-section">
+
+  <div className="thinking-inner">
+
+    {/* Top metadata */}
+    <motion.div
+      className="thinking-meta"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.4 }}
+      transition={{ duration: 0.7 }}
+    >
+      <span>THE HP GROUP</span>
+      <span>HOW WE THINK</span>
+      <span>02 / 04</span>
+    </motion.div>
+
+
+    {/* Main statement */}
+    <div className="thinking-statement">
+
+      <motion.div
+        className="thinking-kicker"
+        initial={{ opacity: 0, x: -30 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+      >
+        <span className="thinking-line" />
+        OUR APPROACH
+      </motion.div>
+
+
+      <motion.h2
+        initial={{ opacity: 0, y: 80 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{
+          duration: 1,
+          ease: [0.22, 1, 0.36, 1]
+        }}
+      >
+        We don't just build
+        <br />
+
+        <span className="thinking-muted">
+          businesses.
+        </span>
+      </motion.h2>
+
+
+      <motion.h3
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{
+          duration: 0.9,
+          delay: 0.15,
+          ease: [0.22, 1, 0.36, 1]
+        }}
+      >
+        We build what comes next.
+      </motion.h3>
+
+    </div>
+
+
+    {/* Bottom information */}
+    <div className="thinking-bottom">
+
+      <motion.p
+        initial={{ opacity: 0, y: 25 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{
+          duration: 0.8,
+          delay: 0.3
+        }}
+      >
+        We take a long-term view of growth — bringing together
+        people, ideas, and businesses to create meaningful
+        progress.
+      </motion.p>
+
+
+      <motion.div
+        className="thinking-values"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{
+          duration: 0.8,
+          delay: 0.5
+        }}
+      >
+        <span>PEOPLE</span>
+        <i />
+        <span>PROGRESS</span>
+        <i />
+        <span>POSSIBILITY</span>
+      </motion.div>
+
+    </div>
+
+
+    {/* Large background number */}
+    <motion.div
+      className="thinking-number"
+      initial={{ opacity: 0, x: 100 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{
+        duration: 1.2,
+        ease: [0.22, 1, 0.36, 1]
+      }}
+    >
+      02
+    </motion.div>
+
+  </div>
+
 </section>
 
       <FeatureBanner
