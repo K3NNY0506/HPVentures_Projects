@@ -375,19 +375,64 @@ useEffect(() => {
         Who we are
       </motion.p>
 
-      <motion.h2
-        initial={{ opacity: 0, y: 60 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{
-          duration: 0.9,
-          ease: [0.22, 1, 0.36, 1]
-        }}
-      >
-        We build
-        <br />
-        <span>businesses.</span>
-      </motion.h2>
+      <div className="workspace-heading-row">
+  <motion.h2
+    initial={{ opacity: 0, y: 60 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{
+      duration: 0.9,
+      ease: [0.22, 1, 0.36, 1]
+    }}
+  >
+    We build
+    <br />
+    <span>businesses.</span>
+  </motion.h2>
+
+  <motion.div
+  className="workspace-3d-logo"
+  animate={{
+  rotateY: [-12, 12, -12],
+  rotateX: [3, -3, 3],
+}}
+transition={{
+  rotateY: {
+    duration: 6,
+    repeat: Infinity,
+    ease: "easeInOut",
+  },
+  rotateX: {
+    duration: 6,
+    repeat: Infinity,
+    ease: "easeInOut",
+  },
+}}
+  whileHover={{
+    scale: 1.08,
+  }}
+>
+  {/* Back layers = thickness */}
+  {Array.from({ length: 12 }).map((_, index) => (
+    <img
+      key={index}
+      src={logo}
+      alt=""
+      className="workspace-3d-logo-layer"
+      style={{
+        transform: `translateZ(${-index * 3}px)`,
+      }}
+    />
+  ))}
+
+  {/* Front face */}
+  <img
+    src={logo}
+    alt="HP Ventures"
+    className="workspace-3d-logo-front"
+  />
+</motion.div>
+</div>
 
       <motion.div
         className="workspace-heading-accent"
@@ -406,47 +451,7 @@ useEffect(() => {
     <div className="workspace-grid">
 
       {/* IMAGE */}
-      <div className="workspace-image-stack">
-
-  {/* Main image */}
-  <motion.div
-    className="workspace-image-wrap"
-    initial={{ opacity: 0, x: -80 }}
-    whileInView={{ opacity: 1, x: 0 }}
-    viewport={{ once: true, amount: 0.25 }}
-    transition={{
-      duration: 1,
-      ease: [0.22, 1, 0.36, 1]
-    }}
-  >
-    <motion.div
-      className="workspace-image"
-      style={{
-        backgroundImage: `url("${heroImages[1] || defaultEvents[1]}")`
-      }}
-      whileHover={{ scale: 1.025 }}
-      transition={{
-        duration: 0.7,
-        ease: [0.22, 1, 0.36, 1]
-      }}
-    />
-
-    <div className="workspace-image-overlay" />
-
-    <div className="workspace-image-label">
-      <span>OUR WORKSPACE</span>
-      <span>EST. — 20XX</span>
-    </div>
-
-    <div className="workspace-image-number">
-      01
-    </div>
-  </motion.div>
-
-
-  {/* SHUFFLING PHOTO STACK */}
-  {/* SHUFFLING PHOTO STACK */}
-<div className="workspace-photo-stack">
+<div className="workspace-image-stack">
   {workspacePhotos.map((image, index) => {
     const isFront = index === 0
 
@@ -463,33 +468,38 @@ useEffect(() => {
           zIndex: workspacePhotos.length - index,
         }}
         animate={{
-          x: isFront
-            ? isPhotoShuffling
-              ? 110
-              : 0
-            : index * 12,
+          x:
+            isFront
+              ? isPhotoShuffling
+                ? 140
+                : 0
+              : index * 12,
 
-          y: isFront
-            ? isPhotoShuffling
-              ? -25
-              : 0
-            : index * -8,
+          y:
+            isFront
+              ? isPhotoShuffling
+                ? -25
+                : 0
+              : index * -8,
 
-          rotate: isFront
-            ? isPhotoShuffling
-              ? 8
-              : 0
-            : index % 2 === 0
-              ? 3
-              : -3,
+          rotate:
+            isFront
+              ? isPhotoShuffling
+                ? 8
+                : 0
+              : index % 2 === 0
+                ? 3
+                : -3,
 
-          scale: isFront
-            ? 1
-            : 1 - index * 0.035,
+          scale:
+            isFront
+              ? 1
+              : 1 - index * 0.035,
 
-          opacity: isFront && isPhotoShuffling
-            ? 0
-            : 1,
+          opacity:
+            isFront && isPhotoShuffling
+              ? 0
+              : 1,
         }}
         transition={{
           duration: isFront && isPhotoShuffling ? 0.65 : 0.8,
@@ -498,8 +508,19 @@ useEffect(() => {
       />
     )
   })}
-</div>
 
+  {/* Overlay for the front image */}
+  <div className="workspace-image-overlay" />
+
+  {/* Image information */}
+  <div className="workspace-image-label">
+    <span>OUR WORKSPACE</span>
+    <span>EST. — 20XX</span>
+  </div>
+
+  <div className="workspace-image-number">
+    01
+  </div>
 </div>
 
 
