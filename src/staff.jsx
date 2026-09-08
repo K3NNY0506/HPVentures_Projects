@@ -21,6 +21,17 @@ import {
 
 const ease = [0.22, 1, 0.36, 1]
 
+const heroNumber = {
+    hidden: {
+        opacity: 0,
+        y: 20
+    },
+    visible: {
+        opacity: 0.12,
+        y: 0
+    }
+};
+
 const fadeUp = {
 	 hidden: {
 		 opacity: 0,
@@ -469,7 +480,7 @@ function Staff() {
 
 				 <motion.div
 					 className="staff-hero-number"
-					 variants={fadeUp}
+					 variants={heroNumber}
 				 >
 					 03
 				 </motion.div>
@@ -556,7 +567,7 @@ function Staff() {
 						 y: 25,
 					 }}
 					 whileInView={{
-						 opacity: 1,
+						 opacity: 0.05,
 						 y: 0,
 					 }}
 					 viewport={{

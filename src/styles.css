@@ -2491,23 +2491,7 @@ h3 {
   margin-top: 0;
 }
 
-.staff-content::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -86px;
-  height: 180px;
-  background: linear-gradient(
-    180deg,
-    rgba(6, 35, 55, 0) 0%,
-    rgba(6, 35, 55, 0.06) 20%,
-    rgba(6, 35, 55, 0.18) 42%,
-    rgba(255, 255, 255, 0.8) 72%,
-    rgba(255, 255, 255, 1) 100%
-  );
-  pointer-events: none;
-}
+
 
 .staff-content > * {
   position: relative;
@@ -2603,21 +2587,19 @@ h3 {
 }
 
 .employee-card-info {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  min-height: 150px;
-  padding: 18px 18px 14px;
-  background: #1b1b1b;
-  border-radius: 10px 10px 0 0;
-  transform: translateY(100%);
-  transition: transform .32s ease;
-  z-index: 1;
+    position: absolute;
+
+    left: 22px;
+    right: 22px;
+    bottom: 22px;
+
+    color: #fff;
+
+    transform: translateY(calc(100% - 58px));
+    transition:
+        transform .45s cubic-bezier(.22, 1, .36, 1);
+
+    z-index: 2;
 }
 
 .employee-card:hover .employee-card-info,
@@ -8294,18 +8276,21 @@ h3 {
 }
 
 .staff-hero-number {
-	position: absolute;
-	right: 6vw;
-	top: 120px;
+    position: absolute;
+    right: 6vw;
+    top: 120px;
 
-	font-family: 'Poppins', sans-serif;
-	font-size: clamp(150px, 20vw, 330px);
-	line-height: .8;
-	font-weight: 800;
-	letter-spacing: -.08em;
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(150px, 20vw, 330px);
+    line-height: .8;
+    font-weight: 800;
+    letter-spacing: -.08em;
 
-	color: #fff;
-	opacity: .001;
+    color: #fff;
+    opacity: .12;
+
+    pointer-events: none;
+    user-select: none;
 }
 
 .staff-hero-meta {
@@ -8398,29 +8383,16 @@ h3 {
 ========================================================= */
 
 .staff-intro-clean {
-	position: relative;
+    position: relative;
 
-	display: grid;
-	grid-template-columns: 70px minmax(0, 1.2fr) minmax(280px, .8fr);
-	gap: 50px;
-	align-items: end;
+    display: grid;
+    grid-template-columns: 70px minmax(0, 1.2fr) minmax(280px, .8fr);
+    gap: 50px;
+    align-items: end;
 
-	padding: 135px 7vw;
+    padding: 125px 7vw 110px;
 
-	background: #fff;
-}
-
-.staff-intro-clean::after {
-	content: '';
-
-	position: absolute;
-	left: 7vw;
-	bottom: 0;
-
-	width: 110px;
-	height: 3px;
-
-	background: #aa1e14;
+    background: #fff;
 }
 
 .staff-intro-number {
@@ -8636,7 +8608,10 @@ h3 {
 		);
 }
 
-.employee-card-clean:hover
+.employee-card-clean:hover {
+    opacity: 1;
+    transform: translateY(0);
+}
 .employee-card-image {
 	transform: scale(1.045);
 }
@@ -8685,33 +8660,50 @@ h3 {
 }
 
 .employee-card-info h3 {
-	margin: 0 0 7px;
+    margin: 0 0 6px;
 
-	font-family: 'Poppins', sans-serif;
-	font-size: 22px;
-	line-height: 1.05;
-	font-weight: 600;
-	letter-spacing: -.035em;
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    line-height: 1.05;
+    font-weight: 600;
+    letter-spacing: -.035em;
+
+    color: #fff;
 }
 
 .employee-card-info .employee-role {
-	display: block;
+    display: block;
 
-	font-size: 9px;
-	font-weight: 700;
-	letter-spacing: .11em;
-	text-transform: uppercase;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .11em;
+    text-transform: uppercase;
 
-	color: rgba(255,255,255,.65);
+    color: rgba(255,255,255,.65);
 }
 
 .employee-card-info p {
-	margin: 13px 0 0;
+    max-width: 360px;
 
-	font-size: 11px;
-	line-height: 1.6;
+    margin: 14px 0 0;
 
-	color: rgba(255,255,255,.7);
+    font-size: 12px;
+    line-height: 1.55;
+
+    color: rgba(255,255,255,.75);
+
+    opacity: 0;
+    transform: translateY(12px);
+
+    transition:
+        opacity .3s ease .12s,
+        transform .4s cubic-bezier(.22, 1, .36, 1);
+}
+
+.employee-card-clean:hover .employee-card-info p,
+.employee-card-clean:focus-within .employee-card-info p {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* =========================================================
@@ -8791,6 +8783,7 @@ h3 {
 	font-family: 'Poppins', sans-serif;
 	font-size: 25px;
 	font-weight: 600;
+  opacity: .2;
 }
 
 /* =========================================================
