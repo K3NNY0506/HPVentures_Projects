@@ -62,9 +62,9 @@ function Admin() {
   const confirmResolverRef = useRef(null)
   const focalPickerRef = useRef(null)
   const isDraggingFocalRef = useRef(false)
-  const [departmentList, setDepartmentList] = useState(loadDepartments())
+  const [departmentList, setDepartmentList] = useState([])
   const [employees, setEmployees] = useState([])
-  const [form, setForm] = useState(createEmptyEmployee(loadDepartments()[0] || ''))
+  const [form, setForm] = useState(createEmptyEmployee(''))
   const [editingId, setEditingId] = useState(null)
   const [filter, setFilter] = useState('ALL DEPARTMENTS')
   const [departmentDraft, setDepartmentDraft] = useState('')
@@ -406,21 +406,31 @@ function Admin() {
   }, [])
 
   useEffect(() => {
-    const loadAdminContent = async () => {
-      const [loadedEmployees, loadedEvents, loadedWhatWeDo, loadedArchive, loadedGroups, loadedCertifications] =
-        await Promise.all([
-          loadEmployees(),
-          loadEvents(),
-          loadWhatWeDo(),
-          loadArchiveEntries(),
-          loadGroups(),
-          loadCertifications(),
-        ])
-      const loadedDepartments = loadDepartments()
+  const loadAdminContent = async () => {
+    try {
+      const [
+        loadedEmployees,
+        loadedEvents,
+        loadedWhatWeDo,
+        loadedArchive,
+        loadedGroups,
+        loadedCertifications,
+        loadedDepartments,
+      ] = await Promise.all([
+        loadEmployees(),
+        loadEvents(),
+        loadWhatWeDo(),
+        loadArchiveEntries(),
+        loadGroups(),
+        loadCertifications(),
+        loadDepartments(),
+      ])
+
       const normalizedEmployees = loadedEmployees.map((emp) => ({
         ...emp,
         imagePosition: emp.imagePosition || { x: 50, y: 50 },
       }))
+
       setDepartmentList(loadedDepartments)
       setEmployees(normalizedEmployees)
       setEvents(loadedEvents)
@@ -428,28 +438,42 @@ function Admin() {
       setWhatWeDo(loadedWhatWeDo)
       setArchiveEntries(loadedArchive)
       setGroups(loadedGroups)
+
       setForm((currentForm) => ({
         ...currentForm,
-        department: normalizedEmployees.some((employee) => employee.id === editingId)
+        department: normalizedEmployees.some(
+          (employee) => employee.id === editingId
+        )
           ? currentForm.department
           : loadedDepartments[0] || '',
       }))
+    } catch (error) {
+      console.error('ADMIN CONTENT LOAD ERROR:', error)
     }
-    loadAdminContent()
-  }, [editingId])
-
-  const syncDepartments = (nextDepartments) => {
-    const cleanedDepartments = nextDepartments.map((department) => String(department).trim()).filter(Boolean)
-    const normalizedDepartments = cleanedDepartments.length ? cleanedDepartments : [...loadDepartments()]
-    const savedDepartments = saveDepartments(normalizedDepartments)
-    setDepartmentList(savedDepartments)
-    setForm((currentForm) => ({
-      ...currentForm,
-      department: savedDepartments.includes(currentForm.department)
-        ? currentForm.department
-        : savedDepartments[0] || '',
-    }))
   }
+
+  loadAdminContent()
+}, [editingId])
+  const syncDepartments = async (nextDepartments) => {
+  const cleanedDepartments = nextDepartments
+    .map((department) => String(department).trim())
+    .filter(Boolean)
+
+  const normalizedDepartments = cleanedDepartments.length
+    ? cleanedDepartments
+    : await loadDepartments()
+
+  const savedDepartments = await saveDepartments(normalizedDepartments)
+
+  setDepartmentList(savedDepartments)
+
+  setForm((currentForm) => ({
+    ...currentForm,
+    department: savedDepartments.includes(currentForm.department)
+      ? currentForm.department
+      : savedDepartments[0] || '',
+  }))
+}
 
   // ---------- DEPARTMENTS (Create) ----------
   const addDepartment = async () => {
@@ -559,7 +583,43 @@ function Admin() {
       confirmLabel: 'Reset departments',
     })
     if (!confirmed) return
-    const defaults = resetDepartments()
+    const resetDepartmentList = async () => {
+  const confirmed = await requestConfirm({
+    tone: 'reset',
+    title: 'Reset all departments?',
+    message: 'Departments will return to the original defaults. Employees will be reassigned if needed.',
+    confirmLabel: 'Reset departments',
+  })
+
+  if (!confirmed) return
+
+  try {
+    const defaults = await resetDepartments()
+
+    setDepartmentList(defaults)
+
+    setForm((currentForm) => ({
+      ...currentForm,
+      department: defaults.includes(currentForm.department)
+        ? currentForm.department
+        : defaults[0] || '',
+    }))
+
+    setEmployees((currentEmployees) =>
+      currentEmployees.map((employee) => ({
+        ...employee,
+        department: defaults.includes(employee.department)
+          ? employee.department
+          : defaults[0] || '',
+      }))
+    )
+
+    showSuccessNotice('Departments reset to defaults.')
+  } catch (error) {
+    console.error('ERROR RESETTING DEPARTMENTS:', error)
+    showValidationError('Unable to reset departments right now.')
+  }
+}
     setDepartmentList(defaults)
     setForm((currentForm) => ({
       ...currentForm,

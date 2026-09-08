@@ -5,30 +5,106 @@ import { supabase, supabaseConfigured } from './supabaseClient.js'
 
 export const defaultDepartments = ['LEADERSHIP', 'IT DEPARTMENT', 'FINANCE AND ACCOUNTING', 'HR DEPARTMENT', 'TAURUS CAFE']
 
-export function loadDepartments() {
-  try {
-    const savedDepartments = window.localStorage.getItem('hp-ventures-departments')
-    const departments = savedDepartments ? JSON.parse(savedDepartments) : defaultDepartments
-    if (!Array.isArray(departments) || !departments.length) return [...defaultDepartments]
-    return departments.map((department) => String(department).trim()).filter(Boolean)
-  } catch {
-    return [...defaultDepartments]
+export async function loadDepartments() {
+  if (supabaseConfigured) {
+    const { data, error } = await supabase
+      .from('departments')
+      .select('name')
+      .order('id', { ascending: true })
+
+    if (!error) {
+      return (data || [])
+        .map((department) => String(department.name).trim())
+        .filter(Boolean)
+    }
+
+    console.error('SUPABASE DEPARTMENT LOAD ERROR:', error)
   }
-}
 
-export function saveDepartments(departments) {
-  const sanitized = [...new Set((departments || []).map((department) => String(department).trim()).filter(Boolean))]
-  const nextDepartments = sanitized.length ? sanitized : [...defaultDepartments]
-  window.localStorage.setItem('hp-ventures-departments', JSON.stringify(nextDepartments))
-  return nextDepartments
-}
-
-export function resetDepartments() {
-  window.localStorage.removeItem('hp-ventures-departments')
   return [...defaultDepartments]
 }
 
-export const departments = loadDepartments()
+export async function saveDepartments(departments) {
+  const sanitized = [
+    ...new Set(
+      (departments || [])
+        .map((department) => String(department).trim())
+        .filter(Boolean)
+    )
+  ]
+
+  const nextDepartments = sanitized.length
+    ? sanitized
+    : [...defaultDepartments]
+
+  if (supabaseConfigured) {
+    try {
+      const { error: deleteError } = await supabase
+        .from('departments')
+        .delete()
+        .not('id', 'is', null)
+
+      if (deleteError) {
+        console.error('SUPABASE DEPARTMENT DELETE ERROR:', deleteError)
+        throw deleteError
+      }
+
+      const { error: insertError } = await supabase
+        .from('departments')
+        .insert(
+          nextDepartments.map((name) => ({
+            name,
+          }))
+        )
+
+      if (insertError) {
+        console.error('SUPABASE DEPARTMENT INSERT ERROR:', insertError)
+        throw insertError
+      }
+
+      console.log('DEPARTMENTS SAVED TO SUPABASE:', nextDepartments)
+    } catch (error) {
+      console.error('SUPABASE DEPARTMENT SAVE ERROR:', error)
+      throw error
+    }
+  }
+
+  window.dispatchEvent(new Event('departments-updated'))
+
+  return nextDepartments
+}
+
+export async function resetDepartments() {
+  if (supabaseConfigured) {
+    const { error } = await supabase
+      .from('departments')
+      .delete()
+      .not('id', 'is', null)
+
+    if (error) {
+      console.error('SUPABASE DEPARTMENT RESET ERROR:', error)
+      throw error
+    }
+
+    const { error: insertError } = await supabase
+      .from('departments')
+      .insert(
+        defaultDepartments.map((name) => ({
+          name,
+        }))
+      )
+
+    if (insertError) {
+      console.error('SUPABASE DEFAULT DEPARTMENT INSERT ERROR:', insertError)
+      throw insertError
+    }
+  }
+
+  window.dispatchEvent(new Event('departments-updated'))
+
+  return [...defaultDepartments]
+}
+
 
 export const defaultEmployees = [
   { id: 'employee-1', name: 'Name Test', role: 'Chairman', department: 'LEADERSHIP', description: 'Guides the group with a long-term view of responsible growth, strong partnerships, and meaningful value creation.', imagePosition: { x: 50, y: 50 } },

@@ -87,10 +87,23 @@ const heroStagger = {
 }
 
 function Staff() {
-	 const staffDepartments = [
-		 'All',
-		 ...loadDepartments(),
-	 ]
+const [departmentList, setDepartmentList] = useState([])
+
+useEffect(() => {
+    const fetchDepartments = async () => {
+        try {
+            const departments = await loadDepartments()
+            setDepartmentList(departments)
+        } catch (error) {
+            console.error('STAFF DEPARTMENT LOAD ERROR:', error)
+            setDepartmentList([])
+        }
+    }
+
+    fetchDepartments()
+}, [])
+
+const staffDepartments = ['All', ...departmentList]
 
 	 const selectorDepartments = [
 		 ...staffDepartments,
