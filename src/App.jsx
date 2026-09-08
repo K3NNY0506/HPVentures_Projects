@@ -578,6 +578,10 @@ useEffect(() => {
 
 
     {/* FLOATING STATEMENT */}
+<a
+  href="/groups"
+  style={{ textDecoration: 'none'}}
+>
     <motion.div
       className="workspace-floating"
       initial={{ opacity: 0, y: 40 }}
@@ -588,6 +592,7 @@ useEffect(() => {
         delay: 0.3
       }}
     >
+
       <span className="workspace-floating-number">
         01
       </span>
@@ -602,7 +607,7 @@ useEffect(() => {
         ↗
       </span>
     </motion.div>
-
+    </a>
 
     {/* DECORATIVE ORBIT */}
     <motion.div
